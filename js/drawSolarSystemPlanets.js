@@ -1,5 +1,5 @@
 
-function clearOrbitLines() {
+function clearPlanetOrbitLines() {
 	orbitLines.forEach( function( l, i ) {
 		l.geometry.dispose();
 		scene.remove( l );
@@ -54,7 +54,7 @@ function createOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
 }
 
 
-function makeLine( geo , color = 'white', rotation = null) {
+function makePlanetLine( geo , color = 'white', rotation = null) {
 
 	var g = new MeshLine();
 	g.setGeometry( geo, function( p ) { return Math.pow(p, params.SSlineTaper ) ; });
@@ -84,13 +84,52 @@ function makeLine( geo , color = 'white', rotation = null) {
 
 }
 
+function makeAsteroidLine( geo , color = 'white', rotation = null) {
 
-function drawOrbitLines()
+	var g = new MeshLine();
+	g.setGeometry(geo)
+	var material = new MeshLineMaterial({
+		color: new THREE.Color(color),
+		opacity: params.useASTalpha,
+		//useAlphaMap: 1,
+		//alphaMap: aTex,
+		lineWidth: params.lineWidth/2.,
+		sizeAttenuation: 0,
+		depthWrite: true,
+		depthTest: true,
+		transparent: true,
+
+	}); 
+	
+	var mesh = new THREE.Mesh( g.geometry, material );
+	mesh.geometry.dynamic = true;
+	if (rotation != null){
+		mesh.rotation.x = rotation.x;
+		mesh.rotation.y = rotation.y;
+		mesh.rotation.z = rotation.z;
+	}
+	scene.add( mesh );
+
+
+}
+function drawPlanetOrbitLines()
 {
 	// line
 	for (var i=0; i<planets.length; i++){
 		geo = createOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
-		makeLine( geo ,  color = pcolors[planets[i].name], rotation = SSrotation);		
+		makePlanetLine( geo ,  color = pcolors[planets[i].name], rotation = SSrotation);		
+	}
+
+}
+
+function drawAsteroidOrbitLines()
+{
+	// line
+	ak = Object.keys(asteroids); //a bit of a silly way to do this, could probably find a way to remake the file in the same format as planets.json
+	for (var j=0; j<ak.length; j++){
+		i = ak[j];
+		geo = createOrbit(asteroids[i].semi_major_axis, asteroids[i].eccentricity, THREE.Math.degToRad(asteroids[i].inclination), THREE.Math.degToRad(asteroids[i].longitude_of_ascending_node), THREE.Math.degToRad(asteroids[i].argument_of_periapsis), asteroids[i].tperi, asteroids[i].period, Ntheta = 100.);
+		makeAsteroidLine( geo ,  color = 'green', rotation = SSrotation);		
 	}
 
 }

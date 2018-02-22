@@ -30,17 +30,17 @@ function update(time){
 				params.timeStepFac = params.saveTimeStepFac;
 			}
 		}
-		params.resetSlider('timeStepFac', basicGUI, params.timeStepFac);
+		params.resetSlider('timeStepFac', gui, params.timeStepFac);
 
 	}
 	if ( keyboard.down("left") ) {
 		params.timeStepFac = -1. * Math.abs(params.timeStepFac);
-		params.resetSlider('timeStepFac', basicGUI, params.timeStepFac);
+		params.resetSlider('timeStepFac', gui, params.timeStepFac);
 
 	}
 	if ( keyboard.down("right") ) {
 		params.timeStepFac = Math.abs(params.timeStepFac);
-		params.resetSlider('timeStepFac', basicGUI, params.timeStepFac);
+		params.resetSlider('timeStepFac', gui, params.timeStepFac);
 
 	}
 	controls.update();
@@ -65,9 +65,9 @@ function render() {
 	}
 
 	params.timeStep = parseFloat(params.timeStepUnit)*parseFloat(params.timeStepFac);
-	if (params.timeStep > 0){
+	if (params.timeStep != 0){
 		params.Year += params.timeStep;
-		params.updateSSExop();
+		params.updateSolarSystem();
 	}
 
 

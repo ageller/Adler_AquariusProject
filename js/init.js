@@ -14,6 +14,8 @@ var JD0 = 2447892.5; //Jan. 1, 1990
 
 var AUfac = 206264.94195722;
 
+var planets;
+var asteroids;
 
 var orbitLines = [];
 var SunMesh;
@@ -192,6 +194,7 @@ function defineParams(){
 		this.SSlineTaper = 1./4.;
 		this.SSalpha = 1.;
 		this.useSSalpha = 1.;
+		this.useASTalpha = 0.3;
 		this.coronaSize = 50.;
 		this.coronaP = 0.3;
 		this.coronaAlpha = 1.;
@@ -217,11 +220,8 @@ function defineParams(){
 //some functions
 		this.updateSolarSystem = function() {
 
-			clearOrbitLines();
-			drawOrbitLines();
-
-			clearHZ();
-			drawHZ();
+			clearPlanetOrbitLines();
+			drawPlanetOrbitLines();
 
 			clearSun();
 			drawSun();
@@ -255,7 +255,7 @@ function defineParams(){
 function defineGUI(){
 
 	gui = new dat.GUI({ width: 450 } )
-	gui.add( params, 'Year', 1990, 2020).listen().onChange( params.updateSolarSystem ).name("Year");
+	gui.add( params, 'Year', 1990, 3000).listen().onChange(params.updateSolarSystem).name("Year");;
 	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
 	gui.add( params, 'timeStepFac', 0, 100 ).name("Time Step Multiplier");//.listen();
 
@@ -268,14 +268,17 @@ function loadData(callback){
 		//from Allen's Astrophysical Quantities; Note, I changed Earth's year to be exactly 1 so there isn't any confusion in the visualization. The true value is 0.99997862]]
 		planets = x0;
 
-		callback();
+		d3.json("data/asteroids.json",  function(x1) {
+			asteroids = x1;
+
+			callback();
+		});
 	});
 }
 
 
 function WebGLStart(){	
 	
-
 	clearloading();
 
 //initialize
@@ -283,7 +286,8 @@ function WebGLStart(){
 	init();
 
 //initial GUI
-	gui = new dat.GUI({ width: 450 } )
+	defineGUI();
+
 
 	if (isMobile){
 		resizeMobile();
@@ -291,7 +295,8 @@ function WebGLStart(){
 
 //draw everything
 	drawInnerMilkyWay();
-	drawOrbitLines();
+	drawPlanetOrbitLines();
+	drawAsteroidOrbitLines();
 	drawSun();
 
 //begin the animation
