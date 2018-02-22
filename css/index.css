@@ -1,0 +1,49 @@
+body{ 
+	margin: 0; 
+	font-family: 'Nunito', sans-serif;
+}
+
+canvas{
+	width: 100%; 
+	height: 100% 
+}
+
+a{
+    color: #FFF008;
+}
+a:visited{
+    color: #FFF008;
+} 
+
+
+
+#loader {
+	display: table;
+	margin: 0 auto;
+}
+
+/* https://codepen.io/chrisnager/pen/yfwgE */
+@keyframes blink {50% { color: transparent }}
+.loader__dot { animation: 1s blink infinite }
+.loader__dot:nth-child(2) { animation-delay: 250ms }
+.loader__dot:nth-child(3) { animation-delay: 500ms }
+
+.playstop{
+	position:absolute;
+	top:50%;
+	left:50%;
+	height:200px;
+	width: 200px;
+	padding: 0px;
+	margin: 0px;
+	margin-left:-100px;
+	margin-top:-100px;
+	z-index: 4;
+	color: #FFF008;
+	background-color:none;
+	text-align: center;
+	border: 2px solid #FFF008;
+	border-radius: 5%;
+	opacity: 0.0;
+	display: none;
+}

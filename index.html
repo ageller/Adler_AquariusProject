@@ -1,0 +1,65 @@
+<html>
+
+	<head>
+		<title>Adler Kavli Lecture November 2017</title>
+        <!--<link rel="shortcut icon" href="icon.png">  -->
+
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Lato|Nunito|Material+Icons" rel="stylesheet">
+
+<!-- three.js resources -->		
+		<script src="resources/three.min.js"></script>
+		<script src="resources/dat.gui.js"></script>
+		<script src="resources/Detector.js"></script>
+		<script src="resources/TrackballControls.js"></script>
+		<script src="resources/KeyboardState.js"></script>
+		<script src="resources/THREEx.FullScreen.js"></script>
+		<script src="resources/THREEx.WindowResize.js"></script>
+		<script src="resources/THREE.MeshLine.js"></script>
+		<script src="resources/StereoEffect.js"></script>
+
+<!-- d3 -->
+	<script src="resources/d3.v4.10.2.min.js"></script>
+
+
+	</head>
+
+	<body>
+    	<div id="loader" style="background-color:black; position:absolute; top:0; bottom:0; left:0; right:0;" >
+			<div style="font-size:50px">
+				<span>Loading</span>
+				<span class="loader__dot">.</span>
+				<span class="loader__dot">.</span>
+				<span class="loader__dot">.</span>
+			</div>
+		</div>
+
+		<div id="stop" class="material-icons playstop" style="font-size: 200px; display:none">stop</div>
+		<div id="play" class="material-icons playstop" style="font-size: 200px; display:none">play_arrow</div>
+
+		<div id="ContentContainer" style="position: absolute; left:0px; top:0px"></div>
+
+
+
+		<!-- shaders -->
+	    <script src="shaders/vertex.glsl.js"></script>
+	    <script src="shaders/SunVertex.glsl.js"></script>
+	    <script src="shaders/coronaFragment.glsl.js"></script>
+	    <script src="shaders/SunFragment.glsl.js"></script>
+
+		<!-- the main attraction -->
+		<script src="js/utils.js"></script>
+		<script src="js/drawSun.js"></script>
+		<script src="js/drawSolarSystemPlanets.js"></script>
+		<script src="js/drawMilkyWay.js"></script>
+		<script src="js/renderAll.js"></script>
+		<script src="js/init.js"></script>
+
+
+	</body>
+
+
+
+
+</html>
