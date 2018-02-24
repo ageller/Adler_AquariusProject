@@ -63,7 +63,7 @@ function makePlanetLine( geo , color = 'white', rotation = null) {
 		opacity: params.useSSalpha,
 		//useAlphaMap: 1,
 		//alphaMap: aTex,
-		lineWidth: params.lineWidth,
+		lineWidth: params.SSlineWidth,
 		sizeAttenuation: 0,
 		depthWrite: true,
 		depthTest: true,
@@ -93,7 +93,7 @@ function makeAsteroidLine( geo , color = 'white', rotation = null) {
 		opacity: params.useASTalpha,
 		//useAlphaMap: 1,
 		//alphaMap: aTex,
-		lineWidth: params.lineWidth/2.,
+		lineWidth: params.ASTlineWidth,
 		sizeAttenuation: 0,
 		depthWrite: true,
 		depthTest: true,
@@ -131,5 +131,13 @@ function drawAsteroidOrbitLines()
 		geo = createOrbit(asteroids[i].semi_major_axis, asteroids[i].eccentricity, THREE.Math.degToRad(asteroids[i].inclination), THREE.Math.degToRad(asteroids[i].longitude_of_ascending_node), THREE.Math.degToRad(asteroids[i].argument_of_periapsis), asteroids[i].tperi, asteroids[i].period, Ntheta = 100.);
 		makeAsteroidLine( geo ,  color = 'green', rotation = SSrotation);		
 	}
+
+}
+
+function drawAquariusOrbitLine()
+{
+	// line
+	geo = createOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 100.);
+	makePlanetLine( geo ,  color = 'white', rotation = SSrotation);		
 
 }

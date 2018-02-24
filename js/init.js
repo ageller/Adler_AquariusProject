@@ -16,6 +16,7 @@ var AUfac = 206264.94195722;
 
 var planets;
 var asteroids;
+var aquarius;
 
 var orbitLines = [];
 var SunMesh;
@@ -190,11 +191,13 @@ function defineParams(){
 		this.pause = false; //toggles pausing time evolution on/off with space bar
 
 //Solar System appearance
-		this.lineWidth = 0.003;
+		this.SSlineWidth = 0.003;
 		this.SSlineTaper = 1./4.;
 		this.SSalpha = 1.;
 		this.useSSalpha = 1.;
-		this.useASTalpha = 0.3;
+		this.useASTalpha = 0.5; //transparency only works if sorted, and we won't sort these, but with thin lines...
+		this.ASTlineWidth = 0.0005;
+
 		this.coronaSize = 50.;
 		this.coronaP = 0.3;
 		this.coronaAlpha = 1.;
@@ -210,7 +213,7 @@ function defineParams(){
 		this.timeStepFac = 1.;
 		this.saveTimeStepFac = 1.;
 		this.timeStep = parseFloat(this.timeStepUnit)*parseFloat(this.timeStepFac);
-		this.Year = 2017;
+		this.Year = 2017.101; //roughly Feb 6, 2017
 
 
 
@@ -222,6 +225,7 @@ function defineParams(){
 
 			clearPlanetOrbitLines();
 			drawPlanetOrbitLines();
+			drawAquariusOrbitLine();
 
 			clearSun();
 			drawSun();
@@ -271,7 +275,11 @@ function loadData(callback){
 		d3.json("data/asteroids.json",  function(x1) {
 			asteroids = x1;
 
-			callback();
+			d3.json("data/aquarius.json",  function(x2) {
+				aquarius = x2;
+
+				callback();
+			});
 		});
 	});
 }
@@ -296,6 +304,7 @@ function WebGLStart(){
 //draw everything
 	drawInnerMilkyWay();
 	drawPlanetOrbitLines();
+	drawAquariusOrbitLine();
 	drawAsteroidOrbitLines();
 	drawSun();
 

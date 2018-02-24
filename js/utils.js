@@ -13,11 +13,12 @@ function getAllIndices(arr, val) {
 //after the data is loaded, include the buttons
 function clearloading(){
 
-    d3.select("#ContentContainer").style("visibility","visible")
+	d3.select("#ContentContainer").style("visibility","visible")
 
-    loaded = true;
-    console.log("loaded")
-    d3.select("#loader").style("display","none")
+	loaded = true;
+	console.log("loaded")
+	d3.select("#loader").style("display","none")
+	d3.select("#loaderText").style("display","none")
 
 }
 
