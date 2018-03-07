@@ -1,6 +1,6 @@
 //all global variables
 
-var container, scene, MWscene, MWInnerScene, camera, renderer, controls, effect;
+var container, scene, MWscene, MWInnerScene, camera, renderer, controls, effect, composer, capturer;
 var keyboard = new KeyboardState();
 
 var c3 = "red"
@@ -123,6 +123,9 @@ function init() {
 	effect.autoClear = false;
 	params.renderer = renderer;
 
+	//for video capture
+	composer = new THREE.EffectComposer(params.renderer);
+
 	camera.up.set(0, -1, 0);
 
 }
@@ -215,7 +218,14 @@ function defineParams(){
 		this.timeStep = parseFloat(this.timeStepUnit)*parseFloat(this.timeStepFac);
 		this.Year = 2017.101; //roughly Feb 6, 2017
 
-
+		//image and video capture
+		this.filename = "test.png";
+		this.captureWidth = 1024;
+		this.captureHeight = 1024;
+		this.captureCanvas = false;
+		this.videoFramerate = 30;
+		this.videoDuration = 2;
+		this.videoFormat = 'png';
 
 //Galaxy appearance
 		this.MWalpha = 0.7;
@@ -249,6 +259,68 @@ function defineParams(){
 			}
 		};
 
+		this.screenshot = function(){
+			var imgData, imgNode;
+			var strDownloadMime = "image/octet-stream";
+			var strMime = "image/png";
+			var screenWidth = window.innerWidth;
+			var screenHeight = window.innerHeight;
+			var aspect = screenWidth / screenHeight;
+
+			var saveFile = function (strData, filename) {
+				var link = document.createElement('a');
+				if (typeof link.download === 'string') {
+					document.body.appendChild(link); //Firefox requires the link to be in the body
+					link.download = filename;
+					link.href = strData;
+					link.click();
+					document.body.removeChild(link); //remove the link when done
+				} else {
+					location.replace(uri);
+				}
+			}
+
+
+			try {
+				//resize
+				params.renderer.setSize(params.captureWidth, params.captureHeight);
+				camera.aspect = params.captureWidth / params.captureHeight;;
+				camera.updateProjectionMatrix();
+				myRender();
+
+				//save image
+				imgData = params.renderer.domElement.toDataURL(strMime);
+				saveFile(imgData.replace(strMime, strDownloadMime), params.filename);
+
+				//back to original size
+				params.renderer.setSize(screenWidth, screenHeight);
+				camera.aspect = aspect;
+				camera.updateProjectionMatrix();
+				myRender();
+
+			} catch (e) {
+				console.log(e);
+				return;
+			}
+
+		}
+
+		this.recordVideo = function(){
+
+			params.captureCanvas = true;
+			capturer = new CCapture( { 
+				format: params.videoFormat, 
+				workersPath: 'resources/CCapture/',
+				framerate: params.videoFramerate,
+				name: params.filename,
+				timeLimit: params.videoDuration,
+				autoSaveTime: params.videoDuration,
+				verbose: true,
+			} );
+
+			capturer.start();
+
+		}
 
 	};
 
@@ -262,6 +334,17 @@ function defineGUI(){
 	gui.add( params, 'Year', 1990, 3000).listen().onChange(params.updateSolarSystem).name("Year");;
 	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
 	gui.add( params, 'timeStepFac', 0, 100 ).name("Time Step Multiplier");//.listen();
+
+	var captureGUI = gui.addFolder('Capture');
+	captureGUI.add( params, 'filename');
+	captureGUI.add( params, 'captureWidth');
+	captureGUI.add( params, 'captureHeight');
+	captureGUI.add( params, 'videoDuration');
+	captureGUI.add( params, 'videoFramerate');
+	captureGUI.add( params, 'videoFormat', {"gif":"gif", "jpg":"jpg", "png":"png"} )
+	captureGUI.add( params, 'screenshot');
+	captureGUI.add( params, 'recordVideo');
+
 
 }
 

@@ -54,6 +54,15 @@ function updateBillboards(){
 	coronaMesh.lookAt(camera.position);
 }
 
+function myRender(){
+
+	//render the scene (with the Milky Way always in the back)
+	if (params.renderer != effect) params.renderer.clear();
+	params.renderer.render( MWInnerScene, camera );
+	if (params.renderer != effect) params.renderer.clearDepth();
+	params.renderer.render( scene, camera );
+}
+
 function render() {
 	camPrev = camDist;
 	camDist = CameraDistance();
@@ -88,15 +97,29 @@ function render() {
 	}
 
 
+	myRender();
 
 
-	//render the scene (with the Milky Way always in the back)
-	if (params.renderer != effect) params.renderer.clear();
-	params.renderer.render( MWInnerScene, camera );
-	if (params.renderer != effect) params.renderer.clearDepth();
-	params.renderer.render( scene, camera );
+	if (params.captureCanvas){
+		var screenWidth = window.innerWidth;
+		var screenHeight = window.innerHeight;
+		var aspect = screenWidth / screenHeight;
+		
+		params.renderer.setSize(params.captureWidth, params.captureHeight);
+		camera.aspect = params.captureWidth / params.captureHeight;;
+		camera.updateProjectionMatrix();
+
+		myRender();
+
+		capturer.capture( params.renderer.domElement );
+
+		//restore the original
+		params.renderer.setSize(screenWidth, screenHeight);
+		camera.aspect = aspect;
+		camera.updateProjectionMatrix();
+		myRender();
 
 
-
+	}
 
 }
