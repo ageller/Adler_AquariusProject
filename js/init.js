@@ -4,7 +4,8 @@ var container, scene, MWscene, MWInnerScene, camera, renderer, controls, effect,
 var keyboard = new KeyboardState();
 
 var c3 = "red"
-var c2 = "blue"
+//var c2 = "blue"
+var c2 = "deepskyblue"
 var c1 = "orange"
 var c4 = "purple"
 var pcolors = {"Mercury":c1, "Venus":c1, "EarthMoon":c2, "Mars":c1, "Jupiter":c3, "Saturn":c3, "Uranus":c3, "Neptune":c3, "Pluto":c4}
@@ -22,6 +23,10 @@ var orbitLines = [];
 var SunMesh;
 var coronaMesh;
 var MWInnerMesh;
+var MovingCloudMesh;
+var MovingEarthMesh;
+var MovingEarthCloud;
+
 
 var SSrotation = new THREE.Vector3(THREE.Math.degToRad(-63.), 0., 0.); //solar system is inclined at 63 degrees to galactic plane
 
@@ -31,6 +36,10 @@ var iLength;
 var bbTex;
 var MWTex;
 var ESOMWTex;
+var EarthTex;
+var EarthBump;
+var EarthSpec;
+var CloudTex;
 
 var camDist = 1.;
 var camDist0 = 1.;
@@ -61,15 +70,16 @@ function init() {
 	var screenHeight = window.innerHeight;
 	var fov = 45;
 	var aspect = screenWidth / screenHeight;
-	var zmin = 0.01;
+	var zmin = 0.005;
 	var zmax = 5.e10;
 	camera = new THREE.PerspectiveCamera( fov, aspect, zmin, zmax);
 	scene.add(camera);
 	MWscene.add(camera);
 	MWInnerScene.add(camera);
 
-	camera.position.set(0,0,50); //SS view
+	camera.position.set(0,0,0); //Earth view
 
+	//camera.position.set(0,0,50); //SS view
 	//camera.position.set(0,0,1.8e10); //MW view
 
 	camDist = CameraDistance();
@@ -113,6 +123,14 @@ function init() {
 	ESOMWTex = new THREE.TextureLoader().load("textures/eso0932a.jpg" );
 	ESOMWTex.minFilter = THREE.LinearFilter;
 
+	//for Earth texture: http://planetpixelemporium.com/earth.html
+	//for Cloud texture: https://github.com/turban/webgl-earth/tree/master/images
+	//EarthTex = new THREE.TextureLoader().load("textures/2_no_clouds_4k.jpg" );
+	EarthTex = new THREE.TextureLoader().load("textures/earthmap1k.jpg" );
+	EarthBump = new THREE.TextureLoader().load("textures/earthbump1k.jpg" );
+	EarthSpec = new THREE.TextureLoader().load("textures/earthspec1k.jpg" );
+	CloudTex = new THREE.TextureLoader().load("textures/fair_clouds_4k.png" );
+	//EarthTex.minFilter = THREE.LinearFilter;
 
 	//stereo
 	effect = new THREE.StereoEffect( renderer );
@@ -195,7 +213,8 @@ function defineParams(){
 
 //Solar System appearance
 		this.SSlineWidth = 0.003;
-		this.SSlineTaper = 1./4.;
+		//this.SSlineWidth = 0.006;
+                this.SSlineTaper = 1./4.;
 		this.SSalpha = 1.;
 		this.useSSalpha = 1.;
 		this.useASTalpha = 0.5; //transparency only works if sorted, and we won't sort these, but with thin lines...
@@ -211,12 +230,20 @@ function defineParams(){
 		//factor to exagerate color (set to 1 for no exageration)
 		this.Teffac = 1.0;
 
+		//Planetary radii
+		this.earthRad = 1./23481.066;
+		this.cloudRad = this.earthRad * 1.01; 
+
 		//time controls
 		this.timeStepUnit = 0.;
 		this.timeStepFac = 1.;
 		this.saveTimeStepFac = 1.;
 		this.timeStep = parseFloat(this.timeStepUnit)*parseFloat(this.timeStepFac);
-		this.Year = 2017.101; //roughly Feb 6, 2017
+		//this.Year = 2017.101; //roughly Feb 6, 2017
+		//this.Year = 2017.10137;
+		//gets us closer to intersection, but might not be exactly correct time
+		this.Year = 2017.094; 
+		//this.Year = 2017.0939;
 
 		//image and video capture
 		this.filename = "test.png";
@@ -226,6 +253,9 @@ function defineParams(){
 		this.videoFramerate = 30;
 		this.videoDuration = 2;
 		this.videoFormat = 'png';
+
+//Earth location
+		this.EarthPos = new THREE.Vector3();
 
 //Galaxy appearance
 		this.MWalpha = 0.7;
@@ -239,6 +269,11 @@ function defineParams(){
 
 			clearSun();
 			drawSun();
+		
+			clearEarth();
+			drawEarth();
+
+
 
 		};
 	
@@ -390,6 +425,12 @@ function WebGLStart(){
 	drawAquariusOrbitLine();
 	drawAsteroidOrbitLines();
 	drawSun();
+	drawEarth();
+	PointLightSun();
+
+//always look at the Earth
+	controls.target = params.EarthPos;
+	camera.lookAt(params.EarthPos);	
 
 //begin the animation
 	animate();

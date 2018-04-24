@@ -3,10 +3,18 @@ function clearSun(){
 	SunMesh.geometry.dispose();
 	scene.remove(SunMesh);
 	coronaMesh.geometry.dispose();
-	scene.remove(coronaMesh);
+	scene.remove(coronaMesh);	
 }
 
-
+//function here for point source
+function PointLightSun()
+{
+	var light = new THREE.PointLight( 0xffffff, 1, 0, 2);
+	light.position.set(0,0,0);
+	scene.add( light );
+	//so that I can see the backside
+	scene.add(new THREE.AmbientLight(0xffffff));
+}
 
 function drawSun()
 {
