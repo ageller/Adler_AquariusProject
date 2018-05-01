@@ -54,8 +54,10 @@ function createEarthOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
 
 function makeEarth( geo , rotation = null) {
 
-	var EarthRad = params.earthRad * 100.;
-	var CloudRad = params.cloudRad * 100.;
+	var EarthRad = 1.;
+	var CloudRad = 1. * params.cloudRad/params.earthRad;
+        //rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
+        var sc = params.earthRad;
 
         var geometry = new THREE.SphereGeometry(EarthRad,32,32);
 	var EarthMaterial = new THREE.MeshPhongMaterial( {
@@ -75,6 +77,7 @@ function makeEarth( geo , rotation = null) {
                 mesh.rotation.z = THREE.Math.degToRad(0.); 
         }
         mesh.position.set(geo[0],geo[1],geo[2]);
+        mesh.scale.set(sc, sc, sc);
 	//scene.add( mesh );
 	MovingEarthMesh = mesh;
 
@@ -93,6 +96,8 @@ function makeEarth( geo , rotation = null) {
                 mesh.rotation.z = THREE.Math.degToRad(0.);
 	}
         mesh.position.set(geo[0],geo[1],geo[2]);
+        mesh.scale.set(sc, sc, sc);
+
 	MovingCloudMesh = mesh;
         //scene.add(MovingCloudMesh);
 

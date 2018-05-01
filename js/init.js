@@ -70,7 +70,7 @@ function init() {
 	var screenHeight = window.innerHeight;
 	var fov = 45;
 	var aspect = screenWidth / screenHeight;
-	var zmin = 0.005;
+	var zmin = 0.0001;
 	var zmax = 5.e10;
 	camera = new THREE.PerspectiveCamera( fov, aspect, zmin, zmax);
 	scene.add(camera);
