@@ -20,13 +20,35 @@ var asteroids;
 var aquarius;
 
 var orbitLines = [];
+var MoonOrbitLines = [];
 var SunMesh;
 var coronaMesh;
 var MWInnerMesh;
 var MovingCloudMesh;
 var MovingEarthMesh;
+var MovingMoonMesh;
 var MovingEarthCloud;
-
+var MovingJupiterMesh;
+var MovingJupiter;
+var MovingMarsMesh;
+var MovingMars;
+var MovingVenusMesh;
+var MovingVenusCloudMesh;
+var MovingVenusCloud;
+var MovingMercuryMesh;
+var MovingMercury;
+var MovingSaturnMesh;
+var MovingSaturnRingMesh;
+var MovingSaturn;
+var MovingUranusMesh;
+var MovingUranusRingMesh;
+var MovingUranus;
+var MovingNeptuneMesh;
+var MovingNeptune;
+var MovingPlutoMesh;
+var MovingPluto;
+var MovingAquariusMesh;
+var MovingAquarius;
 
 var SSrotation = new THREE.Vector3(THREE.Math.degToRad(-63.), 0., 0.); //solar system is inclined at 63 degrees to galactic plane
 
@@ -40,7 +62,19 @@ var EarthTex;
 var EarthBump;
 var EarthSpec;
 var CloudTex;
-
+var JupiterTex;
+var MarsTex;
+var VenusTex;
+var VenusCloudTex;
+var MercuryTex;
+var SaturnTex;
+var SaturnRingTex;
+var UranusTex;
+var UranusRingTex;
+var NeptuneTex;
+var PlutoTex;
+var AquariusTex;
+var MoonTex;
 var camDist = 1.;
 var camDist0 = 1.;
 var camPrev = 1.;
@@ -70,7 +104,8 @@ function init() {
 	var screenHeight = window.innerHeight;
 	var fov = 45;
 	var aspect = screenWidth / screenHeight;
-	var zmin = 0.0001;
+	//var zmin = 0.005; //minimum distance from object
+	var zmin = 0.00001;
 	var zmax = 5.e10;
 	camera = new THREE.PerspectiveCamera( fov, aspect, zmin, zmax);
 	scene.add(camera);
@@ -123,14 +158,38 @@ function init() {
 	ESOMWTex = new THREE.TextureLoader().load("textures/eso0932a.jpg" );
 	ESOMWTex.minFilter = THREE.LinearFilter;
 
-	//for Earth texture: http://planetpixelemporium.com/earth.html
+	//for Mercury texture: https://astrogeology.usgs.gov/search/map/Mercury/Messenger/Global/Mercury_MESSENGER_MDIS_Basemap_EnhancedColor_Mosaic_Global_665m?p=1&pb=1#downloads - actual data!
+	//for Venus surface and cloud texture: https://maps.jpl.nasa.gov/venus.html - actual data!
+	//for Earth, bump, spec, texture: https://www.solarsystemscope.com/textures/
 	//for Cloud texture: https://github.com/turban/webgl-earth/tree/master/images
+	//for Moon texture: https://astrogeology.usgs.gov/search/map/Moon/Clementine/UVVIS/Lunar_Clementine_UVVIS_750nm_Global_Mosaic_118m_v2 - actual data!
+	//for Mars texture: https://maps.jpl.nasa.gov/mars.html - actual data!
+	//for Jupiter texture: https://svs.gsfc.nasa.gov/12021 - actual data!
+	//for Saturn texture: https://www.solarsystemscope.com/textures/ - artist, based on Cassini image with hexagon at pole 
+	//for Saturn rings: https://alpha-element.deviantart.com/art/Stock-Image-Saturn-Rings-393767006 - artist
+	//for Uranus texture: http://planetpixelemporium.com/uranus.html - artist 
+	//for Uranus rings: https://jcpag2010.deviantart.com/art/Uranus-Rings-558779857 - artist
+	//for Neptune texture: https://www.solarsystemscope.com/textures/ - artist
+	//for Pluto texture: https://www.nasa.gov/image-feature/pluto-global-color-map - actual data! black part is missing data
+	//for Aquarius texture: http://planetpixelemporium.com/mars.html - artist based on Mars moon Deimos
+	MercuryTex = new THREE.TextureLoader().load("textures/Mercury_MESSENGER_MDIS_Basemap_EnhancedColor_Mosaic_Global_1024.jpg" );
+	VenusTex = new THREE.TextureLoader().load("textures/venus_surface_nasa.jpg" );
+	VenusCloudTex = new THREE.TextureLoader().load("textures/venus_clouds_nasa.jpg" );
 	//EarthTex = new THREE.TextureLoader().load("textures/2_no_clouds_4k.jpg" );
-	EarthTex = new THREE.TextureLoader().load("textures/earthmap1k.jpg" );
-	EarthBump = new THREE.TextureLoader().load("textures/earthbump1k.jpg" );
-	EarthSpec = new THREE.TextureLoader().load("textures/earthspec1k.jpg" );
+	EarthTex = new THREE.TextureLoader().load("textures/8k_earth_daymap.jpg" );
+	EarthBump = new THREE.TextureLoader().load("textures/8k_earth_normal_map.tif" );
+	EarthSpec = new THREE.TextureLoader().load("textures/8k_earth_specular_map.tif" );
 	CloudTex = new THREE.TextureLoader().load("textures/fair_clouds_4k.png" );
-	//EarthTex.minFilter = THREE.LinearFilter;
+	MoonTex = new THREE.TextureLoader().load("textures/Lunar_Clementine_UVVIS_750nm_Global_Mosaic_1024.jpg" );
+	MarsTex = new THREE.TextureLoader().load("textures/mars_nasa.jpg" );
+	JupiterTex = new THREE.TextureLoader().load("textures/Hubble_Jupiter_color_global_map_2015a.jpg" );
+	SaturnTex = new THREE.TextureLoader().load("textures/2k_saturn_sss.jpg" );
+	SaturnRingTex = new THREE.TextureLoader().load("textures/saturn_rings_concentric.png" );
+	UranusTex = new THREE.TextureLoader().load("textures/uranusmap.jpg" );
+	UranusRingTex = new THREE.TextureLoader().load("textures/uranus_rings_concentric.png" );
+	NeptuneTex = new THREE.TextureLoader().load("textures/2k_neptune.jpg" );
+	PlutoTex = new THREE.TextureLoader().load("textures/pluto_color_mapmosaic.jpg" );
+	AquariusTex = new THREE.TextureLoader().load("textures/deimosbump.jpg" );
 
 	//stereo
 	effect = new THREE.StereoEffect( renderer );
@@ -233,6 +292,8 @@ function defineParams(){
 		//Planetary radii
 		this.earthRad = 1./23481.066;
 		this.cloudRad = this.earthRad * 1.01; 
+		this.jupiterRad = this.earthRad * 11.209;
+		this.marsRad = this.earthRad * 0.53;
 
 		//time controls
 		this.timeStepUnit = 0.;
@@ -273,7 +334,35 @@ function defineParams(){
 			clearEarth();
 			drawEarth();
 
+			clearJupiter();
+			drawJupiter();
 
+			clearMars();
+			drawMars();
+	
+			clearVenus();
+			drawVenus();
+
+			clearMercury();
+			drawMercury();
+
+			clearSaturn();
+			drawSaturn();
+
+			clearUranus();
+			drawUranus();
+
+			clearNeptune();
+			drawNeptune();
+
+			clearPluto();
+			drawPluto();
+		
+			clearAquarius();
+			drawAquarius();
+
+			clearMoonOrbitLines();
+			drawMoonOrbitLines();
 
 		};
 	
@@ -366,7 +455,8 @@ function defineParams(){
 function defineGUI(){
 
 	gui = new dat.GUI({ width: 450 } )
-	gui.add( params, 'Year', 1990, 3000).listen().onChange(params.updateSolarSystem).name("Year");;
+	//gui.add( params, 'Year', 1990, 3000).listen().onChange(params.updateSolarSystem).name("Year");;
+	gui.add( params, 'Year', 1990, 2018).listen().onChange(params.updateSolarSystem).name("Year");;
 	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
 	gui.add( params, 'timeStepFac', 0, 100 ).name("Time Step Multiplier");//.listen();
 
@@ -426,6 +516,16 @@ function WebGLStart(){
 	drawAsteroidOrbitLines();
 	drawSun();
 	drawEarth();
+	drawJupiter();
+	drawMars();
+	drawVenus();
+	drawMercury();
+	drawSaturn();
+	drawUranus();
+	drawNeptune();
+	drawPluto();
+	drawAquarius();
+	drawMoonOrbitLines();
 	PointLightSun();
 
 //always look at the Earth
