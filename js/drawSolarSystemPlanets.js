@@ -115,8 +115,8 @@ function makeAsteroidLine( geo , color = 'white', rotation = null) {
 function drawPlanetOrbitLines()
 {
 	// line
-	for (var i=0; i<planets.length; i++){
-		geo = createOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
+	for (var i=0; i<9; i++){
+		geo = createOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 1000.);
 		makePlanetLine( geo ,  color = pcolors[planets[i].name], rotation = SSrotation);		
 	}
 
@@ -137,7 +137,7 @@ function drawAsteroidOrbitLines()
 function drawAquariusOrbitLine()
 {
 	// line
-	geo = createOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 100.);
+	geo = createOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 1000.);
 	makePlanetLine( geo ,  color = 'white', rotation = SSrotation);		
 
 }
