@@ -82,6 +82,8 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 	MovingAquarius.add(MovingAquariusMesh);
 	scene.add(MovingAquarius);
 
+        scene.updateMatrixWorld(true);
+        params.AquariusPos.setFromMatrixPosition( MovingAquariusMesh.matrixWorld );
 }
 
 

@@ -102,6 +102,8 @@ function makeVenus( geo, tperi, day, radius, tilt, rotation = null) {
 	MovingVenusCloud.add(MovingVenusCloudMesh);
 	scene.add(MovingVenusCloud);
 
+        scene.updateMatrixWorld(true);
+        params.VenusPos.setFromMatrixPosition( MovingVenusMesh.matrixWorld );
 }
 
 

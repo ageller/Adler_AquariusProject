@@ -82,7 +82,8 @@ function makeNeptune( geo, tperi, day, radius, tilt, rotation = null) {
 	MovingNeptune.add(MovingNeptuneMesh);
 	scene.add(MovingNeptune);
 
-
+        scene.updateMatrixWorld(true);
+        params.NeptunePos.setFromMatrixPosition( MovingNeptuneMesh.matrixWorld );
 }
 
 

@@ -315,11 +315,36 @@ function defineParams(){
 		this.videoDuration = 2;
 		this.videoFormat = 'png';
 
-//Earth location
+//Planet locations
+		this.SunPos = new THREE.Vector3();
+		this.MercuryPos = new THREE.Vector3();
+		this.VenusPos = new THREE.Vector3();
 		this.EarthPos = new THREE.Vector3();
-
+		this.MoonPos = new THREE.Vector3();
+		this.AquariusPos = new THREE.Vector3();
+		this.MarsPos = new THREE.Vector3();
+		this.JupiterPos = new THREE.Vector3();
+		this.SaturnPos = new THREE.Vector3();
+		this.UranusPos = new THREE.Vector3();
+		this.NeptunePos = new THREE.Vector3();
+		this.PlutoPos = new THREE.Vector3();
+		this.PlanetsPos = { 0:this.MercuryPos,
+							1:this.VenusPos,
+							2.:this.EarthPos,
+							3:this.MarsPos,
+							4:this.JupiterPos,
+							5:this.SaturnPos,
+							6:this.UranusPos,
+							7:this.NeptunePos,
+							8:this.PlutoPos,
+							9:this.MoonPos,
+							10:this.AquariusPos,
+							100:this.SunPos, }
 //Galaxy appearance
 		this.MWalpha = 0.7;
+
+//Camera target (number)
+		this.cameraTarget = 2 //Earth
 
 //some functions
 		this.updateSolarSystem = function() {
@@ -446,6 +471,12 @@ function defineParams(){
 
 		}
 
+		this.updateCameraTarget = function(){
+
+			controls.target = params.PlanetsPos[params.cameraTarget];
+			camera.lookAt(params.PlanetsPos[params.cameraTarget]);	
+		}
+
 	};
 
 	params = new ParamsInit();
@@ -458,7 +489,8 @@ function defineGUI(){
 	//gui.add( params, 'Year', 1990, 3000).listen().onChange(params.updateSolarSystem).name("Year");;
 	gui.add( params, 'Year', 1990, 2018).listen().onChange(params.updateSolarSystem).name("Year");;
 	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
-	gui.add( params, 'timeStepFac', 0, 100 ).name("Time Step Multiplier");//.listen();
+	gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
+	gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8 } ).onChange(params.updateCameraTarget).name("Camera Target");
 
 	var captureGUI = gui.addFolder('Capture');
 	captureGUI.add( params, 'filename');
@@ -528,7 +560,7 @@ function WebGLStart(){
 	drawMoonOrbitLines();
 	PointLightSun();
 
-//always look at the Earth
+//begin looking at the Earth
 	controls.target = params.EarthPos;
 	camera.lookAt(params.EarthPos);	
 

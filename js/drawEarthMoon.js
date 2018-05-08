@@ -143,7 +143,7 @@ function makeEarth( geo, tperi, day, radius, tilt, rotation = null) {
 
         scene.updateMatrixWorld(true);
         params.EarthPos.setFromMatrixPosition( MovingEarthMesh.matrixWorld );
-
+        params.MoonPos.setFromMatrixPosition( MovingMoonMesh.matrixWorld );
 
 }
 

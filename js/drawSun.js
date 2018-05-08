@@ -82,5 +82,7 @@ function drawSun()
 
 	coronaMesh = mesh;
 
+    scene.updateMatrixWorld(true);
+    params.SunPos.setFromMatrixPosition( SunMesh.matrixWorld );
 
 }

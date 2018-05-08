@@ -83,7 +83,8 @@ function makePluto( geo, tperi, day, radius, tilt, rotation = null) {
 	MovingPluto.add(MovingPlutoMesh);
 	scene.add(MovingPluto);
 
-
+        scene.updateMatrixWorld(true);
+        params.PlutoPos.setFromMatrixPosition( MovingPlutoMesh.matrixWorld );
 }
 
 

@@ -80,6 +80,8 @@ function makeMercury( geo, tperi, day, radius, tilt, rotation = null) {
 	MovingMercury.add(MovingMercuryMesh);
 	scene.add(MovingMercury);
 
+        scene.updateMatrixWorld(true);
+        params.MercuryPos.setFromMatrixPosition( MovingMercuryMesh.matrixWorld );
 }
 
 

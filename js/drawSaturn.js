@@ -106,6 +106,8 @@ function makeSaturn( geo, tperi, day, radius, tilt, rotation = null) {
 	MovingSaturn.add(MovingSaturnRingMesh);
 	scene.add(MovingSaturn);
 
+        scene.updateMatrixWorld(true);
+        params.SaturnPos.setFromMatrixPosition( MovingSaturnMesh.matrixWorld );
 }
 
 

@@ -101,6 +101,8 @@ function makeUranus( geo, tperi, day, radius, tilt, rotation = null) {
 	MovingUranus.add(MovingUranusRingMesh);
 	scene.add(MovingUranus);
 
+        scene.updateMatrixWorld(true);
+        params.UranusPos.setFromMatrixPosition( MovingUranusMesh.matrixWorld );
 }
 
 

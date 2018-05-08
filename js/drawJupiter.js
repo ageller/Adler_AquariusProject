@@ -82,6 +82,9 @@ function makeJupiter( geo, tperi, day, radius, tilt, rotation = null) {
 	MovingJupiter.add(MovingJupiterMesh);
 	scene.add(MovingJupiter);
 
+        scene.updateMatrixWorld(true);
+        params.JupiterPos.setFromMatrixPosition( MovingJupiterMesh.matrixWorld );
+
 }
 
 

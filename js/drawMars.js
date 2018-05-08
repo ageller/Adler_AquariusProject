@@ -82,6 +82,8 @@ function makeMars( geo, tperi, day, radius, tilt, rotation = null) {
 	MovingMars.add(MovingMarsMesh);
 	scene.add(MovingMars);
 
+        scene.updateMatrixWorld(true);
+        params.MarsPos.setFromMatrixPosition( MovingMarsMesh.matrixWorld );
 }
 
 
