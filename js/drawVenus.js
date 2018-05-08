@@ -1,9 +1,8 @@
 
 function clearVenus(){
 
-        MovingVenusCloud.remove(MovingVenusMesh);
-	MovingVenusCloud.remove(MovingVenusCloudMesh);
-        scene.remove(MovingVenusCloud);
+        MovingVenus.remove(MovingVenusMesh);
+        scene.remove(MovingVenus);
 }
 
 
@@ -38,6 +37,7 @@ function createVenusOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
         
         var E = 0.0;
 	i=0;
+	E = (i*dTheta + 2.*phase*Math.PI) % (2.*Math.PI);
 	pos = []
 	for (j=0; j<3; j++){
 		pos.push(semi * (Math.cos(E) - ecc) * P[j] + semi * Math.sqrt(1.0 - ecc * ecc) * Math.sin(E) * Q[j])                
@@ -48,25 +48,23 @@ function createVenusOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
 function makeVenus( geo, tperi, day, radius, tilt, rotation = null) {
 
 	var rotPeriodVenus = day;
-	var rotPeriodCloud = rotPeriodVenus/1.3;
 	var JDtoday = JD0 + (params.Year - 1990.);
         var tdiff = JDtoday - tperi;
         var phaseVenus = (tdiff % rotPeriodVenus)/rotPeriodVenus;
-	var phaseCloud = (tdiff % rotPeriodCloud)/rotPeriodCloud;
 
 	var VenusRad = radius;
-	var CloudRad = VenusRad * 1.01;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
         var sc = params.earthRad;
 
         var geometry = new THREE.SphereGeometry(VenusRad,32,32);
 	var VenusMaterial = new THREE.MeshPhongMaterial( {
-                map: VenusTex,
+                map: VenusCloudTex,
         } );
+
 
         var mesh = new THREE.Mesh( geometry, VenusMaterial );
         if (rotation != null){
-                mesh.rotation.x = THREE.Math.degToRad(90.+tilt); // orient map
+                mesh.rotation.x = THREE.Math.degToRad(90.)+tilt; // orient map
 		mesh.rotation.y = (2.*phaseVenus*Math.PI) % (2.*Math.PI); //rotate Venus around axis
                 mesh.rotation.z = THREE.Math.degToRad(0.); 
         }
@@ -74,35 +72,17 @@ function makeVenus( geo, tperi, day, radius, tilt, rotation = null) {
 	mesh.scale.set(sc, sc, sc);
 	MovingVenusMesh = mesh;
 
-	//make Venus cloud layer, leave a chunk of surface exposed
-	var geometry = new THREE.SphereGeometry( CloudRad, 32, 32, 0, Math.PI*1.5, 0 ,Math.PI)
-        var CloudMaterial = new THREE.MeshPhongMaterial( {
-                map: VenusCloudTex,
-                transparent: true,
-        } );
 
-        var mesh = new THREE.Mesh( geometry, CloudMaterial );
-        if (rotation != null){
-                mesh.rotation.x = THREE.Math.degToRad(90.+tilt); // orient map and tilt Cloud
-                mesh.rotation.y = (2.*phaseCloud*Math.PI) % (2.*Math.PI); //rotate Cloud around axis
-                mesh.rotation.z = THREE.Math.degToRad(0.);
-        }
-        mesh.position.set(geo[0],geo[1],geo[2]);
-        mesh.scale.set(sc, sc, sc);
-        MovingVenusCloudMesh = mesh;
-
-
-	MovingVenusCloud = new THREE.Group(); // group Venus mesh, then orient orbit 
+	MovingVenus = new THREE.Group(); // group Venus mesh, then orient orbit 
 	if (rotation != null){
-                MovingVenusCloud.rotation.x = rotation.x;
-                MovingVenusCloud.rotation.y = rotation.y;
-                MovingVenusCloud.rotation.z = rotation.z;
+                MovingVenus.rotation.x = rotation.x;
+                MovingVenus.rotation.y = rotation.y;
+                MovingVenus.rotation.z = rotation.z;
         }
-	MovingVenusCloud.add(MovingVenusMesh);
-	MovingVenusCloud.add(MovingVenusCloudMesh);
-	scene.add(MovingVenusCloud);
+	MovingVenus.add(MovingVenusMesh);
+	scene.add(MovingVenus);
 
-        scene.updateMatrixWorld(true);
+	scene.updateMatrixWorld(true);
         params.VenusPos.setFromMatrixPosition( MovingVenusMesh.matrixWorld );
 }
 
