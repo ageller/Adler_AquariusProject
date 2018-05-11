@@ -353,7 +353,6 @@ function defineParams(){
 
 			clearPlanetOrbitLines();
 			drawPlanetOrbitLines();
-			drawAquariusOrbitLine();
 
 			clearSun();
 			drawSun();
@@ -544,9 +543,9 @@ function WebGLStart(){
 	}
 
 //draw everything
+	loadAquarius();
 	drawInnerMilkyWay();
 	drawPlanetOrbitLines();
-	drawAquariusOrbitLine();
 	drawAsteroidOrbitLines();
 	drawSun();
 	drawEarth();
@@ -558,9 +557,9 @@ function WebGLStart(){
 	drawUranus();
 	drawNeptune();
 	drawPluto();
-	drawAquarius();
 	drawMoonOrbitLines();
 	PointLightSun();
+
 
 //begin looking at the Earth
 	controls.target = params.EarthPos;

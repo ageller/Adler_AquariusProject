@@ -57,12 +57,25 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
 	var sc = params.earthRad;
 
-	var geometry = new THREE.SphereGeometry(AquariusRad,32,32);
-	var AquariusMaterial = new THREE.MeshPhongMaterial( {
-		map: AquariusTex,
-	} );
+	MovingAquariusMesh.position.set(geo[0],geo[1],geo[2]);
+	MovingAquariusMesh.scale.set(sc, sc, sc);
 
-	//from https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj.html
+	MovingAquarius = new THREE.Group(); // group Aquarius mesh, then orient orbit 
+	if (rotation != null){
+		MovingAquarius.rotation.x = rotation.x;
+		MovingAquarius.rotation.y = rotation.y;
+		MovingAquarius.rotation.z = rotation.z;
+	}
+	MovingAquarius.add(MovingAquariusMesh);
+	scene.add(MovingAquarius);
+
+	scene.updateMatrixWorld(true);
+	params.AquariusPos.setFromMatrixPosition( MovingAquariusMesh.matrixWorld );
+}
+
+function loadAquarius()
+{
+		//from https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj.html
 	var manager = new THREE.LoadingManager();
 	manager.onProgress = function ( item, loaded, total ) {
 		console.log( item, loaded, total );
@@ -72,6 +85,7 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 			var percentComplete = xhr.loaded / xhr.total * 100;
 			console.log( Math.round(percentComplete, 2) + '% downloaded' );
 		}
+
 	};
 	var onError = function ( xhr ) {
 	};	
@@ -84,31 +98,13 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 				child.material.map = texture;
 			}
 		} );
-
-		object.position.set(geo[0],geo[1],geo[2]);
-
-		object.scale.set(sc, sc, sc);
 		
 		MovingAquariusMesh = object;
+		drawAquarius();
 
-		MovingAquarius = new THREE.Group(); // group Aquarius mesh, then orient orbit 
-		if (rotation != null){
-			MovingAquarius.rotation.x = rotation.x;
-			MovingAquarius.rotation.y = rotation.y;
-			MovingAquarius.rotation.z = rotation.z;
-		}
-		MovingAquarius.add(MovingAquariusMesh);
-		scene.add(MovingAquarius);
-
-		scene.updateMatrixWorld(true);
-		params.AquariusPos.setFromMatrixPosition( MovingAquariusMesh.matrixWorld );
 
 	}, onProgress, onError );
-
-				
-
 }
-
 
 function drawAquarius()
 {
