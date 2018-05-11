@@ -113,8 +113,9 @@ function init() {
 	MWscene.add(camera);
 	MWInnerScene.add(camera);
 
-	camera.position.set(0,0,0); //Earth view
-
+	camera.position.set(5,0,5); //adjusted starting postion
+	
+	//camera.position.set(0,0,0); //Earth view
 	//camera.position.set(0,0,50); //SS view
 	//camera.position.set(0,0,1.8e10); //MW view
 
@@ -204,7 +205,7 @@ function init() {
 	//for video capture
 	composer = new THREE.EffectComposer(params.renderer);
 
-	camera.up.set(0, -1, 0);
+	camera.up.set(0, 1, 0); //flipped orientation of up, changed -1 to 1
 
 }
 //to allow me to disable parts of the gui
