@@ -99,6 +99,7 @@ function moveMercury()
 	var i = 0;
 	geo = createMercuryOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
 	MovingMercuryMesh.position.set(geo[0],geo[1],geo[2]);
+	scene.updateMatrixWorld(true);
 	params.MercuryPos.setFromMatrixPosition( MovingMercuryMesh.matrixWorld );
 
 }
