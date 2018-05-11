@@ -369,8 +369,7 @@ function defineParams(){
 			clearVenus();
 			drawVenus();
 
-			clearMercury();
-			drawMercury();
+			moveMercury();
 
 			clearSaturn();
 			drawSaturn();
