@@ -95,3 +95,25 @@ function drawNeptune()
 	makeNeptune( geo, planets[i].tperi, planets[i].day, planets[i].radius, planets[i].tilt, rotation = SSrotation);	
 
 }
+
+function moveNeptune()
+{
+        var i = 7;
+
+        var rotPeriodNeptune = planets[i].day;
+        var JDtoday = JD0 + (params.Year - 1990.);
+        var tdiff = JDtoday - planets[i].tperi;
+        var phaseNeptune = (tdiff % rotPeriodNeptune)/rotPeriodNeptune;
+
+        geo = createNeptuneOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
+
+        //set position
+        MovingNeptuneMesh.position.set(geo[0],geo[1],geo[2]);
+
+        //set rotation of planet
+        MovingNeptuneMesh.rotation.y = (2.*phaseNeptune*Math.PI) % (2.*Math.PI); //rotate Neptune around axis
+
+        scene.updateMatrixWorld(true);
+        params.NeptunePos.setFromMatrixPosition( MovingNeptuneMesh.matrixWorld );
+
+}

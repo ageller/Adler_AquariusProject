@@ -47,7 +47,7 @@ function createMercuryOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.
 
 function makeMercury( geo, tperi, day, radius, tilt, rotation = null) {
 
-	var rotPeriodMercury = day;
+	var rotPeriodMercury = day/1000.;
 	var JDtoday = JD0 + (params.Year - 1990.);
 	var tdiff = JDtoday - tperi;
 	var phaseMercury = (tdiff % rotPeriodMercury)/rotPeriodMercury;
@@ -97,8 +97,20 @@ function drawMercury()
 function moveMercury()
 {
 	var i = 0;
+
+	var rotPeriodMercury = planets[i].day;
+        var JDtoday = JD0 + (params.Year - 1990.);
+        var tdiff = JDtoday - planets[i].tperi;
+        var phaseMercury = (tdiff % rotPeriodMercury)/rotPeriodMercury;
+
 	geo = createMercuryOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
+	
+	//set position
 	MovingMercuryMesh.position.set(geo[0],geo[1],geo[2]);
+
+	//set rotation of planet
+	MovingMercuryMesh.rotation.y = (2.*phaseMercury*Math.PI) % (2.*Math.PI); //rotate Mercury around axis
+
 	scene.updateMatrixWorld(true);
 	params.MercuryPos.setFromMatrixPosition( MovingMercuryMesh.matrixWorld );
 

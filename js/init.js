@@ -353,38 +353,48 @@ function defineParams(){
 
 			clearPlanetOrbitLines();
 			drawPlanetOrbitLines();
+			drawAquariusOrbitLine();
 
 			clearSun();
 			drawSun();
 		
-			clearEarth();
-			drawEarth();
+			//clearEarth();
+			//drawEarth();
+			moveEarthMoon();
 
-			clearJupiter();
-			drawJupiter();
+			//clearJupiter();
+			//drawJupiter();
+			moveJupiter();
 
-			clearMars();
-			drawMars();
-	
-			clearVenus();
-			drawVenus();
+			//clearMars();
+			//drawMars();
+			moveMars();	
+
+			//clearVenus();
+			//drawVenus();
+			moveVenus();
 
 			moveMercury();
 
-			clearSaturn();
-			drawSaturn();
+			//clearSaturn();
+			//drawSaturn();
+			moveSaturn();
 
-			clearUranus();
-			drawUranus();
+			//clearUranus();
+			//drawUranus();
+			moveUranus();
 
-			clearNeptune();
-			drawNeptune();
+			//clearNeptune();
+			//drawNeptune();
+			moveNeptune();
 
-			clearPluto();
-			drawPluto();
-		
-			clearAquarius();
-			drawAquarius();
+			//clearPluto();
+			//drawPluto();
+			movePluto();		
+
+			//clearAquarius();
+			//drawAquarius();
+			moveAquarius();
 
 			clearMoonOrbitLines();
 			drawMoonOrbitLines();
@@ -545,6 +555,7 @@ function WebGLStart(){
 	loadAquarius();
 	drawInnerMilkyWay();
 	drawPlanetOrbitLines();
+	drawAquariusOrbitLine();
 	drawAsteroidOrbitLines();
 	drawSun();
 	drawEarth();

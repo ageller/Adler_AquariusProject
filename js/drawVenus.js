@@ -95,3 +95,25 @@ function drawVenus()
 	makeVenus( geo, planets[i].tperi, planets[i].day, planets[i].radius, planets[i].tilt, rotation = SSrotation);	
 
 }
+
+function moveVenus()
+{
+        var i = 1;
+	
+	var rotPeriodVenus = planets[i].day;
+        var JDtoday = JD0 + (params.Year - 1990.);
+        var tdiff = JDtoday - planets[i].tperi;
+        var phaseVenus = (tdiff % rotPeriodVenus)/rotPeriodVenus;
+
+        geo = createVenusOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
+
+	//set position
+        MovingVenusMesh.position.set(geo[0],geo[1],geo[2]);
+
+	//set rotation of planet
+        MovingVenusMesh.rotation.y = (2.*phaseVenus*Math.PI) % (2.*Math.PI); //rotate Venus around axis
+	
+        scene.updateMatrixWorld(true);
+        params.VenusPos.setFromMatrixPosition( MovingVenusMesh.matrixWorld );
+
+}

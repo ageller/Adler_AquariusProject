@@ -95,3 +95,25 @@ function drawMars()
 	makeMars( geo, planets[i].tperi, planets[i].day, planets[i].radius, planets[i].tilt, rotation = SSrotation);	
 
 }
+
+function moveMars()
+{
+        var i = 3;
+
+        var rotPeriodMars = planets[i].day;
+        var JDtoday = JD0 + (params.Year - 1990.);
+        var tdiff = JDtoday - planets[i].tperi;
+        var phaseMars = (tdiff % rotPeriodMars)/rotPeriodMars;
+
+        geo = createMarsOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
+
+        //set position
+        MovingMarsMesh.position.set(geo[0],geo[1],geo[2]);
+
+        //set rotation of planet
+        MovingMarsMesh.rotation.y = (2.*phaseMars*Math.PI) % (2.*Math.PI); //rotate Mars around axis
+
+        scene.updateMatrixWorld(true);
+        params.MarsPos.setFromMatrixPosition( MovingMarsMesh.matrixWorld );
+
+}

@@ -114,3 +114,27 @@ function drawUranus()
 	makeUranus( geo, planets[i].tperi, planets[i].day, planets[i].radius, planets[i].tilt, rotation = SSrotation);	
 
 }
+
+function moveUranus()
+{
+        var i = 6;
+
+        var rotPeriodUranus = planets[i].day;
+        var JDtoday = JD0 + (params.Year - 1990.);
+        var tdiff = JDtoday - planets[i].tperi;
+        var phaseUranus = (tdiff % rotPeriodUranus)/rotPeriodUranus;
+
+        geo = createUranusOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
+
+        //set position
+        MovingUranusMesh.position.set(geo[0],geo[1],geo[2]);
+        MovingUranusRingMesh.position.set(geo[0],geo[1],geo[2]);
+
+        //set rotation of planet
+        MovingUranusMesh.rotation.y = (2.*phaseUranus*Math.PI) % (2.*Math.PI); //rotate Uranus around axis
+        MovingUranusRingMesh.rotation.z = (2.*phaseUranus*Math.PI) % (2.*Math.PI); //this rotates rings at same rate as planet
+
+        scene.updateMatrixWorld(true);
+        params.UranusPos.setFromMatrixPosition( MovingUranusMesh.matrixWorld );
+
+}

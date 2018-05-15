@@ -8,11 +8,11 @@ function clearMoonOrbitLines() {
 }
 
 
-function createMoonOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
+function createMoonOrbits(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
 //in this calculation the orbit line will start at peri
 //but I'd like to move that so that it starts at roughly the correct spot for the given planet at the given time
         var JDtoday = JD0 + (params.Year - 1990.);
-        var tdiff = JDtoday - tperi;
+        var tdiff = JDtoday - tperi - 0.025; //fiddle to get moon in correct spot
         var phase = (tdiff % period)/period;
 
         var i,j;
@@ -96,7 +96,7 @@ function makeMoonLine( geo , color = 'grey', rotation = null, offset = null) {
 function drawMoonOrbitLines()
 {
 	var i1 = 9;
-	geo = createMoonOrbit(planets[i1].semi_major_axis, planets[i1].eccentricity, THREE.Math.degToRad(planets[i1].inclination), THREE.Math.degToRad(planets[i1].longitude_of_ascending_node), THREE.Math.degToRad(planets[i1].argument_of_periapsis), planets[i1].tperi, planets[i1].period, Ntheta = 1000.);
+	geo = createMoonOrbits(planets[i1].semi_major_axis, planets[i1].eccentricity, THREE.Math.degToRad(planets[i1].inclination), THREE.Math.degToRad(planets[i1].longitude_of_ascending_node), THREE.Math.degToRad(planets[i1].argument_of_periapsis), planets[i1].tperi, planets[i1].period, Ntheta = 1000.);
 	makeMoonLine( geo ,  color = 'grey', rotation = SSrotation, offset = params.PlanetsPos[2]); //position 2 is for Earth
 
 }
