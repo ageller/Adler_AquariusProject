@@ -47,7 +47,6 @@ function update(time){
 
 	SunMesh.material.uniforms.cameraCenter.value = camera.position;
 
-
 }
 
 function updateBillboards(){
