@@ -52,7 +52,7 @@ function makeNeptune( geo, tperi, day, radius, tilt, rotation = null) {
         var tdiff = JDtoday - tperi;
         var phaseNeptune = (tdiff % rotPeriodNeptune)/rotPeriodNeptune;
 
-	var NeptuneRad = radius;
+	var NeptuneRad = radius * params.planetScale;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
         var sc = params.earthRad;
 

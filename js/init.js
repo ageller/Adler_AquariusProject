@@ -108,15 +108,15 @@ function init() {
 	var fov = 45;
 	var aspect = screenWidth / screenHeight;
 	//var zmin = 0.005; //minimum distance from object
-	var zmin = 0.00001;
+	var zmin = 0.000001;
 	var zmax = 5.e10;
 	camera = new THREE.PerspectiveCamera( fov, aspect, zmin, zmax);
 	scene.add(camera);
 	MWscene.add(camera);
 	MWInnerScene.add(camera);
 
-	camera.position.set(5,0,5); //adjusted starting postion
-	
+	camera.position.set(10.316805259726525,2.6445350439636446,9.955315659418815); //about 15 AU out
+	//camera.position.set(5,0,5); //partial SS view
 	//camera.position.set(0,0,0); //Earth view
 	//camera.position.set(0,0,50); //SS view
 	//camera.position.set(0,0,1.8e10); //MW view
@@ -282,7 +282,9 @@ function defineParams(){
 		this.SSalpha = 1.;
 		this.useSSalpha = 1.;
 		this.useASTalpha = 0.5; //transparency only works if sorted, and we won't sort these, but with thin lines...
-		this.ASTlineWidth = 0.0005;
+		//this.ASTlineWidth = 0.0005;
+		this.ASTlineWidth = 0.0002;
+		this.MoonlineWidth = 0.0015;
 
 		this.coronaSize = 50.;
 		this.coronaP = 0.3;
@@ -299,6 +301,8 @@ function defineParams(){
 		this.cloudRad = this.earthRad * 1.01; 
 		this.jupiterRad = this.earthRad * 11.209;
 		this.marsRad = this.earthRad * 0.53;
+		this.planetScale = 300.; //scale up all the planets to start
+		this.aquariusScale = 100000.; //scale up Aquarius
 
 		//time controls
 		this.timeStepUnit = 0.;
@@ -308,8 +312,10 @@ function defineParams(){
 		//this.Year = 2017.101; //roughly Feb 6, 2017
 		//this.Year = 2017.10137;
 		//gets us closer to intersection, but might not be exactly correct time
-		this.Year = 2017.094; 
+		//this.Year = 2017.094; 
 		//this.Year = 2017.0939;
+		this.Year = 2014.5; //trying near beginning of last full Aquarius orbit
+		this.shrinkYear = 2016.8; //time at which to shrink from original this.planetScale
 
 		//image and video capture
 		this.filename = "test.png";
@@ -318,6 +324,7 @@ function defineParams(){
 		this.captureCanvas = false;
 		this.videoFramerate = 30;
 		this.videoDuration = 2;
+		this.videoSaveTime = 2;
 		this.videoFormat = 'png';
 
 //Planet locations
@@ -350,7 +357,11 @@ function defineParams(){
 		this.MWalpha = 0.7;
 
 //Camera target (number)
-		this.cameraTarget = 2 //Earth
+		//this.cameraTarget = 2 //Earth
+		this.cameraTarget = 10 //Asteroid
+
+//counter for Tweens
+		this.counter = 0;
 
 //some functions
 		this.updateSolarSystem = function() {
@@ -362,46 +373,55 @@ function defineParams(){
 			clearSun();
 			drawSun();
 		
-			//clearEarth();
-			//drawEarth();
 			moveEarthMoon();
-
-			//clearJupiter();
-			//drawJupiter();
+			//clear moon when Earth drawn too big
+			if (params.Year <= params.shrinkYear) {
+                                clearMoon();
+                        }		
+	
 			moveJupiter();
-
-			//clearMars();
-			//drawMars();
 			moveMars();	
-
-			//clearVenus();
-			//drawVenus();
 			moveVenus();
-
 			moveMercury();
-
-			//clearSaturn();
-			//drawSaturn();
 			moveSaturn();
-
-			//clearUranus();
-			//drawUranus();
 			moveUranus();
-
-			//clearNeptune();
-			//drawNeptune();
 			moveNeptune();
-
-			//clearPluto();
-			//drawPluto();
 			movePluto();		
-
-			//clearAquarius();
-			//drawAquarius();
 			moveAquarius();
 
 			clearMoonOrbitLines();
 			drawMoonOrbitLines();
+
+			//do first Tweening
+			ZoomIn1(); //returns 1
+
+			if ((params.Year > params.shrinkYear) && (params.counter == 1)) {
+                                clearEarth();
+                                clearMercury();
+                                clearVenus();
+                                clearMars();
+                                clearJupiter();
+                                clearSaturn();
+                                clearUranus();
+                                clearNeptune();
+                                clearPluto();
+
+                                params.planetScale = 1.;
+
+                                drawEarth();
+                                drawMercury();
+                                drawVenus();
+                                drawMars();
+                                drawJupiter();
+                                drawSaturn();
+                                drawUranus();
+                                drawNeptune();
+                                drawPluto();
+                                //loadAquarius();
+
+                                params.counter = params.counter + 1;
+                        }
+
 
 		};
 	
@@ -470,6 +490,7 @@ function defineParams(){
 
 		this.recordVideo = function(){
 
+			console.log("testing", params.videoSaveTime)
 			params.captureCanvas = true;
 			capturer = new CCapture( { 
 				format: params.videoFormat, 
@@ -477,13 +498,23 @@ function defineParams(){
 				framerate: params.videoFramerate,
 				name: params.filename,
 				timeLimit: params.videoDuration,
-				autoSaveTime: params.videoDuration,
+				autoSaveTime: params.videoSaveTime,
 				verbose: true,
 			} );
 
 			capturer.start();
 
 		}
+		this.stopRecordVideo = function(){
+                        console.log("before",params.Year.toFixed(10));
+                        capturer.stop();
+                        console.log("after",params.Year.toFixed(10));
+                }
+                this.saveVideo = function(){
+                        //capturer.stop();
+                        capturer.save();
+                        //capturer.start();
+                }
 
 		this.updateCameraTarget = function(){
 
@@ -511,10 +542,13 @@ function defineGUI(){
 	captureGUI.add( params, 'captureWidth');
 	captureGUI.add( params, 'captureHeight');
 	captureGUI.add( params, 'videoDuration');
+	captureGUI.add( params, 'videoSaveTime');
 	captureGUI.add( params, 'videoFramerate');
 	captureGUI.add( params, 'videoFormat', {"gif":"gif", "jpg":"jpg", "png":"png"} )
 	captureGUI.add( params, 'screenshot');
 	captureGUI.add( params, 'recordVideo');
+	captureGUI.add( params, 'stopRecordVideo');
+        captureGUI.add( params, 'saveVideo');
 
 
 }
@@ -576,8 +610,10 @@ function WebGLStart(){
 
 
 //begin looking at the Earth
-	controls.target = params.EarthPos;
-	camera.lookAt(params.EarthPos);	
+	//controls.target = params.EarthPos;
+	//camera.lookAt(params.EarthPos);	
+	controls.target = params.AquariusPos;
+        camera.lookAt(params.AquariusPos);
 
 //begin the animation
 	animate();

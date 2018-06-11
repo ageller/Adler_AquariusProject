@@ -66,7 +66,7 @@ function makeMoonLine( geo , color = 'grey', rotation = null, offset = null) {
 		opacity: params.useSSalpha,
 		//useAlphaMap: 1,
 		//alphaMap: aTex,
-		lineWidth: params.SSlineWidth,
+		lineWidth: params.MoonlineWidth,
 		sizeAttenuation: 0,
 		depthWrite: true,
 		depthTest: true,

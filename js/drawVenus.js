@@ -52,7 +52,7 @@ function makeVenus( geo, tperi, day, radius, tilt, rotation = null) {
         var tdiff = JDtoday - tperi;
         var phaseVenus = (tdiff % rotPeriodVenus)/rotPeriodVenus;
 
-	var VenusRad = radius;
+	var VenusRad = radius * params.planetScale;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
         var sc = params.earthRad;
 

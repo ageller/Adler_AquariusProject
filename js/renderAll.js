@@ -2,6 +2,7 @@
 function animate(time) {
 	requestAnimationFrame( animate );
 	update(time);
+	TWEEN.update(time);
 	render();
 
 }
@@ -13,6 +14,16 @@ function update(time){
 		params.pause = false;
 	}
 
+	if (keyboard.down("C")){
+                console.log(camera.position);
+                console.log(camera.position.distanceTo(params.EarthPos));
+                console.log(camera.position.distanceTo(params.SunPos));
+        }
+
+        if (keyboard.down("T")){
+                console.log(params.Year);
+                console.log(time);
+        }
 
     //pause the time evolution
 	if ( keyboard.down("space") ) {
