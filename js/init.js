@@ -132,7 +132,7 @@ function init() {
 
 	// renderer
 	if ( Detector.webgl )
-		renderer = new THREE.WebGLRenderer( {antialias:true} );
+		renderer = new THREE.WebGLRenderer( {antialias:true, logarithmicDepthBuffer:true} );
 	else
 		renderer = new THREE.CanvasRenderer(); 
 	renderer.setSize(screenWidth, screenHeight);
@@ -278,7 +278,7 @@ function defineParams(){
 //Solar System appearance
 		this.SSlineWidth = 0.003;
 		//this.SSlineWidth = 0.006;
-                this.SSlineTaper = 1./4.;
+        this.SSlineTaper = 1./4.;
 		this.SSalpha = 1.;
 		this.useSSalpha = 1.;
 		this.useASTalpha = 0.5; //transparency only works if sorted, and we won't sort these, but with thin lines...
@@ -362,9 +362,9 @@ function defineParams(){
 			clearSun();
 			drawSun();
 		
-			//clearEarth();
-			//drawEarth();
-			moveEarthMoon();
+			clearEarth();
+			drawEarth();
+			//moveEarthMoon();
 
 			//clearJupiter();
 			//drawJupiter();

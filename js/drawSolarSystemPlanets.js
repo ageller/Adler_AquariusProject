@@ -65,9 +65,9 @@ function makePlanetLine( geo , color = 'white', rotation = null) {
 		//alphaMap: aTex,
 		lineWidth: params.SSlineWidth,
 		sizeAttenuation: 0,
-		depthWrite: true,
-		depthTest: true,
-		transparent: true,
+		depthWrite: false,
+		depthTest: false,
+		transparent: false,
 
 	}); 
 	
