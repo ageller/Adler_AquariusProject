@@ -53,7 +53,7 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 	var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
 
 	//make slightly bigger so can actually see it
-	var AquariusRad = radius*1000.;
+	var AquariusRad = radius*5.e4;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
 	var sc = params.earthRad*AquariusRad;
 

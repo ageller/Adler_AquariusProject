@@ -7,14 +7,14 @@ function animate(time) {
 }
 
 function update(time){
+	TWEEN.update(time);
 	keyboard.update();
-
 	if (params.timeStepFac > 0){
 		params.pause = false;
 	}
 
 
-    //pause the time evolution
+	//pause the time evolution
 	if ( keyboard.down("space") ) {
 		params.pause = !params.pause;
 		if (params.pause){
@@ -33,6 +33,26 @@ function update(time){
 		params.resetSlider('timeStepFac', gui, params.timeStepFac);
 
 	}
+
+	if (keyboard.down("T")) {
+
+		console.log("tweening")		
+		var initialPos = {x:camera.position.x, y:camera.position.y, z:camera.position.z, t:params.Year};
+		var finalPos = {x:0.7448025457837447, y:-0.542700457564619, z:1.3863427066124339, t:params.Year + 0.5};
+
+		CameraTween = new TWEEN.Tween(initialPos).to(finalPos, 3000).easing(TWEEN.Easing.Quintic.InOut)
+			.onUpdate(function(object){
+				camera.position.x = object.x;
+				camera.position.y = object.y;
+				camera.position.z = object.z;
+				params.Year = object.t;
+				params.updateSolarSystem();
+
+			})
+			.start();
+
+	}
+
 	if ( keyboard.down("left") ) {
 		params.timeStepFac = -1. * Math.abs(params.timeStepFac);
 		params.resetSlider('timeStepFac', gui, params.timeStepFac);
@@ -84,9 +104,9 @@ function render() {
 	updateBillboards();
 
 	//update the corona/glow size based on the camera position
-    var dist,vFoc,height,width;
+	var dist,vFoc,height,width;
 	if (camDist  > 50.){
-     // visible width
+	 // visible width
 		dist = SunMesh.position.distanceTo(camera.position);
 		vFOV = THREE.Math.degToRad( camera.fov ); // convert vertical fov to radians
 		height = 2 * Math.tan( vFOV / 2 ) * dist; // visible height

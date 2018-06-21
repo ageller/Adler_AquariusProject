@@ -90,6 +90,9 @@ var loaded = false;
 var ParamsInit;
 var params;
 
+var TweensInit;
+var tweens;
+
 var gui = null;
 var basicGUI = null;
 var legendGUI = null;
@@ -495,7 +498,6 @@ function defineParams(){
 
 	params = new ParamsInit();
 }
-
 
 function defineGUI(){
 

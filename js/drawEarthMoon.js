@@ -97,7 +97,7 @@ function makeEarth( geo, tperi, day, radius, tilt, rotation = null) {
 	var rotPeriodMoon = planets[9].period;
 	var phaseMoon = (tdiff % rotPeriodMoon)/rotPeriodMoon;
 
-	var EarthRad = radius*1e3;
+	var EarthRad = radius;
 	var CloudRad = radius * params.cloudRad/params.earthRad;
 	var MoonRad = planets[9].radius;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
