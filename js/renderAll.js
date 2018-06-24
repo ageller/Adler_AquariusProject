@@ -35,22 +35,31 @@ function update(time){
 	}
 
 	if (keyboard.down("T")) {
-
-		console.log("tweening")		
-		var initialPos = {x:camera.position.x, y:camera.position.y, z:camera.position.z, t:params.Year};
-		var finalPos = {x:0.7448025457837447, y:-0.542700457564619, z:1.3863427066124339, t:params.Year + 0.5};
-
-		CameraTween = new TWEEN.Tween(initialPos).to(finalPos, 3000).easing(TWEEN.Easing.Quintic.InOut)
-			.onUpdate(function(object){
-				camera.position.x = object.x;
-				camera.position.y = object.y;
-				camera.position.z = object.z;
-				params.Year = object.t;
-				params.updateSolarSystem();
-
-			})
-			.start();
-
+		params.inTween = true;
+		console.log("tweening")	
+		runTweens()
+	}
+	if (keyboard.down("Y")) {
+		params.inTween = false;
+	}
+	if (keyboard.down("0")) {
+		params.Year = t0;
+		params.updateSolarSystem();
+	}
+	if (keyboard.down("1")) {
+		params.Year = t1;
+		params.updateSolarSystem();
+	}
+	if (keyboard.down("2")) {
+		params.Year = t2;
+		params.updateSolarSystem();
+	}
+	if (keyboard.down("3")) {
+		params.Year = tf;
+		params.updateSolarSystem();
+	}	
+	if (keyboard.down("C")) {
+		console.log(camera.position, camera.rotation, params.Year);
 	}
 
 	if ( keyboard.down("left") ) {
@@ -63,7 +72,9 @@ function update(time){
 		params.resetSlider('timeStepFac', gui, params.timeStepFac);
 
 	}
-	controls.update();
+	if (! params.inTween){
+		controls.update();
+	}
 
 	SunMesh.material.uniforms.cameraCenter.value = camera.position;
 
