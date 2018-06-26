@@ -7,6 +7,10 @@ function clearEarth(){
 	scene.remove(MovingEarthCloud);
 }
 
+function clearMoon(){
+        MovingEarthCloud.remove(MovingMoonMesh);
+}
+
 
 //get position of Earth
 function createEarthOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
@@ -97,9 +101,9 @@ function makeEarth( geo, tperi, day, radius, tilt, rotation = null) {
 	var rotPeriodMoon = planets[9].period;
 	var phaseMoon = (tdiff % rotPeriodMoon)/rotPeriodMoon;
 
-	var EarthRad = radius;
-	var CloudRad = radius * params.cloudRad/params.earthRad;
-	var MoonRad = planets[9].radius;
+	var EarthRad = radius * params.planetScale;
+	var CloudRad = radius * params.planetScale * params.cloudRad/params.earthRad;
+	var MoonRad = planets[9].radius * params.planetScale;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
 	var sc = params.earthRad;
 	

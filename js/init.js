@@ -15,6 +15,8 @@ var JD0 = 2447892.5; //Jan. 1, 1990
 
 var tf = 2017.0944307077525;
 //var tf = 2017.0944295776158
+var t00 = tf - 2.59443;//2014.5
+var t01 = tf - 0.29443;//2016.8
 var t0 = tf - 0.4;//2016.69443071;
 var t1 = tf - 0.2;//2016.89443071;
 var t2 = tf - 0.0015;//tf - 0.01;//2017.08443071;
@@ -121,8 +123,8 @@ function init() {
 	MWscene.add(camera);
 	MWInnerScene.add(camera);
 
-	camera.position.set(5,0,5); //adjusted starting postion
-	
+	camera.position.set(10.316805259726525,2.6445350439636446,9.955315659418815); //about 15 AU out
+	//camera.position.set(5,0,5); //adjusted starting postion
 	//camera.position.set(0,0,0); //Earth view
 	//camera.position.set(0,0,50); //SS view
 	//camera.position.set(0,0,1.8e10); //MW view
@@ -305,6 +307,8 @@ function defineParams(){
 		this.cloudRad = this.earthRad * 1.01; 
 		this.jupiterRad = this.earthRad * 11.209;
 		this.marsRad = this.earthRad * 0.53;
+		this.planetScale = 500.; //scale up all the planets to start
+		//this.aquariusScale = 11000.;
 
 		//time controls
 		this.timeStepUnit = 0.;
@@ -314,17 +318,18 @@ function defineParams(){
 		//this.Year = 2017.101; //roughly Feb 6, 2017
 		//this.Year = 2017.10137;
 		//gets us closer to intersection, but might not be exactly correct time
-		this.Year = t0;//2017.094; 
+		this.Year = t00;//2017.094; 
+		this.shrinkYear = 2016.79; //time at which to shrink from origininal this.planetScale
 		//this.Year = 2017.0939;
 
 		//image and video capture
-		this.filename = "test.png";
-		this.captureWidth = 1024;
-		this.captureHeight = 1024;
+		this.filename = "test_fancy.jpg";
+		this.captureWidth = 1920;
+		this.captureHeight = 1080;
 		this.captureCanvas = false;
 		this.videoFramerate = 30;
-		this.videoDuration = 2;
-		this.videoFormat = 'png';
+		this.videoDuration = 80;
+		this.videoFormat = 'jpg';
 
 //Planet locations
 		this.SunPos = new THREE.Vector3();
@@ -359,6 +364,9 @@ function defineParams(){
 //		this.cameraTarget = 2 //Earth
 		this.cameraTarget = 10 //Asteroid
 
+//counter for shrink
+	this.counter = 0;
+
 //some functions
 		this.updateSolarSystem = function() {
 
@@ -372,6 +380,11 @@ function defineParams(){
 			clearEarth();
 			drawEarth();
 			//moveEarthMoon();
+
+			//clear moon when Earth drawn too big
+                        if (params.Year <= params.shrinkYear) {
+                                clearMoon();
+                        }
 
 			//clearJupiter();
 			//drawJupiter();
@@ -409,6 +422,33 @@ function defineParams(){
 
 			clearMoonOrbitLines();
 			drawMoonOrbitLines();
+
+			if ((params.Year > params.shrinkYear) && (params.counter == 0)) {
+                                clearEarth();
+                                clearMercury();
+                                clearVenus();
+                                clearMars();
+                                clearJupiter();
+                                clearSaturn();
+                                clearUranus();
+                                clearNeptune();
+                                clearPluto();
+
+                                params.planetScale = 1.;
+
+                                drawEarth();
+                                drawMercury();
+                                drawVenus();
+                                drawMars();
+                                drawJupiter();
+                                drawSaturn();
+                                drawUranus();
+                                drawNeptune();
+                                drawPluto();
+                                //loadAquarius();
+
+                                params.counter = params.counter + 1;
+                        }
 
 		};
 	
@@ -523,22 +563,57 @@ function runTweens(){
 	// var finalPos1 = {x: 0.6231314746206444, y: -0.419258337508283, z: 0.7190997237313866};
 	// var finalRot1 = {x: 0.48646546648422334, y: -0.6729899335806955, z: 0.15152019175101947};
 
-	var initialPos1 = {x: -1.5229923919239612, y: -1.392539191804188, z: 1.794524190150591 };
-	var initialRot1 = {x: 0.7007383397082899, y: -1.0337449092016764, z: 0.7429190870044281};
+	var finalPos00 = { x: 0.7448025457837447, y: -0.542700457564619, z: 1.3863427066124339 };
+	var initialTime00 = {t:t00};
+	var finalTime00 = {t:t01};
 
+	var initialPos1 = {x: -1.5229923919239612, y: -1.392539191804188, z: 1.794524190150591 };
+	//var initialRot1 = {x: 0.7007383397082899, y: -1.0337449092016764, z: 0.7429190870044281};
+	var initialRot1 = {x: -0.28798640344379695, y: 0.7641189554688708, z: 0.20215616650278126};
 
 	var finalPos1 = {x: 0.18291806368280125, y: -0.7375995944597667, z: 1.0181240718482598 };
 	var finalRot1 = {x: 0.7877242610262146, y: -0.9271183326009036, z: 0.7154204118270164};
 
 
-	var initialTime1 = {t:t0};
+	var initialTime1 = {t:t01};
 	var finalTime1 = {t:t1};
 	var duration = 10000;
-	var dur1 = duration * (t1 - t0)/(tf - t0);
-	var dur2 = duration * (t2 - t1)/(tf - t0);
-	var dur3 = duration * (tf - t2)/(tf - t0) *50.;
+	var dur0 = 3.5 * duration * (t01 - t00)/(tf - t00);
+	var dur1 = 55.*duration * (t1 - t01)/(tf - t00);
+	var dur2 = 15.*duration * (t2 - t1)/(tf - t00);
+	var dur3 = 30.*duration * (tf - t2)/(tf - t00) *50.;
 	var dur4 = dur3/3.;
-	console.log(dur1, dur2, dur3, dur4)
+	console.log(dur0,dur1, dur2, dur3, dur4)
+	
+	//tween00
+	var timeTween00 = new TWEEN.Tween(initialTime00).to(finalTime00, dur0).easing(TWEEN.Easing.Linear.None)
+                .onUpdate(function(object){
+                        params.Year = object.t;
+                        params.updateSolarSystem();
+                });
+        var posTween00 = new TWEEN.Tween(camera.position).to(finalPos00, dur0).easing(TWEEN.Easing.Quintic.InOut)
+                .onUpdate(function(object){
+                        camera.position.x = object.x;
+                        camera.position.y = object.y;
+                        camera.position.z = object.z;
+                })
+                .onStart(function(){
+                        console.log("tween00");
+			//params.captureCanvas = true;
+                        //capturer = new CCapture( {
+                        //        format: params.videoFormat,
+                        //        workersPath: 'resources/CCapture/',
+                        //        framerate: params.videoFramerate,
+                        //        name: params.filename,
+                        //        timeLimit: params.videoDuration,
+                        //        autoSaveTime: params.videoSaveTime,
+                        //        verbose: true,
+                        //} );
+                        //capturer.start();
+                        timeTween00.start();
+                })
+                .onComplete(function(){
+			console.log("tween00 end:",params.Year);
 
 	//tween1
 	var timeTween1 = new TWEEN.Tween(initialTime1).to(finalTime1, dur1).easing(TWEEN.Easing.Linear.None)
@@ -552,14 +627,15 @@ function runTweens(){
 			camera.rotation.y = object.y;
 			camera.rotation.z = object.z;
 		});
-	var posTween1 = new TWEEN.Tween(initialPos1).to(finalPos1, dur1).easing(TWEEN.Easing.Linear.None)
+	var posTween1 = new TWEEN.Tween(finalPos00).to(finalPos1, dur1).easing(TWEEN.Easing.Linear.None)
 		.onUpdate(function(object){
 			camera.position.x = object.x;
 			camera.position.y = object.y;
 			camera.position.z = object.z;
 		})
 		.onStart(function(){
-			console.log("tween1")
+			console.log("tween1 start", params.Year)
+			//console.log(camera.rotation)
 			timeTween1.start();
 			rotTween1.start();
 		})
@@ -665,6 +741,10 @@ function runTweens(){
 
 
 	posTween1.start();
+
+	})
+
+	posTween00.start();
 
 }
 
