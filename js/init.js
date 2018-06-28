@@ -491,7 +491,12 @@ function defineParams(){
 			capturer.start();
 
 		}
-
+		this.stopVideo = function(){
+			capturer.stop();
+		}
+		this.saveVideo = function(){
+			capturer.save();
+		}
 		this.updateCameraTarget = function(){
 
 			controls.target = params.PlanetsPos[params.cameraTarget];
@@ -560,10 +565,16 @@ function runTweens(){
 		})
 		.onStart(function(){
 			console.log("tween1")
+			params.filename = 'tween1Capture';
+			params.videoDuration = 90;
+			params.videoFramerate = 5;
+			params.recordVideo();
 			timeTween1.start();
 			rotTween1.start();
 		})
 		.onComplete(function(){
+			params.stopVideo();
+			params.saveVideo();
 		///////////////////////////////tween2
 			var initialTime2 = {t:t1};
 			var finalTime2 = {t:t2};
@@ -575,12 +586,13 @@ function runTweens(){
 				y:(camera.position.y - params.AquariusPos.y), 
 				z:(camera.position.z - params.AquariusPos.z)}; 
 			
-
 			var timeTween2 = new TWEEN.Tween(initialTime2).to(finalTime2, dur2).easing(TWEEN.Easing.Linear.None)
 				.onUpdate(function(object){
 					params.Year = object.t;
 					params.updateSolarSystem();
 				});
+			console.log("here")
+
 			var posTween2 = new TWEEN.Tween(foo1).to(foo2, dur2).easing(TWEEN.Easing.Linear.None)
 				.onUpdate(function(object){
 					camera.position.x = params.AquariusPos.x + offset.x;
@@ -589,12 +601,17 @@ function runTweens(){
 				})
 				.onStart(function(){
 					console.log("tween2")
+					params.filename = 'tween2Capture';
+					params.videoDuration = 90;
+					params.recordVideo();
 					//params.AquariusThetaMax= 1e-2;
 					//params.drawAquariusOrbit = false;
 					timeTween2.start();
 				})
 				.onComplete(function(){
-				///////////////////////////////tween3 (slow down)
+					params.stopVideo();
+					params.saveVideo();
+					///////////////////////////////tween3 (slow down)
 					var initialTime3 = {t:t2};
 					var finalTime3 = {t:tf};
 
@@ -658,7 +675,7 @@ function runTweens(){
 					posTween3.start();
 
 				})
-
+			console.log("here2")
 			posTween2.start();
 
 		})
@@ -687,6 +704,8 @@ function defineGUI(){
 	captureGUI.add( params, 'videoFormat', {"gif":"gif", "jpg":"jpg", "png":"png"} )
 	captureGUI.add( params, 'screenshot');
 	captureGUI.add( params, 'recordVideo');
+	captureGUI.add( params, 'stopVideo');
+	captureGUI.add( params, 'saveVideo');
 
 
 }
