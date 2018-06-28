@@ -675,9 +675,11 @@ function runTweens(){
 					posTween3.start();
 
 				})
-			console.log("here2")
-			posTween2.start();
-
+			console.log("here2", posTween2)
+			setTimeout(function () {
+				posTween2.start();
+				console.log("afterward2")
+    		}, 500);
 		})
 
 
