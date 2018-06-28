@@ -567,7 +567,7 @@ function runTweens(){
 			console.log("tween1")
 			params.filename = 'tween1Capture';
 			params.videoDuration = 90;
-			params.videoFramerate = 5;
+			params.videoFramerate = 30;
 			params.recordVideo();
 			timeTween1.start();
 			rotTween1.start();
