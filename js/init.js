@@ -587,6 +587,12 @@ function runTweens(){
 				z:(camera.position.z - params.AquariusPos.z)}; 
 			
 			var timeTween2 = new TWEEN.Tween(initialTime2).to(finalTime2, dur2).easing(TWEEN.Easing.Linear.None)
+				.onStart(function(){
+					console.log("timetween2")
+					params.filename = 'tween2Capture';
+					params.videoDuration = 90;
+					params.recordVideo();
+				})
 				.onUpdate(function(object){
 					params.Year = object.t;
 					params.updateSolarSystem();
@@ -600,10 +606,10 @@ function runTweens(){
 					camera.position.z = params.AquariusPos.z + offset.z;
 				})
 				.onStart(function(){
-					console.log("tween2")
-					params.filename = 'tween2Capture';
-					params.videoDuration = 90;
-					params.recordVideo();
+					// console.log("tween2")
+					// params.filename = 'tween2Capture';
+					// params.videoDuration = 90;
+					// params.recordVideo();
 					//params.AquariusThetaMax= 1e-2;
 					//params.drawAquariusOrbit = false;
 					timeTween2.start();
