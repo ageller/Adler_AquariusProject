@@ -15,6 +15,8 @@ var JD0 = 2447892.5; //Jan. 1, 1990
 
 var tf = 2017.0944307077525;
 //var tf = 2017.0944295776158
+var t00 = tf - 2.59443;//2014.5
+var t01 = tf - 0.29443;//2016.8
 var t0 = tf - 0.4;//2016.69443071;
 var t1 = tf - 0.2;//2016.89443071;
 var t2 = tf - 0.0015;//tf - 0.01;//2017.08443071;
@@ -121,7 +123,8 @@ function init() {
 	MWscene.add(camera);
 	MWInnerScene.add(camera);
 
-	camera.position.set(5,0,5); //adjusted starting postion
+	camera.position.set(10.316805259726525,2.6445350439636446,9.955315659418815); //about 15 AU out
+	//camera.position.set(5,0,5); //adjusted starting postion
 	
 	//camera.position.set(0,0,0); //Earth view
 	//camera.position.set(0,0,50); //SS view
@@ -314,13 +317,13 @@ function defineParams(){
 		//this.Year = 2017.101; //roughly Feb 6, 2017
 		//this.Year = 2017.10137;
 		//gets us closer to intersection, but might not be exactly correct time
-		this.Year = t0;//2017.094; 
+		this.Year = t00; 
 		//this.Year = 2017.0939;
 
 		//image and video capture
 		this.filename = "test.png";
-		this.captureWidth = 1024;
-		this.captureHeight = 1024;
+		this.captureWidth = 1920;
+		this.captureHeight = 1080;
 		this.captureCanvas = false;
 		this.videoFramerate = 30;
 		this.videoDuration = 2;

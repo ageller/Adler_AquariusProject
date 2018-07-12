@@ -35,7 +35,7 @@ function update(time){
 	}
 
 	if (keyboard.down("T")) {
-		params.inTween = true;
+		//params.inTween = true;
 		console.log("tweening")	
 		runTweens()
 	}
