@@ -68,7 +68,6 @@ function runTweens(){
 			params.Year = object.t;
 			params.updateSolarSystem();
 		});
-
 	var posTween2 = new TWEEN.Tween(foo1).to(foo2, dur2).easing(TWEEN.Easing.Linear.None)
 		.onUpdate(function(object){
 			camera.position.x = params.AquariusPos.x + offset.x;
@@ -92,7 +91,7 @@ function runTweens(){
 			camera.position.z = params.AquariusPos.z + offset.z;
 		})
 
-	///////////////////////////////tween4 rotate view and shrink asteroid
+///////////////////////////////tween4 rotate view and shrink asteroid
 	var r1 = {r:5.e4};
 	var r2 = {r:5.e2};
 	var finalPos4 = {x: 0.726915625206527, y: -0.30257293527665774, z: 0.5939085205074811};
