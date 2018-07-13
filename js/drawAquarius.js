@@ -12,11 +12,13 @@ function initAquariusInterps(){
 	var y = [];
 	var z = [];
 	var t = [];
+	var index = [];
 	for (i=0; i<Object.keys(aquarius.x).length; i++){
 		x.push(aquarius.x[i]);
 		y.push(aquarius.y[i]);
 		z.push(aquarius.z[i]);
 		t.push(aquarius.JD[i]);
+		index.push(i)
 	}
 	// console.log(t)
 	// console.log(x)
@@ -41,13 +43,18 @@ function initAquariusInterps(){
 		new Float32Array( 1 )
 	);
 
+	aquarius.indexInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(index),
+		1,
+		new Float32Array( 1 )
+	);
+
 }
 
 function getAquariusPositionH(){
 
 	//I need to interpolate
-	//pos = [aquarius.x[0], aquarius.y[0], aquarius.z[0]];
-	console.log(params.JDtoday, aquarius.xInterp.evaluate(params.JDtoday))
 	pos = [aquarius.xInterp.evaluate(params.JDtoday), aquarius.yInterp.evaluate(params.JDtoday), aquarius.zInterp.evaluate(params.JDtoday)];
 	return pos
 }
@@ -60,9 +67,12 @@ function getAquariusOrbitH(){
 	for (i=0; i<Object.keys(aquarius.x).length; i++){
 		geometry.vertices.push( {"x":aquarius.x[i], "y":aquarius.y[i], "z":aquarius.z[i]} );
 	}
-	console.log("aquarius geometry", geometry)
+
+	params.AquariusOrbitGeometry = geometry;
+
 	return geometry
 }
+
 
 //get position of Aquarius
 function createAquariusOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
@@ -181,7 +191,15 @@ function moveAquarius()
 	var rotPeriodAquarius = 0.02;
 	var tdiff = params.JDtoday;//- aquarius.argument_of_periapsis;
 	var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
-	
+
+	if (params.drawAquariusOrbit){
+		// line
+		var i0 = aquarius.indexInterp.evaluate(params.JDtoday);
+		var p0 = i0/Object.keys(aquarius.x).length;
+		makePlanetLine( params.AquariusOrbitGeometry , color = 'white', rotation = SSrotation, addToOrbitLines = true, p0 = 0.)
+	}
+
+
 	var Ntheta = 1.
 	//geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = Ntheta);
 	geo = getAquariusPositionH();

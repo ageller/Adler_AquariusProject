@@ -317,9 +317,11 @@ function defineParams(){
 		//this.Year = 2017.101; //roughly Feb 6, 2017
 		//this.Year = 2017.10137;
 		//gets us closer to intersection, but might not be exactly correct time
-		this.Year = t00; 
+		this.Year = tf; 
 		this.daytoyr = 365.2422;
 		this.JDtoday = JD0 + (this.Year - 1990.)*this.daytoyr;
+		this.tmin = 0. //will be set in getTspan
+		this.tmax = 0. //will be set in getTspan
 		//this.Year = 2017.0939;
 
 		//image and video capture
@@ -339,6 +341,7 @@ function defineParams(){
 		this.EarthSunDir = new THREE.Vector3(1,0,0);
 		this.MoonPos = new THREE.Vector3();
 		this.AquariusPos = new THREE.Vector3();
+		this.AquariusOrbitGeometry = null;
 		this.MarsPos = new THREE.Vector3();
 		this.JupiterPos = new THREE.Vector3();
 		this.SaturnPos = new THREE.Vector3();
@@ -366,11 +369,12 @@ function defineParams(){
 
 //some functions
 		this.updateSolarSystem = function() {
-			this.JDtoday = JD0 + (this.Year - 1990)*this.daytoyr;
+			params.JDtoday = JD0 + (params.Year - 1990)*params.daytoyr;
 
 			clearPlanetOrbitLines();
 			drawPlanetOrbitLines();
 			//drawAquariusOrbitLine();
+			//I need to resort the orbit line because there are too many points!
 
 			clearSun();
 			drawSun();
@@ -525,7 +529,7 @@ function defineGUI(){
 
 	gui = new dat.GUI({ width: 450 } )
 	//gui.add( params, 'Year', 1990, 3000).listen().onChange(params.updateSolarSystem).name("Year");;
-	gui.add( params, 'Year', 1990, 2018).listen().onChange(params.updateSolarSystem).name("Year");;
+	gui.add( params, 'Year', params.tmin, params.tmax).listen().onChange(params.updateSolarSystem).name("Year");;
 	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./params.daytoyr), "Year": 1} ).name("Time Step Unit");
 	gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
 	gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8 } ).onChange(params.updateCameraTarget).name("Camera Target");
@@ -565,6 +569,23 @@ function loadData(callback){
 	});
 }
 
+function getTspan(){
+	var min = 1e10;
+	var max = -1;
+	var t;
+	for (i=0; i<Object.keys(aquarius.x).length; i++){
+		t = aquarius.JD[i];
+		if (t > max){
+			max = t;
+		}
+		if (t < min){
+			min = t
+		}
+	}
+
+	params.tmin = (min - JD0)/params.daytoyr + 1990;
+	params.tmax = (max - JD0)/params.daytoyr + 1990;
+}
 
 function WebGLStart(){	
 	
@@ -572,6 +593,7 @@ function WebGLStart(){
 
 //initialize
 	defineParams(); 
+	getTspan();
 	init();
 
 //initial GUI

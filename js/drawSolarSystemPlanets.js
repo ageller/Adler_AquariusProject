@@ -54,10 +54,10 @@ function createOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10., theta
 }
 
 
-function makePlanetLine( geo , color = 'white', rotation = null, addToOrbitLines = true) {
+function makePlanetLine( geo , color = 'white', rotation = null, addToOrbitLines = true, p0 = 0.) {
 
 	var g = new MeshLine();
-	g.setGeometry( geo, function( p ) { return Math.pow(p, params.SSlineTaper ) ; });
+	g.setGeometry( geo, function( p ) { return Math.pow((p + p0) % 1, params.SSlineTaper ) ; });
 	var material = new MeshLineMaterial({
 		color: new THREE.Color(color),
 		opacity: params.useSSalpha,
@@ -145,7 +145,10 @@ function drawAquariusOrbitLine()
 		// line
 		// geo = createOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 1000., thethaMin = 0., thetaMax = params.AquariusThetaMax);
 		geo = getAquariusOrbitH();
-		makePlanetLine( geo ,  color = 'white', rotation = SSrotation, addToOrbitLines = false);		
+		var i0 = aquarius.indexInterp.evaluate(params.JDtoday);
+		var p0 = i0/Object.keys(aquarius.x).length;
+		makePlanetLine( params.AquariusOrbitGeometry , color = 'white', rotation = SSrotation, addToOrbitLines = true, p0 = 0.)
+
 	}
 
 }
