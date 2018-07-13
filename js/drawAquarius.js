@@ -18,7 +18,8 @@ function initAquariusInterps(){
 		z.push(aquarius.z[i]);
 		t.push(aquarius.JD[i]);
 	}
-
+	// console.log(t)
+	// console.log(x)
 	aquarius.xInterp = new THREE.LinearInterpolant(
 		new Float32Array(t),
 		new Float32Array(x),
