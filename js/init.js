@@ -552,7 +552,8 @@ function loadData(callback){
 		d3.json("data/asteroids.json",  function(x1) {
 			asteroids = x1;
 
-			d3.json("data/aquarius.json",  function(x2) {
+			//d3.json("data/aquarius.json",  function(x2) {
+			d3.json("data/HammergrenOrbit.json",  function(x2) {	
 				aquarius = x2;
 
 				callback();

@@ -5,6 +5,28 @@ function clearAquarius(){
 	scene.remove(MovingAquarius);
 }
 
+//use the values from Mark Hammergren's file
+function getAquariusPositionH(){
+	var JDtoday = JD0 + (params.Year - 1990.);
+
+	//I need to interpolate
+	pos = [aquarius.x[0], aquarius.y[0], aquarius.z[0]];
+
+	return pos
+}
+//use the values from Mark Hammergren's file
+function getAquariusOrbitH(){
+	var JDtoday = JD0 + (params.Year - 1990.);
+
+	//I need to interpolate
+	var geometry = new THREE.Geometry();
+
+	for (i=0; i<Object.keys(aquarius.x).length; i++){
+		geometry.vertices.push( {"x":aquarius.x[i], "y":aquarius.y[i], "z":aquarius.z[i]} );
+	}
+	console.log("aquarius geometry", geometry)
+	return geometry
+}
 
 //get position of Aquarius
 function createAquariusOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
@@ -53,10 +75,11 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 	var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
 
 	//make slightly bigger so can actually see it
-	var AquariusRad = radius*params.AquariusRadFac;
+	var AquariusRad = 1e5;//radius*params.AquariusRadFac;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
 	var sc = params.earthRad*AquariusRad;
 
+	console.log("aquarius position", geo)
 	MovingAquariusMesh.position.set(geo[0],geo[1],geo[2]);
 	MovingAquariusMesh.scale.set(sc, sc, sc);
 
@@ -66,7 +89,7 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 		MovingAquarius.rotation.y = rotation.y;
 		MovingAquarius.rotation.z = rotation.z;
 	}
-	MovingAquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoriod around axis
+	MovingAquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoroid around axis
 
 	MovingAquarius.add(MovingAquariusMesh);
 	scene.add(MovingAquarius);
@@ -111,8 +134,9 @@ function loadAquarius()
 function drawAquarius()
 {
 	var Ntheta = 1.
-	geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = Ntheta);
+	//geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = Ntheta);
 
+	geo = getAquariusPositionH();
 	//rotate meteorid slightly, and make size approximately 2m in radius, given in Earth radii
 	makeAquarius( geo, aquarius.tperi, 0.0001, 0.0000003, rotation = SSrotation);	
 
@@ -126,7 +150,8 @@ function moveAquarius()
     var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
 	
 	var Ntheta = 1.
-	geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = Ntheta);
+	//geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = Ntheta);
+	geo = createAquariusOrbitH();
 
 	//set position
 	MovingAquariusMesh.position.set(geo[0],geo[1],geo[2]);
@@ -135,5 +160,5 @@ function moveAquarius()
 	MovingAquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoriod around axis
 
 	scene.updateMatrixWorld(true);
-        params.AquariusPos.setFromMatrixPosition( MovingAquariusMesh.matrixWorld );
+    params.AquariusPos.setFromMatrixPosition( MovingAquariusMesh.matrixWorld );
 }

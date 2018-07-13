@@ -8,6 +8,7 @@ function clearPlanetOrbitLines() {
 }
 
 
+
 function createOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10., thetaMin = 0, thetaMax = 2.*Math.PI){
 //in this calculation the orbit line will start at peri
 //but I'd like to move that so that it starts at roughly the correct spot for the given planet at the given time
@@ -136,11 +137,14 @@ function drawAsteroidOrbitLines()
 
 }
 
+
+
 function drawAquariusOrbitLine()
 {
 	if (params.drawAquariusOrbit){
 		// line
-		geo = createOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 1000., thethaMin = 0., thetaMax = params.AquariusThetaMax);
+		// geo = createOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 1000., thethaMin = 0., thetaMax = params.AquariusThetaMax);
+		geo = getAquariusOrbitH();
 		makePlanetLine( geo ,  color = 'white', rotation = SSrotation);		
 	}
 
