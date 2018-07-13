@@ -12,7 +12,7 @@ function runTweens(){
 	//var dur1 = duration * (t1 - t0)/(tf - t0);
 	//var dur2 = duration * (t2 - t1)/(tf - t0);
 	//var dur3 = duration * (tf - t2)/(tf - t0) *50.;
-	var dur1 = 55.*duration * (t1 - t01)/(tf - t00);
+	var dur1 = 35.*duration * (t1 - t01)/(tf - t00);
         var dur2 = 15.*duration * (t2 - t1)/(tf - t00);
         var dur3 = 30.*duration * (tf - t2)/(tf - t00) *50.;
 	var dur4 = dur3/3.;
@@ -55,25 +55,25 @@ function runTweens(){
                         console.log("tween00 end:",params.Year);
 		});
 ///////////////////////////////tween1
-	var timeTween1 = new TWEEN.Tween(initialTime1).to(finalTime1, dur1).easing(TWEEN.Easing.Linear.None)
+	var timeTween1 = new TWEEN.Tween(initialTime1).to(finalTime1, dur1).easing(TWEEN.Easing.Quintic.Out)
 		.onUpdate(function(object){
 			params.Year = object.t;
 			params.updateSolarSystem();
 		});
-	var rotTween1 = new TWEEN.Tween(initialRot1).to(finalRot1, dur1).easing(TWEEN.Easing.Quadratic.Out)
-		.onUpdate(function(object){
-			camera.rotation.x = object.x;
-			camera.rotation.y = object.y;
-			camera.rotation.z = object.z;
-		});
-	var posTween1 = new TWEEN.Tween(finalPos00).to(finalPos1, dur1).easing(TWEEN.Easing.Linear.None)
+	//var rotTween1 = new TWEEN.Tween(initialRot1).to(finalRot1, dur1).easing(TWEEN.Easing.Quadratic.Out)
+	//	.onUpdate(function(object){
+	//		camera.rotation.x = object.x;
+	//		camera.rotation.y = object.y;
+	//		camera.rotation.z = object.z;
+	//	});
+	var posTween1 = new TWEEN.Tween(finalPos00).to(finalPos1, dur1).easing(TWEEN.Easing.Quintic.Out)
 		.onUpdate(function(object){
 			camera.position.x = object.x;
 			camera.position.y = object.y;
 			camera.position.z = object.z;
 		})
 		.onStart(function(){
-			console.log("tween1")
+			console.log("tween1 start")
 		})
 		.onComplete(function(){
 			offset = {
@@ -87,7 +87,7 @@ function runTweens(){
 	var finalTime2 = {t:t2};
 	var foo1 = {x:0};
 	var foo2 = {x:1};
-	var timeTween2 = new TWEEN.Tween(initialTime2).to(finalTime2, dur2).easing(TWEEN.Easing.Linear.None)
+	var timeTween2 = new TWEEN.Tween(initialTime2).to(finalTime2, dur2).easing(TWEEN.Easing.Cubic.InOut)
 		.onUpdate(function(object){
 			params.Year = object.t;
 			params.updateSolarSystem();
@@ -98,6 +98,9 @@ function runTweens(){
 			camera.position.y = params.AquariusPos.y + offset.y;
 			camera.position.z = params.AquariusPos.z + offset.z;
 		})
+		.onStart(function(){
+                        console.log("tween2 start")
+                })
 
 
 //////////////////////tween3 (slow down)		
@@ -114,12 +117,17 @@ function runTweens(){
 			camera.position.y = params.AquariusPos.y + offset.y;
 			camera.position.z = params.AquariusPos.z + offset.z;
 		})
+		.onStart(function(){
+                        console.log("tween3 start",params.Year)
+                })
 
 ///////////////////////////////tween4 rotate view and shrink asteroid
 	var r1 = {r:5.e4};
 	var r2 = {r:5.e2};
-	var finalPos4 = {x: 0.726915625206527, y: -0.30257293527665774, z: 0.5939085205074811};
-	var finalRot4 = {x: 0.11823860662221652, y: 0.7145724314949231, z: 0.39215904157947595};
+	//var finalPos4 = {x: 0.726915625206527, y: -0.30257293527665774, z: 0.5939085205074811};
+	//var finalRot4 = {x: 0.11823860662221652, y: 0.7145724314949231, z: 0.39215904157947595};
+	var finalPos4 = { x: 0.72689694326781, y: -0.30256053688871265, z: 0.5938783162030453 };
+	var finalRot4 = { x: -0.23486571657174551, y: 0.8965041754447987, z: 0.7012401627878595 };
 	var rTween4 = new TWEEN.Tween(r1).to(r2, dur4).easing(TWEEN.Easing.Linear.None)
 		.onUpdate(function(object){
 			params.AquariusRadFac = object.r;
@@ -138,6 +146,9 @@ function runTweens(){
 			camera.position.y = object.y;
 			camera.position.z = object.z;
 		})
+		.onStart(function(){
+                        console.log("tween4 start",params.Year)
+                })
 		.onComplete(function() {
 ///////////////////video
 			params.stopVideo();
