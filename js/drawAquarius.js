@@ -5,18 +5,53 @@ function clearAquarius(){
 	scene.remove(MovingAquarius);
 }
 
+//set up interpolation over Mark's file
 //use the values from Mark Hammergren's file
+function initAquariusInterps(){
+	var x = [];
+	var y = [];
+	var z = [];
+	var t = [];
+	for (i=0; i<Object.keys(aquarius.x).length; i++){
+		x.push(aquarius.x[i]);
+		y.push(aquarius.y[i]);
+		z.push(aquarius.z[i]);
+		t.push(aquarius.JD[i]);
+	}
+
+	aquarius.xInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(x),
+		1,
+		new Float32Array( 1 )
+	);
+
+	aquarius.yInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(y),
+		1,
+		new Float32Array( 1 )
+	);
+
+	aquarius.zInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(z),
+		1,
+		new Float32Array( 1 )
+	);
+
+}
+
 function getAquariusPositionH(){
-	var JDtoday = JD0 + (params.Year - 1990.);
 
 	//I need to interpolate
-	pos = [aquarius.x[0], aquarius.y[0], aquarius.z[0]];
-
+	//pos = [aquarius.x[0], aquarius.y[0], aquarius.z[0]];
+	console.log(params.JDtoday, aquarius.xInterp.evaluate(params.JDtoday))
+	pos = [aquarius.xInterp.evaluate(params.JDtoday), aquarius.yInterp.evaluate(params.JDtoday), aquarius.zInterp.evaluate(params.JDtoday)];
 	return pos
 }
 //use the values from Mark Hammergren's file
 function getAquariusOrbitH(){
-	var JDtoday = JD0 + (params.Year - 1990.);
 
 	//I need to interpolate
 	var geometry = new THREE.Geometry();
@@ -30,8 +65,7 @@ function getAquariusOrbitH(){
 
 //get position of Aquarius
 function createAquariusOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
-	var JDtoday = JD0 + (params.Year - 1990.);
-	var tdiff = JDtoday - tperi;
+	var tdiff = params.JDtoday - tperi;
 	var phase = (tdiff % period)/period;
 	
 	var i,j;
@@ -70,12 +104,11 @@ function createAquariusOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10
 function makeAquarius( geo, tperi, day, radius, rotation = null) {
 
 	var rotPeriodAquarius = 0.002;
-	var JDtoday = JD0 + (params.Year - 1990.);
-	var tdiff = JDtoday - tperi;
+	var tdiff = params.JDtoday - tperi;
 	var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
 
 	//make slightly bigger so can actually see it
-	var AquariusRad = 1e5;//radius*params.AquariusRadFac;
+	var AquariusRad = radius*params.AquariusRadFac;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
 	var sc = params.earthRad*AquariusRad;
 
@@ -138,20 +171,19 @@ function drawAquarius()
 
 	geo = getAquariusPositionH();
 	//rotate meteorid slightly, and make size approximately 2m in radius, given in Earth radii
-	makeAquarius( geo, aquarius.tperi, 0.0001, 0.0000003, rotation = SSrotation);	
+	makeAquarius( geo, 0., 0.0001, 0.0000003, rotation = SSrotation);	
 
 }
 
 function moveAquarius()
 {
 	var rotPeriodAquarius = 0.02;
-    var JDtoday = JD0 + (params.Year - 1990.);
-    var tdiff = JDtoday - aquarius.argument_of_periapsis;
-    var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
+	var tdiff = params.JDtoday;//- aquarius.argument_of_periapsis;
+	var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
 	
 	var Ntheta = 1.
 	//geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = Ntheta);
-	geo = createAquariusOrbitH();
+	geo = getAquariusPositionH();
 
 	//set position
 	MovingAquariusMesh.position.set(geo[0],geo[1],geo[2]);
@@ -160,5 +192,5 @@ function moveAquarius()
 	MovingAquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoriod around axis
 
 	scene.updateMatrixWorld(true);
-    params.AquariusPos.setFromMatrixPosition( MovingAquariusMesh.matrixWorld );
+	params.AquariusPos.setFromMatrixPosition( MovingAquariusMesh.matrixWorld );
 }

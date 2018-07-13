@@ -11,8 +11,7 @@ function clearMoonOrbitLines() {
 function createMoonOrbits(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
 //in this calculation the orbit line will start at peri
 //but I'd like to move that so that it starts at roughly the correct spot for the given planet at the given time
-        var JDtoday = JD0 + (params.Year - 1990.);
-        var tdiff = JDtoday - tperi - 0.025; //fiddle to get moon in correct spot
+        var tdiff = params.JDtoday - tperi - 0.025; //fiddle to get moon in correct spot
         var phase = (tdiff % period)/period;
 
         var i,j;

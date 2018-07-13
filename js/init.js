@@ -318,6 +318,8 @@ function defineParams(){
 		//this.Year = 2017.10137;
 		//gets us closer to intersection, but might not be exactly correct time
 		this.Year = t00; 
+		this.daytoyr = 365.2422;
+		this.JDtoday = JD0 + (this.Year - 1990.)*this.daytoyr;
 		//this.Year = 2017.0939;
 
 		//image and video capture
@@ -345,7 +347,7 @@ function defineParams(){
 		this.PlutoPos = new THREE.Vector3();
 		this.PlanetsPos = { 0:this.MercuryPos,
 							1:this.VenusPos,
-							2.:this.EarthPos,
+							2:this.EarthPos,
 							3:this.MarsPos,
 							4:this.JupiterPos,
 							5:this.SaturnPos,
@@ -364,10 +366,11 @@ function defineParams(){
 
 //some functions
 		this.updateSolarSystem = function() {
+			this.JDtoday = JD0 + (this.Year - 1990)*this.daytoyr;
 
 			clearPlanetOrbitLines();
 			drawPlanetOrbitLines();
-			drawAquariusOrbitLine();
+			//drawAquariusOrbitLine();
 
 			clearSun();
 			drawSun();
@@ -523,7 +526,7 @@ function defineGUI(){
 	gui = new dat.GUI({ width: 450 } )
 	//gui.add( params, 'Year', 1990, 3000).listen().onChange(params.updateSolarSystem).name("Year");;
 	gui.add( params, 'Year', 1990, 2018).listen().onChange(params.updateSolarSystem).name("Year");;
-	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
+	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./params.daytoyr), "Year": 1} ).name("Time Step Unit");
 	gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
 	gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8 } ).onChange(params.updateCameraTarget).name("Camera Target");
 
@@ -580,6 +583,7 @@ function WebGLStart(){
 	}
 
 //draw everything
+	initAquariusInterps();
 	loadAquarius();
 	drawInnerMilkyWay();
 	drawPlanetOrbitLines();

@@ -8,49 +8,9 @@ function clearEarth(){
 }
 
 
-//get position of Earth
-function createEarthOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
-	var JDtoday = JD0 + (params.Year - 1990.);
-	var tdiff = JDtoday - tperi;
-	var phase = (tdiff % period)/period;
-	
-	var i,j;
-	var b = [-1.*inc, lan, ap];
-	var c = [];
-	var s = [];
-	for (i=0; i<3; i++){
-		c.push(Math.cos(b[i]));
-		s.push(Math.sin(b[i]));
-	}       
-	semi = semi;
-	var P = [];
-	P.push(-1.*c[2]*c[1] + s[2]*c[0]*s[1]);
-	P.push(-1.*c[2]*s[1] - s[2]*c[0]*c[1]);
-	P.push(-1.*s[2]*s[0]); 
-	var Q = [];
-	Q.push(s[2]*c[1] + c[2]*c[0]*s[1]);
-	Q.push(s[2]*s[1] - c[2]*c[0]*c[1]);
-	Q.push(-1.*s[0]*c[2]);
-	
-	var dTheta = 2.*Math.PI / Ntheta;
-	
-	var geometry = new THREE.Geometry();
-	var pos;
-	
-	var E = 0.0;
-	i=0;
-	E = (i*dTheta + 2.*phase*Math.PI) % (2.*Math.PI);
-	pos = []
-	for (j=0; j<3; j++){
-		pos.push(semi * (Math.cos(E) - ecc) * P[j] + semi * Math.sqrt(1.0 - ecc * ecc) * Math.sin(E) * Q[j])                
-	}       
-	return pos;
-}
-
 //get position of Moon
 function createMoonOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
-	var JDtoday = JD0 + (params.Year - 1990.);
-	var tdiff = JDtoday - tperi - 0.025; //fiddle to get moon in correct spot
+	var tdiff = params.JDtoday - tperi - 0.025; //fiddle to get moon in correct spot
 	var phase = (tdiff % period)/period;
 
 	var i,j;
@@ -90,9 +50,8 @@ function makeEarth( geo, tperi, day, radius, tilt, rotation = null) {
 
 	var rotPeriodEarth = day;
 	var rotPeriodCloud = rotPeriodEarth/1.3;
-	var JDtoday = JD0 + (params.Year - 1990.);
-	//var tdiff = JDtoday - tperi - 0.0012; //fiddle to change initial position of Earth texture
-	var tdiff = JDtoday - tperi - 0.001265;
+	//var tdiff = params.JDtoday - tperi - 0.0012; //fiddle to change initial position of Earth texture
+	var tdiff = params.JDtoday - tperi - 0.001265;
 	var phaseEarth = (tdiff % rotPeriodEarth)/rotPeriodEarth;
 	var phaseCloud = (tdiff % rotPeriodCloud)/rotPeriodCloud;
 	var rotPeriodMoon = planets[9].period;
@@ -145,7 +104,7 @@ function makeEarth( geo, tperi, day, radius, tilt, rotation = null) {
 		mesh.rotation.y = (2.*phaseEarth*Math.PI) % (2.*Math.PI); //rotate Earth around axis
 		mesh.rotation.z = THREE.Math.degToRad(0.); 
 	}
-	mesh.position.set(geo[0],geo[1],geo[2]);
+	mesh.position.set(geo.x,geo.y,geo.z);
 	mesh.scale.set(sc, sc, sc);
 	MovingEarthMesh = mesh;
 
@@ -165,7 +124,7 @@ function makeEarth( geo, tperi, day, radius, tilt, rotation = null) {
 		mesh.rotation.y = (2.*phaseCloud*Math.PI) % (2.*Math.PI); //rotate Cloud around axis
 		mesh.rotation.z = THREE.Math.degToRad(0.);
 	}
-	mesh.position.set(geo[0],geo[1],geo[2]);
+	mesh.position.set(geo.x,geo.y,geo.z);
 	mesh.scale.set(sc, sc, sc);
 
 	MovingCloudMesh = mesh;
@@ -186,7 +145,7 @@ function makeEarth( geo, tperi, day, radius, tilt, rotation = null) {
 		//mesh.rotation.y = 0.
 		mesh.rotation.z = THREE.Math.degToRad(0.);
 	}
-	mesh.position.set(geo[0]+moongeo[0],geo[1]+moongeo[1],geo[2]+moongeo[2]);
+	mesh.position.set(geo.x+moongeo[0],geo.y+moongeo[1],geo.z+moongeo[2]);
 	mesh.scale.set(sc, sc, sc);
 
 	MovingMoonMesh = mesh;
@@ -215,9 +174,9 @@ function makeEarth( geo, tperi, day, radius, tilt, rotation = null) {
 function drawEarth()
 {
 	var i = 2;
-	geo = createEarthOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
+	geo = createOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period*params.daytoyr, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
 
-	makeEarth( geo, planets[i].tperi, planets[i].day, planets[i].radius, planets[i].tilt, rotation = SSrotation);	
+	makeEarth( geo.vertices[0], planets[i].tperi, planets[i].day, planets[i].radius, planets[i].tilt, rotation = SSrotation);	
 
 }
 
@@ -228,21 +187,20 @@ function moveEarthMoon()
 
 	var rotPeriodEarth = planets[i].day;
 	var rotPeriodCloud = rotPeriodEarth/1.3;
-	var JDtoday = JD0 + (params.Year - 1990.);
-	var tdiff = JDtoday - planets[i].tperi - 0.0012; //fiddle to change initial position of Earth texture
+	var tdiff = params.JDtoday - planets[i].tperi - 0.0012; //fiddle to change initial position of Earth texture
 	var phaseEarth = (tdiff % rotPeriodEarth)/rotPeriodEarth;
 	var phaseCloud = (tdiff % rotPeriodCloud)/rotPeriodCloud; 
 	var rotPeriodMoon = planets[j].period;
 	var phaseMoon = (tdiff % rotPeriodMoon)/rotPeriodMoon;	
 
 
-	geo = createEarthOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 100.);
-	moongeo = createMoonOrbit(planets[j].semi_major_axis, planets[j].eccentricity, THREE.Math.degToRad(planets[j].inclination), THREE.Math.degToRad(planets[j].longitude_of_ascending_node), THREE.Math.degToRad(planets[j].argument_of_periapsis), planets[j].tperi, planets[j].period, Ntheta = 100.);
+	geo = createOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period*params.daytoyr, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
+	moongeo = createMoonOrbit(planets[j].semi_major_axis, planets[j].eccentricity, THREE.Math.degToRad(planets[j].inclination), THREE.Math.degToRad(planets[j].longitude_of_ascending_node), THREE.Math.degToRad(planets[j].argument_of_periapsis), planets[j].tperi, planets[j].period*params.daytoyr, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
 
 	//set position
-	MovingEarthMesh.position.set(geo[0],geo[1],geo[2]);
-	MovingCloudMesh.position.set(geo[0],geo[1],geo[2]);
-	MovingMoonMesh.position.set(geo[0]+moongeo[0],geo[1]+moongeo[1],geo[2]+moongeo[2]);	
+	MovingEarthMesh.position.set(geo.vertices[0].x, geo.vertices[0].y, geo.vertices[0].z);
+	MovingCloudMesh.position.set(geo.vertices[0].x, geo.vertices[0].y, geo.vertices[0].z);
+	MovingMoonMesh.position.set(geo.vertices[0].x+moongeo[0], geo.vertices[0].y+moongeo[1], geo.vertices[0].z+moongeo[2]);
 
 	//set rotation of planet, cloud, moon
 	MovingEarthMesh.rotation.y = (2.*phaseEarth*Math.PI) % (2.*Math.PI); //rotate Earth around axis
