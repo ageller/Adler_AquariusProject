@@ -47,7 +47,7 @@ function createAquariusOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10
 
 function makeAquarius( geo, tperi, day, radius, rotation = null) {
 
-	var rotPeriodAquarius = 0.02;
+	var rotPeriodAquarius = 0.002;
 	var JDtoday = JD0 + (params.Year - 1990.);
 	var tdiff = JDtoday - tperi;
 	var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
