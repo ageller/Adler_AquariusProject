@@ -519,6 +519,7 @@ function defineParams(){
 		this.AquariusRadFac = 5e4;
 		this.drawAquariusOrbit = true;
 		this.AquariusThetaMax= 2.*Math.PI;
+		this.doCapture = false;
 	};
 
 	params = new ParamsInit();

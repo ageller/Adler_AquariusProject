@@ -225,14 +225,16 @@ function loadAquarius()
 		} );
 		
 		MovingAquariusMesh = object;
-		makeAquarius( params.AquariusOrbitGeometry.vertices[0], 0., 0.0001, 0.0000003, rotation = SSrotation);	
-		//drawAquarius();
+		drawAquarius();
 
 
 	}, onProgress, onError );
 }
 
-
+function drawAquarius()
+{
+	makeAquarius( params.AquariusOrbitGeometry.vertices[0], 0., 0.0001, 0.0000003, rotation = SSrotation);	
+}
 
 function moveAquarius()
 {

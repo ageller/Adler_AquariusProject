@@ -5,16 +5,16 @@ function runTweens(){
 
 	var duration = 10000;
 	var initialTime00 = {t:t00};
-        var finalTime00 = {t:t01};
+		var finalTime00 = {t:t01};
 	var initialTime1 = {t:t01};
-        var finalTime1 = {t:t1};
+		var finalTime1 = {t:t1};
 	var dur0 = 3.5 * duration * (t01 - t00)/(tf - t00);
 	//var dur1 = duration * (t1 - t0)/(tf - t0);
 	//var dur2 = duration * (t2 - t1)/(tf - t0);
 	//var dur3 = duration * (tf - t2)/(tf - t0) *50.;
 	var dur1 = 35.*duration * (t1 - t01)/(tf - t00);
-        var dur2 = 15.*duration * (t2 - t1)/(tf - t00);
-        var dur3 = 30.*duration * (tf - t2)/(tf - t00) *50.;
+		var dur2 = 15.*duration * (t2 - t1)/(tf - t00);
+		var dur3 = 30.*duration * (tf - t2)/(tf - t00) *50.;
 	var dur4 = dur3/3.;
 	console.log(dur0, dur1, dur2, dur3, dur4)
 
@@ -24,35 +24,37 @@ function runTweens(){
 
 ///////////////////////////////tween00
 	var finalPos00 = { x: 0.7448025457837447, y: -0.542700457564619, z: 1.3863427066124339 };
-        var initialPos1 = {x: -1.5229923919239612, y: -1.392539191804188, z: 1.794524190150591 };
-        //var initialRot1 = {x: 0.7007383397082899, y: -1.0337449092016764, z: 0.7429190870044281};
+		var initialPos1 = {x: -1.5229923919239612, y: -1.392539191804188, z: 1.794524190150591 };
+		//var initialRot1 = {x: 0.7007383397082899, y: -1.0337449092016764, z: 0.7429190870044281};
 	var initialRot1 = {x: -0.28798640344379695, y: 0.7641189554688708, z: 0.20215616650278126};
-        var finalPos1 = {x: 0.18289695665178268, y: -0.7375987331249219, z: 1.01813441075547};
-        var finalRot1 = {x: 0.7076569428087275, y: -1.0310962401588097, z: 0.5660625965612196};
+		var finalPos1 = {x: 0.18289695665178268, y: -0.7375987331249219, z: 1.01813441075547};
+		var finalRot1 = {x: 0.7076569428087275, y: -1.0310962401588097, z: 0.5660625965612196};
 
 	var timeTween00 = new TWEEN.Tween(initialTime00).to(finalTime00, dur0).easing(TWEEN.Easing.Linear.None)
-                .onUpdate(function(object){
-                        params.Year = object.t;
-                        params.updateSolarSystem();
-                });
-        var posTween00 = new TWEEN.Tween(camera.position).to(finalPos00, dur0).easing(TWEEN.Easing.Quintic.InOut)
-                .onUpdate(function(object){
-                        camera.position.x = object.x;
-                        camera.position.y = object.y;
-                        camera.position.z = object.z;
-                })
-                .onStart(function(){
-                        console.log("tween00");
+				.onUpdate(function(object){
+						params.Year = object.t;
+						params.updateSolarSystem();
+				});
+		var posTween00 = new TWEEN.Tween(camera.position).to(finalPos00, dur0).easing(TWEEN.Easing.Quintic.InOut)
+				.onUpdate(function(object){
+						camera.position.x = object.x;
+						camera.position.y = object.y;
+						camera.position.z = object.z;
+				})
+				.onStart(function(){
+						console.log("tween00");
 ///////////////////video
-                        params.filename = 'tween00Capture';
-                        params.videoDuration = 90;
-                        params.videoFramerate = 30;
-                        params.recordVideo();
+						if (params.doCapture){
+							params.filename = 'tween00Capture';
+							params.videoDuration = 90;
+							params.videoFramerate = 30;
+							params.recordVideo();
+						}
 ///////////////////video	
 			timeTween00.start();	
-                })
-                .onComplete(function(){
-                        console.log("tween00 end:",params.Year);
+				})
+				.onComplete(function(){
+						console.log("tween00 end:",params.Year);
 		});
 ///////////////////////////////tween1
 	var timeTween1 = new TWEEN.Tween(initialTime1).to(finalTime1, dur1).easing(TWEEN.Easing.Quintic.Out)
@@ -99,8 +101,8 @@ function runTweens(){
 			camera.position.z = params.AquariusPos.z + offset.z;
 		})
 		.onStart(function(){
-                        console.log("tween2 start")
-                })
+			console.log("tween2 start")
+		})
 
 
 //////////////////////tween3 (slow down)		
@@ -118,8 +120,8 @@ function runTweens(){
 			camera.position.z = params.AquariusPos.z + offset.z;
 		})
 		.onStart(function(){
-                        console.log("tween3 start",params.Year)
-                })
+			console.log("tween3 start",params.Year)
+		})
 
 ///////////////////////////////tween4 rotate view and shrink asteroid
 	var r1 = {r:5.e4};
@@ -147,12 +149,14 @@ function runTweens(){
 			camera.position.z = object.z;
 		})
 		.onStart(function(){
-                        console.log("tween4 start",params.Year)
-                })
+			console.log("tween4 start",params.Year)
+		})
 		.onComplete(function() {
 ///////////////////video
-			params.stopVideo();
-			params.saveVideo();
+			if (params.doCapture){
+				params.stopVideo();
+				params.saveVideo();
+			}
 ///////////////////video
 		});
 
