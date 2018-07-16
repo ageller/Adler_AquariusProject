@@ -42,24 +42,24 @@ function update(time){
 	if (keyboard.down("Y")) {
 		params.inTween = false;
 	}
-	if (keyboard.down("0")) {
+	if (keyboard.down("Q")) {
 		params.Year = t0;
 		params.updateSolarSystem();
 	}
-	if (keyboard.down("1")) {
+	if (keyboard.down("W")) {
 		params.Year = t1;
 		params.updateSolarSystem();
 	}
-	if (keyboard.down("2")) {
+	if (keyboard.down("E")) {
 		params.Year = t2;
 		params.updateSolarSystem();
 	}
-	if (keyboard.down("3")) {
+	if (keyboard.down("R")) {
 		params.Year = tf;
 		params.updateSolarSystem();
 	}	
 	if (keyboard.down("C")) {
-		console.log(camera.position, camera.rotation, params.Year);
+		console.log(camera.position, camera.rotation, params.Year, params.JDtoday);
 	}
 
 	if ( keyboard.down("left") ) {
