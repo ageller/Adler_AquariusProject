@@ -104,7 +104,7 @@ function render() {
 	}
 
 	params.timeStep = parseFloat(params.timeStepUnit)*parseFloat(params.timeStepFac);
-	if (params.timeStep != 0){
+	if ((params.timeStep != 0) && (params.Year + params.timeStep <= params.tmax) && (params.Year + params.timeStep >= params.tmin)){
 		params.Year += params.timeStep;
 		params.updateSolarSystem();
 	}

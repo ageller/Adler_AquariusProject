@@ -68,8 +68,8 @@ function drawSun()
 
 		vertexShader: myVertexShader,
 		fragmentShader: coronaFragmentShader,
-		depthWrite:true,
-		depthTest: true,
+		depthWrite:false,
+		depthTest: false,
 		side: THREE.DoubleSide, 
 		transparent:true,
 		alphaTest: true,

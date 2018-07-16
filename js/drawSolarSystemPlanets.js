@@ -147,7 +147,7 @@ function drawAquariusOrbitLine()
 		geo = getAquariusOrbitH();
 		var i0 = aquarius.indexInterp.evaluate(params.JDtoday);
 		var p0 = i0/Object.keys(aquarius.x).length;
-		makePlanetLine( params.AquariusOrbitGeometry , color = 'white', rotation = SSrotation, addToOrbitLines = true, p0 = 0.)
+		makePlanetLine( params.AquariusOrbitGeometry , color = 'white', rotation = SSrotation, addToOrbitLines = true, p0 = p0)
 
 	}
 

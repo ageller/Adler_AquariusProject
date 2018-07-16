@@ -413,8 +413,8 @@ function defineParams(){
 			//drawPluto();
 			movePluto();		
 
-			// clearAquarius();
-			// drawAquarius();
+			clearAquarius();
+			drawAquarius();
 			moveAquarius();
 
 			clearMoonOrbitLines();
@@ -585,6 +585,7 @@ function getTspan(){
 
 	params.tmin = (min - JD0)/params.daytoyr + 1990;
 	params.tmax = (max - JD0)/params.daytoyr + 1990;
+	params.Year = params.tmin
 }
 
 function WebGLStart(){	
