@@ -8,20 +8,33 @@ function clearAquarius(){
 //set up interpolation over Mark's file
 //use the values from Mark Hammergren's file
 function initAquariusInterps(){
+	var t = [];
 	var x = [];
 	var y = [];
 	var z = [];
-	var t = [];
+	var a = [];
+	var p = [];
+	var e = [];
+	var inc = [];
+	var la = [];
+	var ap = [];
+	var tp = [];
 	var index = [];
 	for (i=0; i<Object.keys(aquarius.x).length; i++){
+		t.push(aquarius.JD[i]);
 		x.push(aquarius.x[i]);
 		y.push(aquarius.y[i]);
 		z.push(aquarius.z[i]);
-		t.push(aquarius.JD[i]);
+		a.push(aquarius.a[i]);
+		e.push(aquarius.e[i]);
+		p.push(aquarius.p[i]);
+		inc.push(aquarius.i[i]);
+		la.push(aquarius.la[i]);
+		ap.push(aquarius.ap[i]);
+		tp.push(aquarius.tperi[i]);
 		index.push(i)
 	}
-	// console.log(t)
-	// console.log(x)
+
 	aquarius.xInterp = new THREE.LinearInterpolant(
 		new Float32Array(t),
 		new Float32Array(x),
@@ -43,6 +56,48 @@ function initAquariusInterps(){
 		new Float32Array( 1 )
 	);
 
+	aquarius.aInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(a),
+		1,
+		new Float32Array( 1 )
+	);
+	aquarius.pInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(p),
+		1,
+		new Float32Array( 1 )
+	);
+	aquarius.eInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(e),
+		1,
+		new Float32Array( 1 )
+	);
+	aquarius.iInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(inc),
+		1,
+		new Float32Array( 1 )
+	);
+	aquarius.laInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(la),
+		1,
+		new Float32Array( 1 )
+	);
+	aquarius.apInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(ap),
+		1,
+		new Float32Array( 1 )
+	);
+	aquarius.tpInterp = new THREE.LinearInterpolant(
+		new Float32Array(t),
+		new Float32Array(tp),
+		1,
+		new Float32Array( 1 )
+	);
 	aquarius.indexInterp = new THREE.LinearInterpolant(
 		new Float32Array(t),
 		new Float32Array(index),
@@ -55,8 +110,10 @@ function initAquariusInterps(){
 function getAquariusPositionH(){
 
 	//I need to interpolate
-	pos = [aquarius.xInterp.evaluate(params.JDtoday), aquarius.yInterp.evaluate(params.JDtoday), aquarius.zInterp.evaluate(params.JDtoday)];
-	return pos
+	var geometry = new THREE.Geometry();
+
+	geometry.vertices.push( {"x":aquarius.xInterp.evaluate(params.JDtoday), "y":aquarius.yInterp.evaluate(params.JDtoday), "z":aquarius.zInterp.evaluate(params.JDtoday)});
+	return geometry;
 }
 //use the values from Mark Hammergren's file
 function getAquariusOrbitH(){
@@ -70,7 +127,7 @@ function getAquariusOrbitH(){
 
 	params.AquariusOrbitGeometry = geometry;
 
-	return geometry
+	return geometry;
 }
 
 
@@ -123,8 +180,7 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
 	var sc = params.earthRad*AquariusRad;
 
-	console.log("aquarius position", geo)
-	MovingAquariusMesh.position.set(geo[0],geo[1],geo[2]);
+	MovingAquariusMesh.position.set(geo.x,geo.y,geo.z);
 	MovingAquariusMesh.scale.set(sc, sc, sc);
 
 	MovingAquarius = new THREE.Group(); // group Aquarius mesh, then orient orbit 
@@ -169,22 +225,14 @@ function loadAquarius()
 		} );
 		
 		MovingAquariusMesh = object;
-		drawAquarius();
+		makeAquarius( params.AquariusOrbitGeometry.vertices[0], 0., 0.0001, 0.0000003, rotation = SSrotation);	
+		//drawAquarius();
 
 
 	}, onProgress, onError );
 }
 
-function drawAquarius()
-{
-	var Ntheta = 1.
-	//geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = Ntheta);
 
-	geo = getAquariusPositionH();
-	//rotate meteorid slightly, and make size approximately 2m in radius, given in Earth radii
-	makeAquarius( geo, 0., 0.0001, 0.0000003, rotation = SSrotation);	
-
-}
 
 function moveAquarius()
 {
@@ -192,20 +240,21 @@ function moveAquarius()
 	var tdiff = params.JDtoday;//- aquarius.argument_of_periapsis;
 	var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
 
-	if (params.drawAquariusOrbit){
-		// line
-		var i0 = aquarius.indexInterp.evaluate(params.JDtoday);
-		var p0 = i0/Object.keys(aquarius.x).length;
-		makePlanetLine( params.AquariusOrbitGeometry , color = 'white', rotation = SSrotation, addToOrbitLines = true, p0 = p0)
-	}
+	//I can't get this method to work! (using Mark's integrated orbit)
+	// if (params.drawAquariusOrbit){
+	// 	// line
+	// 	var i0 = aquarius.indexInterp.evaluate(params.JDtoday);
+	// 	var p0 = i0/Object.keys(aquarius.x).length;
+	// 	console.log("p0 = ",p0)
+	// 	makePlanetLine( params.AquariusOrbitGeometry , color = 'white', rotation = SSrotation, addToOrbitLines = true, p0 = p0)
+	// }
+	// geo = getAquariusPositionH();
 
 
-	var Ntheta = 1.
-	//geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = Ntheta);
-	geo = getAquariusPositionH();
+	geo = params.AquariusOrbitGeometry.vertices[0];
 
 	//set position
-	MovingAquariusMesh.position.set(geo[0],geo[1],geo[2]);
+	MovingAquariusMesh.position.set(geo.x,geo.y,geo.z);
 
 	//set rotation of meteoriod
 	MovingAquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoriod around axis

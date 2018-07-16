@@ -334,6 +334,8 @@ function defineParams(){
 		this.videoFormat = 'png';
 
 //Planet locations
+		this.AquariusOrbitGeometry = null;
+		this.planetsOrbitGeometry = {};
 		this.SunPos = new THREE.Vector3();
 		this.MercuryPos = new THREE.Vector3();
 		this.VenusPos = new THREE.Vector3();
@@ -341,7 +343,6 @@ function defineParams(){
 		this.EarthSunDir = new THREE.Vector3(1,0,0);
 		this.MoonPos = new THREE.Vector3();
 		this.AquariusPos = new THREE.Vector3();
-		this.AquariusOrbitGeometry = null;
 		this.MarsPos = new THREE.Vector3();
 		this.JupiterPos = new THREE.Vector3();
 		this.SaturnPos = new THREE.Vector3();
@@ -373,8 +374,9 @@ function defineParams(){
 
 			clearPlanetOrbitLines();
 			drawPlanetOrbitLines();
-			//drawAquariusOrbitLine();
-			//I need to resort the orbit line because there are too many points!
+
+			//For Mark's full orbit, I can't redraw because there are too many points.  I tried to just shift the position of the fat part of the line, but couldn't get that to work.  Now I am using the evolving orbital elements.
+			drawAquariusOrbitLine();
 
 			clearSun();
 			drawSun();
@@ -413,8 +415,8 @@ function defineParams(){
 			//drawPluto();
 			movePluto();		
 
-			clearAquarius();
-			drawAquarius();
+			// clearAquarius();
+			// drawAquarius();
 			moveAquarius();
 
 			clearMoonOrbitLines();
@@ -533,6 +535,9 @@ function defineGUI(){
 	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./params.daytoyr), "Year": 1} ).name("Time Step Unit");
 	gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
 	gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8 } ).onChange(params.updateCameraTarget).name("Camera Target");
+	
+	gui.add (params, 'SSlineWidth',0., 1. );
+	gui.add (params, 'SSlineTaper',0., 1. );
 
 	var captureGUI = gui.addFolder('Capture');
 	captureGUI.add( params, 'filename');
@@ -585,7 +590,9 @@ function getTspan(){
 
 	params.tmin = (min - JD0)/params.daytoyr + 1990;
 	params.tmax = (max - JD0)/params.daytoyr + 1990;
-	params.Year = params.tmin
+	params.Year = params.tmin;
+	params.JDtoday = JD0 + (params.Year - 1990.)*params.daytoyr;
+
 }
 
 function WebGLStart(){	
@@ -607,10 +614,10 @@ function WebGLStart(){
 
 //draw everything
 	initAquariusInterps();
+	drawAquariusOrbitLine();
 	loadAquarius();
 	drawInnerMilkyWay();
 	drawPlanetOrbitLines();
-	drawAquariusOrbitLine();
 	drawAsteroidOrbitLines();
 	drawSun();
 	drawEarth();

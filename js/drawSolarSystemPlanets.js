@@ -57,7 +57,7 @@ function createOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10., theta
 function makePlanetLine( geo , color = 'white', rotation = null, addToOrbitLines = true, p0 = 0.) {
 
 	var g = new MeshLine();
-	g.setGeometry( geo, function( p ) { return Math.pow((p + p0) % 1, params.SSlineTaper ) ; });
+	g.setGeometry( geo, function( p ) {return Math.pow( (p + p0) % 1, params.SSlineTaper ) ; });
 	var material = new MeshLineMaterial({
 		color: new THREE.Color(color),
 		opacity: params.useSSalpha,
@@ -120,6 +120,8 @@ function drawPlanetOrbitLines()
 	// line
 	for (var i=0; i<9; i++){
 		geo = createOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period*params.daytoyr, Ntheta = 1000.);
+		// params.planetsOrbitGeometry[i] = geo
+
 		makePlanetLine( geo ,  color = pcolors[planets[i].name], rotation = SSrotation);		
 	}
 
@@ -143,11 +145,19 @@ function drawAquariusOrbitLine()
 {
 	if (params.drawAquariusOrbit){
 		// line
-		// geo = createOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 1000., thethaMin = 0., thetaMax = params.AquariusThetaMax);
-		geo = getAquariusOrbitH();
-		var i0 = aquarius.indexInterp.evaluate(params.JDtoday);
-		var p0 = i0/Object.keys(aquarius.x).length;
-		makePlanetLine( params.AquariusOrbitGeometry , color = 'white', rotation = SSrotation, addToOrbitLines = true, p0 = p0)
+		var a = aquarius.aInterp.evaluate(params.JDtoday);
+		var p = aquarius.pInterp.evaluate(params.JDtoday) * params.daytoyr;
+		var e = aquarius.eInterp.evaluate(params.JDtoday);
+		var i = aquarius.iInterp.evaluate(params.JDtoday);
+		var la = aquarius.laInterp.evaluate(params.JDtoday);
+		var ap = aquarius.apInterp.evaluate(params.JDtoday);
+		var tp = aquarius.tpInterp.evaluate(params.JDtoday);
+
+		params.AquariusOrbitGeometry = createOrbit(a, e, THREE.Math.degToRad(i), THREE.Math.degToRad(la), THREE.Math.degToRad(ap), tp, p, Ntheta = 1000., thethaMin = 0., thetaMax = params.AquariusThetaMax);
+		// geo = getAquariusOrbitH();
+		// var i0 = aquarius.indexInterp.evaluate(params.JDtoday);
+		// var p0 = i0/Object.keys(aquarius.x).length;
+		makePlanetLine( params.AquariusOrbitGeometry , color = 'white', rotation = SSrotation, addToOrbitLines = true, p0 = 0)
 
 	}
 

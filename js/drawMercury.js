@@ -12,7 +12,7 @@ function makeMercury( geo, tperi, day, radius, tilt, rotation = null) {
 	var tdiff = params.JDtoday - tperi;
 	var phaseMercury = (tdiff % rotPeriodMercury)/rotPeriodMercury;
 
-	var MercuryRad = radius;
+	var MercuryRad = radius * 500;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
 	var sc = params.earthRad;
 
@@ -63,7 +63,13 @@ function moveMercury()
 	var phaseMercury = (tdiff % rotPeriodMercury)/rotPeriodMercury;
 
 	geo = createOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period*params.daytoyr, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
-	
+
+	//there aren't enough points to do it this way
+	// var tdiff = params.JDtoday - planets[i].tperi;
+	// var period = planets[i].period*params.daytoyr;
+	// var phase = (tdiff % period)/period;  //am I on the opposite side of the orbit?
+	// makePlanetLine( params.planetsOrbitGeometry[i], color = pcolors[planets[i].name], rotation = SSrotation, addToOrbitLines = true, p0 = phase)
+
 	//set position
 	MovingMercuryMesh.position.set(geo.vertices[0].x, geo.vertices[0].y, geo.vertices[0].z);
 
