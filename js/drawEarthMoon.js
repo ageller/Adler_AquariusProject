@@ -92,14 +92,14 @@ function makeEarth( geo, tperi, day, radius, tilt, rotation = null) {
 	var rotPeriodCloud = rotPeriodEarth/1.3;
 	var JDtoday = JD0 + (params.Year - 1990.);
 	//var tdiff = JDtoday - tperi - 0.0012; //fiddle to change initial position of Earth texture
-	var tdiff = JDtoday - tperi - 0.001265;
+	var tdiff = JDtoday - tperi - 0.00127;
 	var phaseEarth = (tdiff % rotPeriodEarth)/rotPeriodEarth;
 	var phaseCloud = (tdiff % rotPeriodCloud)/rotPeriodCloud;
 	var rotPeriodMoon = planets[9].period;
 	var phaseMoon = (tdiff % rotPeriodMoon)/rotPeriodMoon;
 
-	var EarthRad = radius * 0.9;
-	var CloudRad = radius * 0.9 * params.cloudRad/params.earthRad;
+	var EarthRad = radius * params.earthScale;
+	var CloudRad = radius * params.earthScale * params.cloudRad/params.earthRad;
 	var MoonRad = planets[9].radius;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
 	var sc = params.earthRad;

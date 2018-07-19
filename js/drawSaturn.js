@@ -53,7 +53,7 @@ function makeSaturn( geo, tperi, day, radius, tilt, rotation = null) {
         var tdiff = JDtoday - tperi;
         var phaseSaturn = (tdiff % rotPeriodSaturn)/rotPeriodSaturn;
 
-	var SaturnRad = radius;
+	var SaturnRad = radius * params.planetScale;
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
         var sc = params.earthRad;
 

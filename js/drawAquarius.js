@@ -47,7 +47,7 @@ function createAquariusOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10
 
 function makeAquarius( geo, tperi, day, radius, rotation = null) {
 
-	var rotPeriodAquarius = 0.002;
+	var rotPeriodAquarius = 0.2;
 	var JDtoday = JD0 + (params.Year - 1990.);
 	var tdiff = JDtoday - tperi;
 	var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
@@ -66,7 +66,8 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 		MovingAquarius.rotation.y = rotation.y;
 		MovingAquarius.rotation.z = rotation.z;
 	}
-	MovingAquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoriod around axis
+	//MovingAquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoriod around axis
+	MovingAquariusMesh.rotation.y += 0.02;
 
 	MovingAquarius.add(MovingAquariusMesh);
 	scene.add(MovingAquarius);
@@ -120,7 +121,7 @@ function drawAquarius()
 
 function moveAquarius()
 {
-	var rotPeriodAquarius = 0.02;
+	var rotPeriodAquarius = 0.2;
     var JDtoday = JD0 + (params.Year - 1990.);
     var tdiff = JDtoday - aquarius.argument_of_periapsis;
     var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
@@ -132,7 +133,8 @@ function moveAquarius()
 	MovingAquariusMesh.position.set(geo[0],geo[1],geo[2]);
 
 	//set rotation of meteoriod
-	MovingAquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoriod around axis
+	//MovingAquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoriod around axis
+	MovingAquariusMesh.rotation.y += 0.02;
 
 	scene.updateMatrixWorld(true);
         params.AquariusPos.setFromMatrixPosition( MovingAquariusMesh.matrixWorld );

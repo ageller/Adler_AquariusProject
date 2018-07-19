@@ -19,8 +19,8 @@ var t00 = tf - 2.59443;//2014.5
 var t01 = tf - 0.29443;//2016.8
 var t0 = tf - 0.4;//2016.69443071;
 var t1 = tf - 0.2;//2016.89443071;
-var t2 = tf - 0.0015;//tf - 0.01;//2017.08443071;
-//var t2 = tf;
+//var t2 = tf - 0.0015;
+var t2 = tf - 0.0001;
 
 var AUfac = 206264.94195722;
 
@@ -308,6 +308,8 @@ function defineParams(){
 		this.cloudRad = this.earthRad * 1.01; 
 		this.jupiterRad = this.earthRad * 11.209;
 		this.marsRad = this.earthRad * 0.53;
+		this.planetScale = 500.; //scale up all the planets to start
+		this.earthScale = 500.;
 
 		//time controls
 		this.timeStepUnit = 0.;
@@ -319,6 +321,7 @@ function defineParams(){
 		//gets us closer to intersection, but might not be exactly correct time
 		this.Year = t00; 
 		//this.Year = 2017.0939;
+		this.shrinkYear = 2016.8; //time at which to shrink from original this.planetScale	
 
 		//image and video capture
 		this.filename = "test.png";
@@ -362,12 +365,19 @@ function defineParams(){
 //		this.cameraTarget = 2 //Earth
 		this.cameraTarget = 10 //Asteroid
 
+		this.counter = 0;
+
 //some functions
 		this.updateSolarSystem = function() {
 
 			clearPlanetOrbitLines();
 			drawPlanetOrbitLines();
-			drawAquariusOrbitLine();
+			//drawAquariusOrbitLine();
+			//draw Aquarius line until certain time
+                        if (params.Year <= 2016.8935) {
+                                drawAquariusOrbitLine();
+                        }
+
 
 			clearSun();
 			drawSun();
@@ -412,6 +422,34 @@ function defineParams(){
 
 			clearMoonOrbitLines();
 			drawMoonOrbitLines();
+
+			if ((params.Year > params.shrinkYear) && (params.counter == 0)) {
+                                clearEarth();
+                                clearMercury();
+                                clearVenus();
+                                clearMars();
+                                clearJupiter();
+                                clearSaturn();
+                                clearUranus();
+                                clearNeptune();
+                                clearPluto();
+
+                                params.planetScale = 1.;
+				params.earthScale = 0.9;
+
+                                drawEarth();
+                                drawMercury();
+                                drawVenus();
+                                drawMars();
+                                drawJupiter();
+                                drawSaturn();
+                                drawUranus();
+                                drawNeptune();
+                                drawPluto();
+                                //loadAquarius();
+
+                                params.counter = params.counter + 1;
+                        }
 
 		};
 	
