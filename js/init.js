@@ -108,7 +108,8 @@ function init() {
 	var fov = 45;
 	var aspect = screenWidth / screenHeight;
 	//var zmin = 0.005; //minimum distance from object
-	var zmin = 0.00001;
+	//var zmin = 0.00001;
+	var zmin = 0.0005;
 	var zmax = 5.e10;
 	camera = new THREE.PerspectiveCamera( fov, aspect, zmin, zmax);
 	scene.add(camera);
@@ -352,6 +353,9 @@ function defineParams(){
 //Camera target (number)
 		this.cameraTarget = 2 //Earth
 
+//Camera Zoom In control
+		this.zoominobj = false; //no zooming in
+
 //some functions
 		this.updateSolarSystem = function() {
 
@@ -490,6 +494,26 @@ function defineParams(){
 			controls.target = params.PlanetsPos[params.cameraTarget];
 			camera.lookAt(params.PlanetsPos[params.cameraTarget]);	
 		}
+		
+		this.updateZoomIn = function(){
+			//console.log(camera.near);
+			var posTween = new TWEEN.Tween(camera.position).to(params.PlanetsPos[params.cameraTarget],1000)
+				.start()
+				.onComplete(function(){
+					console.log('camera postion',camera.position);
+					console.log('planet position',params.PlanetsPos[params.cameraTarget]);
+				});
+                }
+
+		this.updateZoomOut = function(){
+			var ZoomOutPos = { x: 5.0, y: 0.0, z: 5.0 };
+                        var posTween = new TWEEN.Tween(camera.position).to(ZoomOutPos,1000)
+                                .start()
+                                .onComplete(function(){
+                                        console.log('camera postion',camera.position);
+                                        console.log('ZoomOutPos',ZoomOutPos);
+                                });
+                }
 
 	};
 
@@ -505,6 +529,10 @@ function defineGUI(){
 	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
 	gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
 	gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8 } ).onChange(params.updateCameraTarget).name("Camera Target");
+	//gui.add( params, 'zoominobj', {"Yes":1, "No":0} ).onChange(params.updateZoomIn).name("Zoom In");
+	//gui.add( params, 'zoominobj').onChange(params.updateZoomIn).name("Zoom In");	
+	gui.add(params,'updateZoomIn').name("Zoom In");
+	gui.add(params,'updateZoomOut').name("Zoom Out");
 
 	var captureGUI = gui.addFolder('Capture');
 	captureGUI.add( params, 'filename');

@@ -7,6 +7,7 @@ function animate(time) {
 }
 
 function update(time){
+	TWEEN.update(time);
 	keyboard.update();
 
 	if (params.timeStepFac > 0){
