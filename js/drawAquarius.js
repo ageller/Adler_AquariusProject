@@ -108,10 +108,10 @@ function loadAquarius()
 
 function drawAquarius()
 {
-	geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 100.);
+	geo = createAquariusOrbit(params.aquarius.semi_major_axis, params.aquarius.eccentricity, THREE.Math.degToRad(params.aquarius.inclination), THREE.Math.degToRad(params.aquarius.longitude_of_ascending_node), THREE.Math.degToRad(params.aquarius.argument_of_periapsis), params.aquarius.tperi, params.aquarius.period, Ntheta = 100.);
 
 	//rotate meteorid slightly, and make size approximately 2m in radius, given in Earth radii
-	makeAquarius( geo, aquarius.tperi, 0.0001, 0.0000003, rotation = SSrotation);	
+	makeAquarius( geo, params.aquarius.tperi, 0.0001, 0.0000003, rotation = SSrotation);	
 
 }
 
@@ -119,10 +119,10 @@ function moveAquarius()
 {
 	var rotPeriodAquarius = 0.0001;
         var JDtoday = JD0 + (params.Year - 1990.);
-        var tdiff = JDtoday - aquarius.argument_of_periapsis;
+        var tdiff = JDtoday - params.aquarius.argument_of_periapsis;
         var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
 	
-	geo = createAquariusOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 100.);
+	geo = createAquariusOrbit(params.aquarius.semi_major_axis, params.aquarius.eccentricity, THREE.Math.degToRad(params.aquarius.inclination), THREE.Math.degToRad(params.aquarius.longitude_of_ascending_node), THREE.Math.degToRad(params.aquarius.argument_of_periapsis), params.aquarius.tperi, params.aquarius.period, Ntheta = 100.);
 
 	//set position
 	MovingAquariusMesh.position.set(geo[0],geo[1],geo[2]);

@@ -96,8 +96,8 @@ function makeMoonLine( geo , color = 'grey', rotation = null, offset = null) {
 function drawMoonOrbitLines()
 {
 	var i1 = 9;
-	geo = createMoonOrbits(planets[i1].semi_major_axis, planets[i1].eccentricity, THREE.Math.degToRad(planets[i1].inclination), THREE.Math.degToRad(planets[i1].longitude_of_ascending_node), THREE.Math.degToRad(planets[i1].argument_of_periapsis), planets[i1].tperi, planets[i1].period, Ntheta = 1000.);
-	makeMoonLine( geo ,  color = 'grey', rotation = SSrotation, offset = params.PlanetsPos[2]); //position 2 is for Earth
+	geo = createMoonOrbits(params.planets[i1].semi_major_axis, params.planets[i1].eccentricity, THREE.Math.degToRad(params.planets[i1].inclination), THREE.Math.degToRad(params.planets[i1].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[i1].argument_of_periapsis), params.planets[i1].tperi, params.planets[i1].period, Ntheta = 1000.);
+	makeMoonLine( geo ,  color = 'grey', rotation = SSrotation, offset = params.planetPos[2]); //position 2 is for Earth
 
 }
 

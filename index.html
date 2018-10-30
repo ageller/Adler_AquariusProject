@@ -2,7 +2,7 @@
 
 	<head>
 		<title>Aquarius Project Interactive</title>
-        <!--<link rel="shortcut icon" href="icon.png">  -->
+		<!--<link rel="shortcut icon" href="icon.png">  -->
 
 		<meta charset="utf-8"/>
 		<link rel="stylesheet" type="text/css" href="css/index.css" />
@@ -26,7 +26,7 @@
 	<script src="resources/d3.v4.10.2.min.js"></script>
 
 <!-- tween -->
-        <script src="resources/Tween.js"></script>
+		<script src="resources/Tween.js"></script>
 
 <!-- ccapture, for video capture -->
 	<script src="resources/CCapture/CCapture.all.min.js"></script>
@@ -34,7 +34,7 @@
 	</head>
 
 	<body>
-    	<div id="loader" >
+		<div id="loader" >
 			<div id="loaderText">
 				<span>Loading</span>
 				<span class="loader__dot">.</span>
@@ -51,20 +51,24 @@
 
 
 		<!-- shaders -->
-	    <script src="shaders/vertex.glsl.js"></script>
-	    <script src="shaders/SunVertex.glsl.js"></script>
-	    <script src="shaders/EarthVertex.glsl.js"></script>
-	    <script src="shaders/coronaFragment.glsl.js"></script>
-	    <script src="shaders/SunFragment.glsl.js"></script>
-	    <script src="shaders/EarthFragment.glsl.js"></script>
+		<script src="shaders/vertex.glsl.js"></script>
+		<script src="shaders/SunVertex.glsl.js"></script>
+		<script src="shaders/EarthVertex.glsl.js"></script>
+		<script src="shaders/coronaFragment.glsl.js"></script>
+		<script src="shaders/SunFragment.glsl.js"></script>
+		<script src="shaders/EarthFragment.glsl.js"></script>
 
 		<!-- the main attraction -->
+		<script src="js/init.js"></script>
 		<script src="js/utils.js"></script>
 		<script src="js/drawSun.js"></script>
-		<script src="js/drawSolarSystemPlanets.js"></script>
+		<script src="js/drawPlanetLine.js"></script>
+		<script src="js/drawPlanetSphere.js"></script>
 		<script src="js/drawMilkyWay.js"></script>
 		<script src="js/renderAll.js"></script>
-		<script src="js/drawEarthMoon.js"></script>
+		<script src="js/drawAquarius.js"></script>
+
+<!-- 		<script src="js/drawEarthMoon.js"></script>
 		<script src="js/drawJupiter.js"></script>
 		<script src="js/drawMars.js"></script>
 		<script src="js/drawVenus.js"></script>
@@ -73,9 +77,7 @@
 		<script src="js/drawUranus.js"></script>
 		<script src="js/drawNeptune.js"></script>
 		<script src="js/drawPluto.js"></script>
-		<script src="js/drawAquarius.js"></script>
-		<script src="js/drawMoons.js"></script>
-		<script src="js/init.js"></script>
+		<script src="js/drawMoons.js"></script> -->
 
 
 	</body>

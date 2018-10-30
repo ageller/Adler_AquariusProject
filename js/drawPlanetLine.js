@@ -54,7 +54,7 @@ function createOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
 }
 
 
-function makePlanetLine( geo , color = 'white', rotation = null) {
+function makePlanetLine( geo , color = 'white', rotation = null, offset = null) {
 
 	var g = new MeshLine();
 	g.setGeometry( geo, function( p ) { return Math.pow(p, params.SSlineTaper ) ; });
@@ -78,8 +78,14 @@ function makePlanetLine( geo , color = 'white', rotation = null) {
 		mesh.rotation.y = rotation.y;
 		mesh.rotation.z = rotation.z;
 	}
+	if (offset != null){
+		mesh.position.x += offset.x;
+		mesh.position.y += offset.y;
+		mesh.position.z += offset.z;
+	}
 	scene.add( mesh );
 	orbitLines.push( mesh );
+
 
 
 }
@@ -115,9 +121,15 @@ function makeAsteroidLine( geo , color = 'white', rotation = null) {
 function drawPlanetOrbitLines()
 {
 	// line
-	for (var i=0; i<planets.length; i++){
-		geo = createOrbit(planets[i].semi_major_axis, planets[i].eccentricity, THREE.Math.degToRad(planets[i].inclination), THREE.Math.degToRad(planets[i].longitude_of_ascending_node), THREE.Math.degToRad(planets[i].argument_of_periapsis), planets[i].tperi, planets[i].period, Ntheta = 1000.);
-		makePlanetLine( geo ,  color = pcolors[planets[i].name], rotation = SSrotation);		
+	for (var i=0; i<params.planets.length; i++){
+		geo = createOrbit(params.planets[i].semi_major_axis, params.planets[i].eccentricity, THREE.Math.degToRad(params.planets[i].inclination), THREE.Math.degToRad(params.planets[i].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[i].argument_of_periapsis), params.planets[i].tperi, params.planets[i].period, Ntheta = 1000.);
+
+		var offset = null;
+		if (i == 9){ //for the Moon
+			offset = params.planetPos[2];
+		}
+
+		makePlanetLine( geo ,  color = pcolors[params.planets[i].name], rotation = SSrotation, offset = offset);		
 	}
 
 }
@@ -125,10 +137,10 @@ function drawPlanetOrbitLines()
 function drawAsteroidOrbitLines()
 {
 	// line
-	ak = Object.keys(asteroids); //a bit of a silly way to do this, could probably find a way to remake the file in the same format as planets.json
+	ak = Object.keys(params.asteroids); //a bit of a silly way to do this, could probably find a way to remake the file in the same format as params.planets.json
 	for (var j=0; j<ak.length; j++){
 		i = ak[j];
-		geo = createOrbit(asteroids[i].semi_major_axis, asteroids[i].eccentricity, THREE.Math.degToRad(asteroids[i].inclination), THREE.Math.degToRad(asteroids[i].longitude_of_ascending_node), THREE.Math.degToRad(asteroids[i].argument_of_periapsis), asteroids[i].tperi, asteroids[i].period, Ntheta = 100.);
+		geo = createOrbit(params.asteroids[i].semi_major_axis, params.asteroids[i].eccentricity, THREE.Math.degToRad(params.asteroids[i].inclination), THREE.Math.degToRad(params.asteroids[i].longitude_of_ascending_node), THREE.Math.degToRad(params.asteroids[i].argument_of_periapsis), params.asteroids[i].tperi, params.asteroids[i].period, Ntheta = 100.);
 		makeAsteroidLine( geo ,  color = 'green', rotation = SSrotation);		
 	}
 
@@ -137,7 +149,7 @@ function drawAsteroidOrbitLines()
 function drawAquariusOrbitLine()
 {
 	// line
-	geo = createOrbit(aquarius.semi_major_axis, aquarius.eccentricity, THREE.Math.degToRad(aquarius.inclination), THREE.Math.degToRad(aquarius.longitude_of_ascending_node), THREE.Math.degToRad(aquarius.argument_of_periapsis), aquarius.tperi, aquarius.period, Ntheta = 1000.);
+	geo = createOrbit(params.aquarius.semi_major_axis, params.aquarius.eccentricity, THREE.Math.degToRad(params.aquarius.inclination), THREE.Math.degToRad(params.aquarius.longitude_of_ascending_node), THREE.Math.degToRad(params.aquarius.argument_of_periapsis), params.aquarius.tperi, params.aquarius.period, Ntheta = 1000.);
 	makePlanetLine( geo ,  color = 'white', rotation = SSrotation);		
 
 }
