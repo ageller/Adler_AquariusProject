@@ -1,101 +1,21 @@
-//all global variables
+//all global variables are now in params object
 
-var container, scene, MWscene, MWInnerScene, camera, renderer, controls, effect, composer, capturer;
-var keyboard = new KeyboardState();
-
-var c3 = "red"
-//var c2 = "blue"
-var c2 = "deepskyblue"
-var c1 = "orange"
-var c4 = "purple"
-var c5 = "grey"
-var pcolors = {"Mercury":c1, "Venus":c1, "EarthMoon":c2, "Mars":c1, "Jupiter":c3, "Saturn":c3, "Uranus":c3, "Neptune":c3, "Pluto":c4, "Moon":c5}
-
-//var JD0 = 2458060.5; //Nov. 3, 2017
-var JD0 = 2447892.5; //Jan. 1, 1990
-
-var AUfac = 206264.94195722;
-
-
-
-var orbitLines = [];
-var MoonOrbitLines = [];
-var SunMesh;
-var coronaMesh;
-var MWInnerMesh;
-var MovingCloudMesh;
-var MovingEarthMesh;
-var MovingMoonMesh;
-var MovingEarthCloud;
-var EarthMaterial;
-var MovingJupiterMesh;
-var MovingJupiter;
-var MovingMarsMesh;
-var MovingMars;
-var MovingVenusMesh;
-var MovingVenus;
-//var MovingVenusCloudMesh;
-//var MovingVenusCloud;
-var MovingMercuryMesh;
-var MovingMercury;
-var MovingSaturnMesh;
-var MovingSaturnRingMesh;
-var MovingSaturn;
-var MovingUranusMesh;
-var MovingUranusRingMesh;
-var MovingUranus;
-var MovingNeptuneMesh;
-var MovingNeptune;
-var MovingPlutoMesh;
-var MovingPluto;
-var MovingAquariusMesh;
-var MovingAquarius;
-
-var SSrotation = new THREE.Vector3(THREE.Math.degToRad(-63.), 0., 0.); //solar system is inclined at 63 degrees to galactic plane
-
-var SunR0;
-
-var iLength;
-var bbTex;
-var MWTex;
-var ESOMWTex;
-var EarthTex;
-var EarthNightTex;
-var EarthBump;
-var EarthSpec;
-var CloudTex;
-var JupiterTex;
-var MarsTex;
-var VenusTex;
-var VenusCloudTex;
-var MercuryTex;
-var SaturnTex;
-var SaturnRingTex;
-var UranusTex;
-var UranusRingTex;
-var NeptuneTex;
-var PlutoTex;
-var AquariusTex;
-var MoonTex;
-var camDist = 1.;
-var camDist0 = 1.;
-var camPrev = 1.;
-var width0 = 1.;
-var height0 = 1.;
-
-var loaded = false;
 
 //defined in WebGLStart, after data is loaded
-var ParamsInit;
 var params;
-
-var gui = null;
-var basicGUI = null;
-var legendGUI = null;
-
-
 function defineParams(data){
 	ParamsInit = function(data) {
+
+		this.scene = null;
+		this.MWInnerScene = null;
+		this.keyboard = null;
+		this.container = null;
+		this.camera = null;
+		this.renderer = null;
+		this.controls = null;
+		this.effect = null;
+		this.composer = null;
+		this.capturer = null;
 
 
 		//this will hold the data from the input files
@@ -103,14 +23,37 @@ function defineParams(data){
 		this.asteroids = data[1];
 		this.aquarius = data[2];
 
+		//this holds all the orbit lines
+		this.orbitLines = [];
+
+		//various meshes
+		this.SunMesh = null;
+		this.coronaMesh = null;
+		this.MWInnerMesh = null;
+
 		//will hold all the spheres of the planets
 		this.movingGroup ={ 0:null,	1:null,	2:null,	3:null,	4:null,	5:null,	6:null,	7:null,	8:null,	9:null};
 		this.movingMesh = { 0:[],	1:[],	2:[],	3:[],	4:[],	5:[],	6:[],	7:[],	8:[],	9:[]  };
 
+		//solar system rotation
+		this.SSrotation = new THREE.Vector3(THREE.Math.degToRad(-63.), 0., 0.); //solar system is inclined at 63 degrees to galactic plane
+
+		//various textures
+		this.bbTex = null;
+		this.ESOMWTex = null;
+
+		//camera info (reset below)
+		this.width0 = 1.;
+		this.height0 = 1.;
+
+		//for gui
+		this.gui = null;
+		this.basicGUI = null;
+		this.legendGUI = null;
+
 		//render info
 		this.fullscreen = function() { THREEx.FullScreen.request() };
-		this.resetCamera = function() { controls.reset(); 	camera.up.set(0, -1, 0)};
-		this.renderer = null;
+		this.resetCamera = function() { params.controls.reset(); 	params.camera.up.set(0, -1, 0)};
 		this.stereo = false;
 		this.friction = 0.2;
 		this.zoomSpeed = 1.;
@@ -153,7 +96,9 @@ function defineParams(data){
 		//gets us closer to intersection, but might not be exactly correct time
 		this.Year = 2017.094; 
 		//this.Year = 2017.0939;
-		this.JDtoday = JD0 + (this.Year - 1990.);
+		//var JD0 = 2458060.5; //Nov. 3, 2017
+		this.JD0 = 2447892.5; //Jan. 1, 1990
+		this.JDtoday = this.JD0 + (this.Year - 1990.);
 
 		//image and video capture
 		this.filename = "test.png";
@@ -190,6 +135,20 @@ function defineParams(data){
 							9:this.MoonPos,
 							10:this.AquariusPos,
 							100:this.SunPos, }
+
+//orbit line colors
+		var c3 = "red"
+		//var c2 = "blue"
+		var c2 = "deepskyblue"
+		var c1 = "orange"
+		var c4 = "purple"
+		var c5 = "grey"
+		this.pcolors = {"Mercury":c1, "Venus":c1, "EarthMoon":c2, "Mars":c1, "Jupiter":c3, "Saturn":c3, "Uranus":c3, "Neptune":c3, "Pluto":c4, "Moon":c5}
+
+//camera "near" limit values for each focus point
+//"Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8
+		this.cameraNear = {"0":0.00003, "1":0.00005, "2":0.00005, "3":0.00004, "4":0.0005, "5":0.0005, "6":0.0003, "7":0.0003, "8":0.00001, "9":0.00005, "10":2e-7, "100":0.01}
+
 //Galaxy appearance
 		this.MWalpha = 0.7;
 
@@ -259,8 +218,8 @@ function defineParams(data){
 			try {
 				//resize
 				params.renderer.setSize(params.captureWidth, params.captureHeight);
-				camera.aspect = params.captureWidth / params.captureHeight;;
-				camera.updateProjectionMatrix();
+				params.camera.aspect = params.captureWidth / params.captureHeight;;
+				params.camera.updateProjectionMatrix();
 				myRender();
 
 				//save image
@@ -269,8 +228,8 @@ function defineParams(data){
 
 				//back to original size
 				params.renderer.setSize(screenWidth, screenHeight);
-				camera.aspect = aspect;
-				camera.updateProjectionMatrix();
+				params.camera.aspect = aspect;
+				params.camera.updateProjectionMatrix();
 				myRender();
 
 			} catch (e) {
@@ -283,7 +242,7 @@ function defineParams(data){
 		this.recordVideo = function(){
 
 			params.captureCanvas = true;
-			capturer = new CCapture( { 
+			params.capturer = new CCapture( { 
 				format: params.videoFormat, 
 				workersPath: 'resources/CCapture/',
 				framerate: params.videoFramerate,
@@ -293,32 +252,35 @@ function defineParams(data){
 				verbose: true,
 			} );
 
-			capturer.start();
+			params.capturer.start();
 
 		}
 
 		this.updateCameraTarget = function(){
 
-			controls.target = params.planetPos[params.cameraTarget];
-			camera.lookAt(params.planetPos[params.cameraTarget]);	
+			params.controls.target = params.planetPos[params.cameraTarget];
+			params.camera.lookAt(params.planetPos[params.cameraTarget]);
+			params.camera.near = params.cameraNear[params.cameraTarget];
+			params.controls.minDistance = 2.*params.camera.near;
+
 		}
 		
 		this.updateZoomIn = function(){
 			//console.log(camera.near);
-			var posTween = new TWEEN.Tween(camera.position).to(params.planetPos[params.cameraTarget],1000)
+			var posTween = new TWEEN.Tween(params.camera.position).to(params.planetPos[params.cameraTarget],1000)
 				.start()
 				.onComplete(function(){
-					console.log('camera postion',camera.position);
+					console.log('camera postion',params.camera.position);
 					console.log('planet position',params.planetPos[params.cameraTarget]);
 				});
 				}
 
 		this.updateZoomOut = function(){
 			var ZoomOutPos = { x: 5.0, y: 0.0, z: 5.0 };
-						var posTween = new TWEEN.Tween(camera.position).to(ZoomOutPos,1000)
+						var posTween = new TWEEN.Tween(params.camera.position).to(ZoomOutPos,1000)
 								.start()
 								.onComplete(function(){
-										console.log('camera postion',camera.position);
+										console.log('camera postion',params.camera.position);
 										console.log('ZoomOutPos',ZoomOutPos);
 								});
 				}
@@ -331,35 +293,35 @@ function defineParams(data){
 
 function defineGUI(){
 
-	gui = new dat.GUI({ width: 450 } )
+	params.gui = new dat.GUI({ width: 450 } )
 	//gui.add( params, 'Year', 1990, 3000).listen().onChange(params.updateSolarSystem).name("Year");;
-	gui.add( params, 'Year', 1990, 2018).listen().onChange(params.updateSolarSystem).name("Year");;
-	gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
-	gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
-	gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8 } ).onChange(params.updateCameraTarget).name("Camera Target");
-	//gui.add( params, 'zoominobj', {"Yes":1, "No":0} ).onChange(params.updateZoomIn).name("Zoom In");
-	//gui.add( params, 'zoominobj').onChange(params.updateZoomIn).name("Zoom In");	
-	gui.add(params,'updateZoomIn').name("Zoom In");
-	gui.add(params,'updateZoomOut').name("Zoom Out");
+	params.gui.add( params, 'Year', 1990, 2018).listen().onChange(params.updateSolarSystem).name("Year");;
+	params.gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
+	params.gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
+	params.gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8 } ).onChange(params.updateCameraTarget).name("Camera Target");
+	//params.gui.add( params, 'zoominobj', {"Yes":1, "No":0} ).onChange(params.updateZoomIn).name("Zoom In");
+	//params.gui.add( params, 'zoominobj').onChange(params.updateZoomIn).name("Zoom In");	
+	params.gui.add(params,'updateZoomIn').name("Zoom In");
+	params.gui.add(params,'updateZoomOut').name("Zoom Out");
 
-	var captureGUI = gui.addFolder('Capture');
-	captureGUI.add( params, 'filename');
-	captureGUI.add( params, 'captureWidth');
-	captureGUI.add( params, 'captureHeight');
-	captureGUI.add( params, 'videoDuration');
-	captureGUI.add( params, 'videoFramerate');
-	captureGUI.add( params, 'videoFormat', {"gif":"gif", "jpg":"jpg", "png":"png"} )
-	captureGUI.add( params, 'screenshot');
-	captureGUI.add( params, 'recordVideo');
+	// var params.captureGUI = gui.addFolder('Capture');
+	// params.captureGUI.add( params, 'filename');
+	// params.captureGUI.add( params, 'captureWidth');
+	// params.captureGUI.add( params, 'captureHeight');
+	// params.captureGUI.add( params, 'videoDuration');
+	// params.captureGUI.add( params, 'videoFramerate');
+	// params.captureGUI.add( params, 'videoFormat', {"gif":"gif", "jpg":"jpg", "png":"png"} )
+	// params.captureGUI.add( params, 'screenshot');
+	// params.captureGUI.add( params, 'recordVideo');
 
 
 }
 
-function init() {
-	// scene
-	scene = new THREE.Scene();
-	MWscene = new THREE.Scene();
-	MWInnerScene = new THREE.Scene();
+function init() {	
+
+	//scene
+	params.scene = new THREE.Scene();
+	params.MWInnerScene = new THREE.Scene();
 
 	// camera
 	var screenWidth = window.innerWidth;
@@ -368,59 +330,54 @@ function init() {
 	var aspect = screenWidth / screenHeight;
 	//var zmin = 0.005; //minimum distance from object
 	//var zmin = 0.00001;
-	var zmin = 5.e-5;
-	var zmax = 5.e10;
-	camera = new THREE.PerspectiveCamera( fov, aspect, zmin, zmax);
-	scene.add(camera);
-	MWscene.add(camera);
-	MWInnerScene.add(camera);
+	var zmin = 1e-7;
+	var zmax = 5000;
+	params.camera = new THREE.PerspectiveCamera( fov, aspect, zmin, zmax);
+	params.scene.add(params.camera);
+	params.MWInnerScene.add(params.camera);
 
-	camera.position.set(5,0,5); //adjusted starting postion
-	
-	//camera.position.set(0,0,0); //Earth view
-	//camera.position.set(0,0,50); //SS view
-	//camera.position.set(0,0,1.8e10); //MW view
+	params.camera.position.set(5,0,5); //adjusted starting postion
+	params.camera.lookAt(params.scene.position);	
 
-	camDist = CameraDistance();
-	camDist0 = CameraDistance();
-	camera.lookAt(scene.position);	
-
-	var dist = scene.position.distanceTo(camera.position);
-	var vFOV = THREE.Math.degToRad( camera.fov ); // convert vertical fov to radians
-	height0 = 2 * Math.tan( vFOV / 2 ) * dist; // visible height
-	width0 = height0 * camera.aspect;           // visible width
+	var dist = params.scene.position.distanceTo(params.camera.position);
+	var vFOV = THREE.Math.degToRad( params.camera.fov ); // convert vertical fov to radians
+	params.height0 = 2 * Math.tan( vFOV / 2 ) * dist; // visible height
+	params.width0 = params.height0 * params.camera.aspect;           // visible width
 
 	// renderer
 	if ( Detector.webgl )
-		renderer = new THREE.WebGLRenderer( {antialias:true} );
+		params.renderer = new THREE.WebGLRenderer( {antialias:true} );
 	else
-		renderer = new THREE.CanvasRenderer(); 
-	renderer.setSize(screenWidth, screenHeight);
-	container = document.getElementById('ContentContainer');
-	container.appendChild( renderer.domElement );
+		params.renderer = new THREE.CanvasRenderer(); 
+	params.renderer.setSize(screenWidth, screenHeight);
+	params.container = document.getElementById('ContentContainer');
+	params.container.appendChild( params.renderer.domElement );
 
 	// events
-	THREEx.WindowResize(renderer, camera);
+	THREEx.WindowResize(params.renderer, params.camera);
 	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
 
 	// controls
-	controls = new THREE.TrackballControls( camera, renderer.domElement );
-	controls.minDistance = 2.*zmin;
-	controls.maxDistance = 500.;
+	params.controls = new THREE.TrackballControls( params.camera, params.renderer.domElement );
+	params.controls.minDistance = 2.*params.camera.near;
+	params.controls.maxDistance = 500.;
 
-	controls.dynamicDampingFactor = params.friction;
-	controls.zoomSpeed = params.zoomSpeed;
+	params.controls.dynamicDampingFactor = params.friction;
+	params.controls.zoomSpeed = params.zoomSpeed;
+
+	//keyboard
+	params.keyboard = new KeyboardState();
 
 	//load in the textures
 
 	//black body texture
-	bbTex = new THREE.TextureLoader().load( "textures/bb.png" );
-	bbTex.minFilter = THREE.LinearFilter;
+	params.bbTex = new THREE.TextureLoader().load( "textures/bb.png" );
+	params.bbTex.minFilter = THREE.LinearFilter;
 
 	
 	//ESO equirectangle MW texture: https://www.eso.org/public/usa/images/eso0932a/
-	ESOMWTex = new THREE.TextureLoader().load("textures/eso0932a.jpg" );
-	ESOMWTex.minFilter = THREE.LinearFilter;
+	params.ESOMWTex = new THREE.TextureLoader().load("textures/eso0932a.jpg" );
+	params.ESOMWTex.minFilter = THREE.LinearFilter;
 
 	//for Mercury texture: https://astrogeology.usgs.gov/search/map/Mercury/Messenger/Global/Mercury_MESSENGER_MDIS_Basemap_EnhancedColor_Mosaic_Global_665m?p=1&pb=1#downloads - actual data!
 	//for Venus surface and cloud texture: https://maps.jpl.nasa.gov/venus.html - actual data!
@@ -468,18 +425,17 @@ function init() {
 	AquariusTex = new THREE.TextureLoader().load("textures/deimosbump.jpg" );
 
 	//stereo
-	effect = new THREE.StereoEffect( renderer );
-	effect.setAspect(1.);
-	effect.setEyeSeparation(params.stereoSep);
+	params.effect = new THREE.StereoEffect( params.renderer );
+	params.effect.setAspect(1.);
+	params.effect.setEyeSeparation(params.stereoSep);
 
-	renderer.autoClear = false;
-	effect.autoClear = false;
-	params.renderer = renderer;
+	params.renderer.autoClear = false;
+	params.effect.autoClear = false;
 
 	//for video capture
-	composer = new THREE.EffectComposer(params.renderer);
+	params.composer = new THREE.EffectComposer(params.renderer);
 
-	camera.up.set(0, 1, 0); //flipped orientation of up, changed -1 to 1
+	params.camera.up.set(0, 1, 0); //flipped orientation of up, changed -1 to 1
 
 }
 
@@ -533,16 +489,12 @@ function WebGLStart(data){
 	drawAsteroidOrbitLines();
 
 	drawSun();
-
-
-	//drawMoonOrbitLines();
-
 	PointLightSun();
 
 
 //begin looking at the Earth
-	controls.target = params.EarthPos;
-	camera.lookAt(params.EarthPos);	
+	params.controls.target = params.EarthPos;
+	params.camera.lookAt(params.EarthPos);	
 
 //begin the animation
 	animate();

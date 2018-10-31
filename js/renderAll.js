@@ -8,7 +8,7 @@ function animate(time) {
 
 function update(time){
 	TWEEN.update(time);
-	keyboard.update();
+	params.keyboard.update();
 
 	if (params.timeStepFac > 0){
 		params.pause = false;
@@ -16,7 +16,7 @@ function update(time){
 
 
     //pause the time evolution
-	if ( keyboard.down("space") ) {
+	if (params.keyboard.down("space") ) {
 		params.pause = !params.pause;
 		if (params.pause){
 			if (params.timeStepFac != 0 && params.timeStepUnit != 0){
@@ -34,39 +34,36 @@ function update(time){
 		params.resetSlider('timeStepFac', gui, params.timeStepFac);
 
 	}
-	if ( keyboard.down("left") ) {
+	if ( params.keyboard.down("left") ) {
 		params.timeStepFac = -1. * Math.abs(params.timeStepFac);
 		params.resetSlider('timeStepFac', gui, params.timeStepFac);
 
 	}
-	if ( keyboard.down("right") ) {
+	if ( params.keyboard.down("right") ) {
 		params.timeStepFac = Math.abs(params.timeStepFac);
 		params.resetSlider('timeStepFac', gui, params.timeStepFac);
 
 	}
-	controls.update();
+	params.controls.update();
 
-	SunMesh.material.uniforms.cameraCenter.value = camera.position;
+	params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
 
 }
 
 function updateBillboards(){
-	coronaMesh.lookAt(camera.position);
+	params.coronaMesh.lookAt(params.camera.position);
 }
 
 function myRender(){
 
 	//render the scene (with the Milky Way always in the back)
-	if (params.renderer != effect) params.renderer.clear();
-	params.renderer.render( MWInnerScene, camera );
-	if (params.renderer != effect) params.renderer.clearDepth();
-	params.renderer.render( scene, camera );
+	if (params.renderer != params.effect) params.renderer.clear();
+	params.renderer.render( params.MWInnerScene, params.camera );
+	if (params.renderer != params.effect) params.renderer.clearDepth();
+	params.renderer.render( params.scene, params.camera );
 }
 
 function render() {
-	camPrev = camDist;
-	camDist = CameraDistance();
-
 
 
 	if (!params.pause){
@@ -84,19 +81,6 @@ function render() {
 	//make sure that the billboards are always looking at the camera
 	updateBillboards();
 
-	//update the corona/glow size based on the camera position
-    var dist,vFoc,height,width;
-	if (camDist  > 50.){
-     // visible width
-		dist = SunMesh.position.distanceTo(camera.position);
-		vFOV = THREE.Math.degToRad( camera.fov ); // convert vertical fov to radians
-		height = 2 * Math.tan( vFOV / 2 ) * dist; // visible height
-		width = height * camera.aspect;  
-		coronaMesh.scale.x = width/width0;
-		coronaMesh.scale.y = height/height0;
-	}
-
-
 	myRender();
 
 
@@ -106,17 +90,17 @@ function render() {
 		var aspect = screenWidth / screenHeight;
 		
 		params.renderer.setSize(params.captureWidth, params.captureHeight);
-		camera.aspect = params.captureWidth / params.captureHeight;;
-		camera.updateProjectionMatrix();
+		params.camera.aspect = params.captureWidth / params.captureHeight;;
+		params.camera.updateProjectionMatrix();
 
 		myRender();
 
-		capturer.capture( params.renderer.domElement );
+		params.capturer.capture( params.renderer.domElement );
 
 		//restore the original
 		params.renderer.setSize(screenWidth, screenHeight);
-		camera.aspect = aspect;
-		camera.updateProjectionMatrix();
+		params.camera.aspect = aspect;
+		params.camera.updateProjectionMatrix();
 		myRender();
 
 

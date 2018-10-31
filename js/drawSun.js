@@ -1,9 +1,9 @@
 
 function clearSun(){
-	SunMesh.geometry.dispose();
-	scene.remove(SunMesh);
-	coronaMesh.geometry.dispose();
-	scene.remove(coronaMesh);	
+	params.SunMesh.geometry.dispose();
+	params.scene.remove(params.SunMesh);
+	params.coronaMesh.geometry.dispose();
+	params.scene.remove(params.coronaMesh);	
 }
 
 //function here for point source
@@ -11,9 +11,9 @@ function PointLightSun()
 {
 	var light = new THREE.PointLight( 0xffffff, 1, 0, 2);
 	light.position.set(0,0,0);
-	scene.add( light );
+	params.scene.add( light );
 	//so that I can see the backside
-	scene.add(new THREE.AmbientLight(0xffffff));
+	params.scene.add(new THREE.AmbientLight(0xffffff));
 }
 
 function drawSun()
@@ -28,12 +28,12 @@ function drawSun()
 		uniforms: {
 			radius: { value: SunRad },
 			uTime: { value: ifac },
-			bb: { type: "t", value: bbTex},
+			bb: { type: "t", value: params.bbTex},
 			sunTemp: {value: SunTeff},
 			sTeff: {value: params.smTeff},
 			Teffac: {value: params.Teffac},
 			SSalpha: {value: params.useSSalpha },
-			cameraCenter: {value: camera.position},
+			cameraCenter: {value: params.camera.position},
 		},
 
 		vertexShader: SunVertexShader,
@@ -46,10 +46,10 @@ function drawSun()
 
 	var mesh = new THREE.Mesh( geometry, SunMaterial );
 	mesh.position.set(0,0,0);
-	scene.add(mesh);
+	params.scene.add(mesh);
 
-	SunMesh = mesh;
-	var geometry = new THREE.PlaneGeometry(width0, height0);
+	params.SunMesh = mesh;
+	var geometry = new THREE.PlaneGeometry(params.width0, params.height0);
 
 	var coronaMaterial =  new THREE.ShaderMaterial( {
 		uniforms: {
@@ -57,7 +57,7 @@ function drawSun()
 			uTime: { value: ifac },
 			cfac: {value: params.coronaP},
 			calpha: {value: params.coronaAlpha},
-			bb: { type: "t", value: bbTex},
+			bb: { type: "t", value: params.bbTex},
 			sunTemp: {value: SunTeff},
 			sTeff: {value: params.smTeff},
 			Teffac: {value: params.Teffac},
@@ -77,12 +77,12 @@ function drawSun()
 
 	var mesh = new THREE.Mesh( geometry, coronaMaterial );
 	mesh.position.set(0,0,0);
-	mesh.lookAt( camera.position )
-	scene.add(mesh);
+	mesh.lookAt( params.camera.position )
+	params.scene.add(mesh);
 
-	coronaMesh = mesh;
+	params.coronaMesh = mesh;
 
-    scene.updateMatrixWorld(true);
-    params.SunPos.setFromMatrixPosition( SunMesh.matrixWorld );
+    params.scene.updateMatrixWorld(true);
+    params.SunPos.setFromMatrixPosition( params.SunMesh.matrixWorld );
 
 }

@@ -2,7 +2,7 @@ function clearPlanet(group){
 	for (var i = group.children.length - 1; i >= 0; i--) {
 		group.remove(group.children[i]);
 	}
-	scene.remove(group);
+	params.scene.remove(group);
 }
 
 
@@ -121,9 +121,9 @@ function makePlanet(geo, tperi, day, radius, tilt, tex, sc, radScale=1., rotatio
 		group.add(cloudMesh);
 	}
 	
-	scene.add(group);
+	params.scene.add(group);
 
-	scene.updateMatrixWorld(true);
+	params.scene.updateMatrixWorld(true);
 
 	return {
 		mesh: mesh,
@@ -148,7 +148,7 @@ function drawPlanets()
 		}	
 
 
-		var vals = makePlanet(geo.vertices[0], params.planets[i].tperi, params.planets[i].day, params.planets[i].radius, params.planets[i].tilt, params.planets[i].tex, params.earthRad, radScale=1., rotation=SSrotation, offset=offset, ringTex=params.planets[i].ringTex, nightTex=params.planets[i].nightTex, specTex=params.planets[i].specTex, bumpTex=params.planets[i].bumpTex, cloudTex=params.planets[i].cloudTex);	
+		var vals = makePlanet(geo.vertices[0], params.planets[i].tperi, params.planets[i].day, params.planets[i].radius, params.planets[i].tilt, params.planets[i].tex, params.earthRad, radScale=1., rotation=params.SSrotation, offset=offset, ringTex=params.planets[i].ringTex, nightTex=params.planets[i].nightTex, specTex=params.planets[i].specTex, bumpTex=params.planets[i].bumpTex, cloudTex=params.planets[i].cloudTex);	
 
 
 
@@ -191,7 +191,7 @@ function movePlanets()
 		//set rotation of planet
 		params.movingMesh[i][0].rotation.y = (2.*phase*Math.PI) % (2.*Math.PI); 
 
-		scene.updateMatrixWorld(true);
+		params.scene.updateMatrixWorld(true);
 		params.planetPos[i].setFromMatrixPosition( params.movingMesh[i][0].matrixWorld );
 	}
 
