@@ -74,7 +74,7 @@ function drawAquarius()
 	geo = createOrbit(params.aquarius.semi_major_axis, params.aquarius.eccentricity, THREE.Math.degToRad(params.aquarius.inclination), THREE.Math.degToRad(params.aquarius.longitude_of_ascending_node), THREE.Math.degToRad(params.aquarius.argument_of_periapsis), params.aquarius.tperi, params.aquarius.period, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
 
 	//rotate meteorid slightly, and make size approximately 2m in radius, given in Earth radii
-	makeAquarius( geo.vertices[0], params.aquarius.tperi, 0.0001, 0.0000003, rotation = params.SSrotation);	
+	makeAquarius( geo.vertices[0], params.aquarius.tperi, 0.0001, params.aquariusRad, rotation = params.SSrotation);	
 
 }
 

@@ -82,9 +82,7 @@ function defineParams(data){
 
 		//Planetary radii
 		this.earthRad = 1./23481.066;
-		this.cloudRad = this.earthRad * 1.01; 
-		this.jupiterRad = this.earthRad * 11.209;
-		this.marsRad = this.earthRad * 0.53;
+		this.aquariusRad = 0.0000003;
 
 		//time controls
 		this.timeStepUnit = 0.;
@@ -125,7 +123,7 @@ function defineParams(data){
 		this.PlutoPos = new THREE.Vector3();
 		this.planetPos = { 0:this.MercuryPos,
 							1:this.VenusPos,
-							2.:this.EarthPos,
+							2:this.EarthPos,
 							3:this.MarsPos,
 							4:this.JupiterPos,
 							5:this.SaturnPos,
@@ -134,7 +132,8 @@ function defineParams(data){
 							8:this.PlutoPos,
 							9:this.MoonPos,
 							10:this.AquariusPos,
-							100:this.SunPos, }
+							100:this.SunPos, 
+							101:this.SunPos}
 
 //orbit line colors
 		var c3 = "red"
@@ -147,7 +146,19 @@ function defineParams(data){
 
 //camera "near" limit values for each focus point
 //"Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8
-		this.cameraNear = {"0":0.00003, "1":0.00005, "2":0.00005, "3":0.00004, "4":0.0005, "5":0.0005, "6":0.0003, "7":0.0003, "8":0.00001, "9":0.00005, "10":2e-7, "100":0.01}
+		this.cameraNear = {	"0":this.planets[0].radius*this.earthRad, 
+							"1":this.planets[1].radius*this.earthRad, 
+							"2":this.planets[2].radius*this.earthRad,
+							"3":this.planets[3].radius*this.earthRad, 
+							"4":this.planets[4].radius*this.earthRad, 
+							"5":this.planets[5].radius*this.earthRad, 
+							"6":this.planets[6].radius*this.earthRad,
+							"7":this.planets[7].radius*this.earthRad,
+							"8":this.planets[8].radius*this.earthRad,
+							"9":this.planets[9].radius*this.earthRad,
+							"10":this.aquariusRad,
+							"100":this.sRad, 
+							"101":this.sRad}
 
 //Galaxy appearance
 		this.MWalpha = 0.7;
@@ -298,7 +309,7 @@ function defineGUI(){
 	params.gui.add( params, 'Year', 1990, 2018).listen().onChange(params.updateSolarSystem).name("Year");;
 	params.gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
 	params.gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
-	params.gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8 } ).onChange(params.updateCameraTarget).name("Camera Target");
+	params.gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Asteroid":10, "Solar System":101} ).onChange(params.updateCameraTarget).name("Camera Target");
 	//params.gui.add( params, 'zoominobj', {"Yes":1, "No":0} ).onChange(params.updateZoomIn).name("Zoom In");
 	//params.gui.add( params, 'zoominobj').onChange(params.updateZoomIn).name("Zoom In");	
 	params.gui.add(params,'updateZoomIn').name("Zoom In");
