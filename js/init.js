@@ -273,8 +273,8 @@ function defineParams(data){
 
 		}
 
-		this.updateCameraTarget = function(){
-
+		this.updateCameraTarget = function(target){
+			params.cameraTarget = target;
 			var dur = 3000;
 			var ease = TWEEN.Easing.Quintic.InOut;
 
@@ -330,11 +330,11 @@ function defineGUI(){
 
 	//params.gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
 	//params.gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
-	var target = params.gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Asteroid":10, "Solar System":101} ).onChange(params.updateCameraTarget).name("Camera Target");
-	//so that hitting the space bar doesn't activate the menu!
-	target.domElement.addEventListener("keypress", function(event) {
-    	event.preventDefault();
-	});
+	// var target = params.gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Asteroid":10, "Solar System":101} ).onChange(params.updateCameraTarget).name("Camera Target");
+	// //so that hitting the space bar doesn't activate the menu!
+	// target.domElement.addEventListener("keypress", function(event) {
+	// 	event.preventDefault();
+	// });
 
 	// var params.captureGUI = gui.addFolder('Capture');
 	// params.captureGUI.add( params, 'filename');
@@ -347,12 +347,37 @@ function defineGUI(){
 	// params.captureGUI.add( params, 'recordVideo');
 
 
+	//play pause, etc.
 	d3.select('#playControl').on('click', function(){params.pause = false;})
 	d3.select('#stopControl').on('click', function(){params.pause = true;})
 	d3.select('#reverseControl').on('click', function(){params.timeStepFac = -1. * Math.abs(params.timeStepFac);})
 	d3.select('#forwardControl').on('click', function(){params.timeStepFac = Math.abs(params.timeStepFac);})
 	d3.select('#fasterControl').on('click', function(){params.timeStepFac *= 2.;})
 	d3.select('#slowerControl').on('click', function(){params.timeStepFac /= 2.;})
+
+	//dropdown for camera target
+	d3.select('#targetControl').on('click', function(){
+		d = d3.select('#targetDropdown');    
+		if (d.style('display') === 'none') {
+			d.style('display','block');
+		} else {
+			d.style('display','none');
+		}
+	});
+	var targs = { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Asteroid":10, "Solar System":101};
+	var dropdown = d3.select('#targetDropdown');
+	for (var key in targs) {
+	// skip loop if the property is from prototype
+		if (!targs.hasOwnProperty(key)) continue;
+		dropdown.append('div')
+			.attr('value',targs[key])
+			.html("&nbsp;" + key)
+			.on('click', function(){
+				params.cameraTarget = targs[key];
+				params.updateCameraTarget(this.getAttribute('value'));
+			});
+	}
+
 }
 
 function init() {	
