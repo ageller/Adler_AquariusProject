@@ -279,14 +279,15 @@ function defineParams(data){
 				"z":params.planetPos[params.cameraTarget].z + params.planets[params.cameraTarget].radius*params.earthRad*2.};
 			var posTween = new TWEEN.Tween(params.camera.position).to(target, dur).easing(ease)
 				.onStart(function(){
+					controlsTween.start();
+				})
+				.onUpdate(function(){
 					//in case the planet is moving
 					target.x = params.planetPos[params.cameraTarget].x + params.planets[params.cameraTarget].radius*params.earthRad*2.; 
 					target.y = params.planetPos[params.cameraTarget].y + params.planets[params.cameraTarget].radius*params.earthRad*2.;
 					target.z = params.planetPos[params.cameraTarget].z + params.planets[params.cameraTarget].radius*params.earthRad*2.;
-					controlsTween.start();
 				})
 
-				
 			posTween.start();
 
 		}
