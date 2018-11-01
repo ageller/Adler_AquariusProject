@@ -14,10 +14,7 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 	var tdiff = JDtoday - tperi;
 	var phaseAquarius = (tdiff % rotPeriodAquarius)/rotPeriodAquarius;
 
-	//make slightly bigger so can actually see it
-	var AquariusRad = radius*1000.;
-	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
-	var sc = params.earthRad*AquariusRad;
+	var sc = radius*params.earthRad/20.; //factor of 20 to account for actual size of the model?
 
 	MovingAquariusMesh.position.set(geo.x,geo.y,geo.z);
 	MovingAquariusMesh.scale.set(sc, sc, sc);

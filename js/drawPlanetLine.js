@@ -121,7 +121,7 @@ function makeAsteroidLine( geo , color = 'white', rotation = null) {
 function drawPlanetOrbitLines()
 {
 	// line
-	for (var i=0; i<params.planets.length; i++){
+	for (var i=0; i<10; i++){
 		geo = createOrbit(params.planets[i].semi_major_axis, params.planets[i].eccentricity, THREE.Math.degToRad(params.planets[i].inclination), THREE.Math.degToRad(params.planets[i].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[i].argument_of_periapsis), params.planets[i].tperi, params.planets[i].period, Ntheta = 1000.);
 
 		var offset = null;

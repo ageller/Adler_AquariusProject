@@ -82,7 +82,7 @@ function makePlanet(geo, tperi, day, radius, tilt, tex, sc, radScale=1., rotatio
 		var ringMesh = new THREE.Mesh( geometry, RingMaterial );
 		if (rotation != null){
 			ringMesh.rotation.x = THREE.Math.degToRad(0.+tilt); 
-			ringMesh.rotation.y = THREE.Math.degToRad(0.); 
+			ringMesh.rotation.y = THREE.Math.degToRad(0.)
 			ringMesh.rotation.z = (2.*phase*Math.PI) % (2.*Math.PI); //this rotates rings at same rate as planet
 		}
 		ringMesh.position.set(geo.x,geo.y,geo.z);
@@ -137,7 +137,7 @@ function makePlanet(geo, tperi, day, radius, tilt, tex, sc, radScale=1., rotatio
 
 function drawPlanets()
 {
-	for (var i=0; i<params.planets.length; i++){
+	for (var i=0; i<10; i++){
 
 		geo = createOrbit(params.planets[i].semi_major_axis, params.planets[i].eccentricity, THREE.Math.degToRad(params.planets[i].inclination), THREE.Math.degToRad(params.planets[i].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[i].argument_of_periapsis), params.planets[i].tperi, params.planets[i].period, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
 
@@ -168,7 +168,7 @@ function drawPlanets()
 function movePlanets()
 {
 
-	for (var i=0; i<params.planets.length; i++){
+	for (var i=0; i<10; i++){
 
 		var tdiff = params.JDtoday - params.planets[i].tperi;
 		var phase = (tdiff % params.planets[i].day)/params.planets[i].day;

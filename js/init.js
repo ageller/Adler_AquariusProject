@@ -17,9 +17,16 @@ function defineParams(data){
 		this.composer = null;
 		this.capturer = null;
 
+		//radii we need to save in units of AU (?), later all planets are scaled by params.earthRad (is this right?)
+		this.earthRad = 1./23481.066;
+		this.sRad = 1./215./this.earthRad;
+		this.aquariusRad = 0.0000003/this.earthRad;
 
 		//this will hold the data from the input files
 		this.planets = data[0];
+		this.planets[10] = {"name":"Asteroid", "radius":this.aquariusRad};
+		this.planets[100] = {"name":"Sun", "radius":this.sRad};
+		this.planets[101] = {"name":"SolarSystem", "radius":this.sRad};
 		this.asteroids = data[1];
 		this.aquarius = data[2];
 
@@ -53,7 +60,10 @@ function defineParams(data){
 
 		//render info
 		this.fullscreen = function() { THREEx.FullScreen.request() };
-		this.resetCamera = function() { params.controls.reset(); 	params.camera.up.set(0, -1, 0)};
+		this.resetCamera = function() { 
+			params.controls.reset(); 	
+			params.camera.up.set(0, -1, 0)
+		};
 		this.stereo = false;
 		this.friction = 0.2;
 		this.zoomSpeed = 1.;
@@ -73,16 +83,13 @@ function defineParams(data){
 		this.coronaSize = 50.;
 		this.coronaP = 0.3;
 		this.coronaAlpha = 1.;
-		this.sRad = 1./215.;
 		this.sTeff = 5780*0.8;
 		//central temperature for exaggerating the colors
 		this.smTeff = 5780.;
 		//factor to exagerate color (set to 1 for no exageration)
 		this.Teffac = 1.0;
 
-		//Planetary radii
-		this.earthRad = 1./23481.066;
-		this.aquariusRad = 0.0000003;
+
 
 		//time controls
 		this.timeStepUnit = 0.;
@@ -155,9 +162,9 @@ function defineParams(data){
 							"7":this.planets[7].radius*this.earthRad,
 							"8":this.planets[8].radius*this.earthRad,
 							"9":this.planets[9].radius*this.earthRad,
-							"10":this.aquariusRad,
-							"100":this.sRad, 
-							"101":this.sRad}
+							"10":this.planets[10].radius*this.earthRad,
+							"100":this.planets[100].radius*this.earthRad, 
+							"101":this.planets[101].radius*this.earthRad}
 
 //Galaxy appearance
 		this.MWalpha = 0.5;
@@ -165,8 +172,6 @@ function defineParams(data){
 //Camera target (number)
 		this.cameraTarget = 2 //Earth
 
-//Camera Zoom In control
-		this.zoominobj = false; //no zooming in
 
 //some functions
 		this.updateSolarSystem = function() {
@@ -187,21 +192,6 @@ function defineParams(data){
 		};
 	
 
-
-		this.resetSlider = function(name, gui, value){
-			if (gui != null){
-				for(var i = 0; i<gui.__controllers.length;i++){
-					if( gui.__controllers[i].property == name ) {
-						if (Math.sign(value) == -1){
-							gui.__controllers[i].__min = value;
-						} else {
-							gui.__controllers[i].__min = 0.; //NOTE: THIS IS NOT GENERAL, BUT CAN WORK FOR ME HERE
-						}
-						gui.__controllers[i].setValue(value);
-					}
-				}
-			}
-		};
 
 		this.screenshot = function(){
 			var imgData, imgNode;
@@ -268,32 +258,29 @@ function defineParams(data){
 
 		this.updateCameraTarget = function(){
 
-			params.controls.target = params.planetPos[params.cameraTarget];
-			params.camera.lookAt(params.planetPos[params.cameraTarget]);
+			var dur = 3000;
+			var ease = TWEEN.Easing.Quintic.InOut;
+
+			//params.controls.target = params.planetPos[params.cameraTarget];
+			//params.camera.lookAt(params.planetPos[params.cameraTarget]);
 			params.camera.near = params.cameraNear[params.cameraTarget];
 			params.controls.minDistance = 2.*params.camera.near;
 
+			var controlsTween = new TWEEN.Tween(params.controls.target).to(params.planetPos[params.cameraTarget], dur).easing(ease);
+
+			var target = {	"x":params.planetPos[params.cameraTarget].x + params.planets[params.cameraTarget].radius*params.earthRad*2., 
+				"y":params.planetPos[params.cameraTarget].y + params.planets[params.cameraTarget].radius*params.earthRad*2.,
+				"z":params.planetPos[params.cameraTarget].z + params.planets[params.cameraTarget].radius*params.earthRad*2.};
+			var posTween = new TWEEN.Tween(params.camera.position).to(target, dur).easing(ease)
+				.onStart(function(){
+					controlsTween.start();
+				})
+
+				
+			posTween.start();
+
 		}
 		
-		this.updateZoomIn = function(){
-			//console.log(camera.near);
-			var posTween = new TWEEN.Tween(params.camera.position).to(params.planetPos[params.cameraTarget],1000)
-				.start()
-				.onComplete(function(){
-					console.log('camera postion',params.camera.position);
-					console.log('planet position',params.planetPos[params.cameraTarget]);
-				});
-				}
-
-		this.updateZoomOut = function(){
-			var ZoomOutPos = { x: 5.0, y: 0.0, z: 5.0 };
-						var posTween = new TWEEN.Tween(params.camera.position).to(ZoomOutPos,1000)
-								.start()
-								.onComplete(function(){
-										console.log('camera postion',params.camera.position);
-										console.log('ZoomOutPos',ZoomOutPos);
-								});
-				}
 
 	};
 
@@ -309,10 +296,7 @@ function defineGUI(){
 	params.gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
 	params.gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
 	params.gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Asteroid":10, "Solar System":101} ).onChange(params.updateCameraTarget).name("Camera Target");
-	//params.gui.add( params, 'zoominobj', {"Yes":1, "No":0} ).onChange(params.updateZoomIn).name("Zoom In");
-	//params.gui.add( params, 'zoominobj').onChange(params.updateZoomIn).name("Zoom In");	
-	params.gui.add(params,'updateZoomIn').name("Zoom In");
-	params.gui.add(params,'updateZoomOut').name("Zoom Out");
+
 
 	// var params.captureGUI = gui.addFolder('Capture');
 	// params.captureGUI.add( params, 'filename');
@@ -346,8 +330,8 @@ function init() {
 	params.scene.add(params.camera);
 	params.MWInnerScene.add(params.camera);
 
-	params.camera.position.set(5,0,5); //adjusted starting postion
-	params.camera.lookAt(params.scene.position);	
+	params.camera.position.set(5,0,5); //adjusted starting position
+
 
 	var dist = params.scene.position.distanceTo(params.camera.position);
 	var vFOV = THREE.Math.degToRad( params.camera.fov ); // convert vertical fov to radians
@@ -415,7 +399,7 @@ function init() {
 	params.planets[8].tex = new THREE.TextureLoader().load("textures/pluto_color_mapmosaic.jpg" );
 	params.planets[9].tex = new THREE.TextureLoader().load("textures/Lunar_Clementine_UVVIS_750nm_Global_Mosaic_1024.jpg" );
 
-	for (var i=0; i<params.planets.length; i++){
+	for (var i=0; i<9; i++){
 		params.planets[i].ringTex = null;
 		params.planets[i].nightTex = null;
 		params.planets[i].specTex = null;
@@ -447,6 +431,12 @@ function init() {
 
 	params.camera.up.set(0, 1, 0); //flipped orientation of up, changed -1 to 1
 
+//begin looking at the Earth
+	params.cameraTarget = 100;
+	//params.controls.target = params.planetPos[params.cameraTarget];
+	//params.camera.lookAt(params.planetPos[params.cameraTarget]);
+	params.camera.near = params.cameraNear[params.cameraTarget];
+	params.controls.minDistance = 2.*params.camera.near;
 }
 
 
@@ -500,11 +490,7 @@ function WebGLStart(data){
 
 	drawSun();
 	PointLightSun();
-
-
-//begin looking at the Earth
-	params.cameraTarget = 2;
-	params.updateCameraTarget();	
+	
 
 //begin the animation
 	animate();

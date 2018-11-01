@@ -18,7 +18,7 @@ function PointLightSun()
 
 function drawSun()
 {
-	var SunRad = params.sRad;
+	var SunRad = params.sRad * params.earthRad;
 	var SunTeff = params.sTeff;
 
 	var ifac = params.Year % 2;
