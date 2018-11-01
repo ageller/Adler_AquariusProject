@@ -493,8 +493,8 @@ function WebGLStart(data){
 
 
 //begin looking at the Earth
-	params.controls.target = params.EarthPos;
-	params.camera.lookAt(params.EarthPos);	
+	params.cameraTarget = 2;
+	params.updateCameraTarget();	
 
 //begin the animation
 	animate();
