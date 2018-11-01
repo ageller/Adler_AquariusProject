@@ -177,17 +177,23 @@ function defineParams(data){
 		this.updateSolarSystem = function() {
 			params.JDtoday = params.JD0 + (params.Year - 1990.);
 
-			movePlanets();	
+			var cameraPos1 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
 
+			movePlanets();	
 			clearPlanetOrbitLines();
 			drawPlanetOrbitLines();
 			drawAquariusOrbitLine();
-
 			clearSun();
 			drawSun();
-		
 			moveAquarius();
 
+			var cameraPos2 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
+
+			params.camera.position.x += (cameraPos2.x - cameraPos1.x);
+			params.camera.position.y += (cameraPos2.y - cameraPos1.y);
+			params.camera.position.z += (cameraPos2.z - cameraPos1.z);
+			params.controls.target = params.planetPos[params.cameraTarget];
+			params.camera.lookAt(params.planetPos[params.cameraTarget]);
 
 		};
 	
@@ -273,6 +279,10 @@ function defineParams(data){
 				"z":params.planetPos[params.cameraTarget].z + params.planets[params.cameraTarget].radius*params.earthRad*2.};
 			var posTween = new TWEEN.Tween(params.camera.position).to(target, dur).easing(ease)
 				.onStart(function(){
+					//in case the planet is moving
+					target.x = params.planetPos[params.cameraTarget].x + params.planets[params.cameraTarget].radius*params.earthRad*2.; 
+					target.y = params.planetPos[params.cameraTarget].y + params.planets[params.cameraTarget].radius*params.earthRad*2.;
+					target.z = params.planetPos[params.cameraTarget].z + params.planets[params.cameraTarget].radius*params.earthRad*2.;
 					controlsTween.start();
 				})
 

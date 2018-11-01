@@ -175,9 +175,10 @@ function movePlanets()
 
 		geo = createOrbit(params.planets[i].semi_major_axis, params.planets[i].eccentricity, THREE.Math.degToRad(params.planets[i].inclination), THREE.Math.degToRad(params.planets[i].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[i].argument_of_periapsis), params.planets[i].tperi, params.planets[i].period, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
 
-		//set position
+		//set position and rotation
 		for (var j=0; j<params.movingMesh[i].length; j++){
 			params.movingMesh[i][j].position.set(geo.vertices[0].x, geo.vertices[0].y, geo.vertices[0].z);
+			params.movingMesh[i][j].rotation.y = (2.*phase*Math.PI) % (2.*Math.PI);  //the only angle that changes
 		}
 
 		if (i == 9){ //for the Moon
@@ -187,9 +188,6 @@ function movePlanets()
 			params.movingMesh[i][0].position.y += offset.y;
 			params.movingMesh[i][0].position.z += offset.z;
 		}	
-
-		//set rotation of planet
-		params.movingMesh[i][0].rotation.y = (2.*phase*Math.PI) % (2.*Math.PI); 
 
 		params.scene.updateMatrixWorld(true);
 		params.planetPos[i].setFromMatrixPosition( params.movingMesh[i][0].matrixWorld );
