@@ -69,7 +69,7 @@ function defineParams(data){
 		this.zoomSpeed = 1.;
 		this.stereoSep = 0.064;
 
-		this.pause = false; //toggles pausing time evolution on/off with space bar
+		this.pause = true; //toggles pausing time evolution on/off with space bar
 
 //Solar System appearance
 		this.SSlineWidth = 0.003;
@@ -92,14 +92,16 @@ function defineParams(data){
 
 
 		//time controls
-		this.timeStepUnit = 0.;
-		this.timeStepFac = 1.;
-		this.saveTimeStepFac = 1.;
+		this.timeStepUnit = 1./8760.; //one hour for the initial time step
+		this.timeStepFac = 1.; 
+		this.saveTimeStepFac = 1.; 
 		this.timeStep = parseFloat(this.timeStepUnit)*parseFloat(this.timeStepFac);
 		//this.Year = 2017.101; //roughly Feb 6, 2017
 		//this.Year = 2017.10137;
 		//gets us closer to intersection, but might not be exactly correct time
-		this.Year = 2017.094; 
+		this.collisionYear = 2017.094;
+		this.startYear = this.collisionYear -1.;
+		this.Year = this.startYear;
 		//this.Year = 2017.0939;
 		//var JD0 = 2458060.5; //Nov. 3, 2017
 		this.JD0 = 2447892.5; //Jan. 1, 1990
@@ -175,25 +177,31 @@ function defineParams(data){
 
 //some functions
 		this.updateSolarSystem = function() {
-			params.JDtoday = params.JD0 + (params.Year - 1990.);
+			if (params.Year < params.collisionYear){
 
-			var cameraPos1 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
+				params.JDtoday = params.JD0 + (params.Year - 1990.);
 
-			movePlanets();	
-			clearPlanetOrbitLines();
-			drawPlanetOrbitLines();
-			drawAquariusOrbitLine();
-			clearSun();
-			drawSun();
-			moveAquarius();
+				var cameraPos1 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
 
-			var cameraPos2 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
+				movePlanets();	
+				clearPlanetOrbitLines();
+				drawPlanetOrbitLines();
+				drawAquariusOrbitLine();
+				clearSun();
+				drawSun();
+				moveAquarius();
 
-			params.camera.position.x += (cameraPos2.x - cameraPos1.x);
-			params.camera.position.y += (cameraPos2.y - cameraPos1.y);
-			params.camera.position.z += (cameraPos2.z - cameraPos1.z);
-			params.controls.target = params.planetPos[params.cameraTarget];
-			params.camera.lookAt(params.planetPos[params.cameraTarget]);
+				var cameraPos2 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
+
+				params.camera.position.x += (cameraPos2.x - cameraPos1.x);
+				params.camera.position.y += (cameraPos2.y - cameraPos1.y);
+				params.camera.position.z += (cameraPos2.z - cameraPos1.z);
+				params.controls.target = params.planetPos[params.cameraTarget];
+				params.camera.lookAt(params.planetPos[params.cameraTarget]);
+			} else {
+				params.Year = params.collisionYear;
+			}
+			
 
 		};
 	
@@ -292,7 +300,20 @@ function defineParams(data){
 
 		}
 		
-
+		this.resetSlider = function(name, gui, value){
+			if (gui != null){
+				for(var i = 0; i<gui.__controllers.length;i++){
+					if( gui.__controllers[i].property == name ) {
+						if (Math.sign(value) == -1){
+							gui.__controllers[i].__min = value;
+						} else {
+							gui.__controllers[i].__min = 0.; //NOTE: THIS IS NOT GENERAL, BUT CAN WORK FOR ME HERE
+						}
+						gui.__controllers[i].setValue(value);
+					}
+				}
+			}
+		};
 	};
 
 	params = new ParamsInit(data);
@@ -302,12 +323,15 @@ function defineParams(data){
 function defineGUI(){
 
 	params.gui = new dat.GUI({ width: 450 } )
-	//gui.add( params, 'Year', 1990, 3000).listen().onChange(params.updateSolarSystem).name("Year");;
-	params.gui.add( params, 'Year', 1990, 2018).listen().onChange(params.updateSolarSystem).name("Year");;
-	params.gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
-	params.gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
-	params.gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Asteroid":10, "Solar System":101} ).onChange(params.updateCameraTarget).name("Camera Target");
+	params.gui.add( params, 'Year', 1990, params.collisionYear).listen().onChange(params.updateSolarSystem).name("Year");
 
+	//params.gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
+	//params.gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
+	var target = params.gui.add( params, 'cameraTarget', { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Asteroid":10, "Solar System":101} ).onChange(params.updateCameraTarget).name("Camera Target");
+	//so that hitting the space bar doesn't activate the menu!
+	target.domElement.addEventListener("keypress", function(event) {
+    	event.preventDefault();
+	});
 
 	// var params.captureGUI = gui.addFolder('Capture');
 	// params.captureGUI.add( params, 'filename');

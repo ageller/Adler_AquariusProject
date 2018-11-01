@@ -10,38 +10,28 @@ function update(time){
 	TWEEN.update(time);
 	params.keyboard.update();
 
-	if (params.timeStepFac > 0){
-		params.pause = false;
-	}
-
 
     //pause the time evolution
 	if (params.keyboard.down("space") ) {
 		params.pause = !params.pause;
 		if (params.pause){
-			if (params.timeStepFac != 0 && params.timeStepUnit != 0){
-				params.saveTimeStepFac = params.timeStepFac;
-				flashplaystop("#stop");
-				params.timeStepFac = 0.;
-			}
-
+			params.saveTimeStepFac = params.timeStepFac;
+			flashplaystop("#stop");
+			params.timeStepFac = 0.;
 		} else {
-			if (params.timeStepFac == 0 && params.timeStepUnit != 0){
-				flashplaystop("#play")
-				params.timeStepFac = params.saveTimeStepFac;
-			}
+			flashplaystop("#play")
+			params.timeStepFac = params.saveTimeStepFac;
 		}
-		params.resetSlider('timeStepFac', gui, params.timeStepFac);
 
 	}
 	if ( params.keyboard.down("left") ) {
 		params.timeStepFac = -1. * Math.abs(params.timeStepFac);
-		params.resetSlider('timeStepFac', gui, params.timeStepFac);
+		params.resetSlider('timeStepFac', params.gui, params.timeStepFac);
 
 	}
 	if ( params.keyboard.down("right") ) {
 		params.timeStepFac = Math.abs(params.timeStepFac);
-		params.resetSlider('timeStepFac', gui, params.timeStepFac);
+		params.resetSlider('timeStepFac', params.gui, params.timeStepFac);
 
 	}
 	params.controls.update();
@@ -71,7 +61,7 @@ function render() {
 	}
 
 	params.timeStep = parseFloat(params.timeStepUnit)*parseFloat(params.timeStepFac);
-	if (params.timeStep != 0){
+	if (params.timeStep != 0 && !params.pause){
 		params.Year += params.timeStep;
 		params.updateSolarSystem();
 	}
