@@ -9,34 +9,6 @@ function animate(time) {
 function update(time){
 	TWEEN.update(time);
 	params.keyboard.update();
-
-
-    //pause the time evolution
-	if (params.keyboard.down("space") ) {
-		params.pause = !params.pause;
-		if (params.pause){
-			flashplaystop("#stop");
-		} else {
-			flashplaystop("#play")
-		}
-
-	}
-	if ( params.keyboard.down("left") ) {
-		params.timeStepFac = -1. * Math.abs(params.timeStepFac);
-		flashplaystop("#reverse");
-	}
-	if ( params.keyboard.down("right") ) {
-		params.timeStepFac = Math.abs(params.timeStepFac);
-		flashplaystop("#forward");
-	}
-	if ( params.keyboard.down("up") ) {
-		params.timeStepFac *= 2.;
-		flashplaystop("#faster");
-	}
-	if ( params.keyboard.down("down") ) {
-		params.timeStepFac /= 2.;
-		flashplaystop("#slower");
-	}
 	params.controls.update();
 
 	params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
@@ -63,8 +35,6 @@ function render() {
 		params.Year += params.timeStep;
 		params.updateSolarSystem();
 	}
-
-
 
 	//make sure that the billboards are always looking at the camera
 	updateBillboards();

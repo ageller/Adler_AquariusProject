@@ -347,6 +347,12 @@ function defineGUI(){
 	// params.captureGUI.add( params, 'recordVideo');
 
 
+	d3.select('#playControl').on('click', function(){params.pause = false;})
+	d3.select('#stopControl').on('click', function(){params.pause = true;})
+	d3.select('#reverseControl').on('click', function(){params.timeStepFac = -1. * Math.abs(params.timeStepFac);})
+	d3.select('#forwardControl').on('click', function(){params.timeStepFac = Math.abs(params.timeStepFac);})
+	d3.select('#fasterControl').on('click', function(){params.timeStepFac *= 2.;})
+	d3.select('#slowerControl').on('click', function(){params.timeStepFac /= 2.;})
 }
 
 function init() {	

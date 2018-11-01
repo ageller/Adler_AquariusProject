@@ -29,17 +29,6 @@ function resizeMobile(){
 
 }
 
-function flashplaystop(ID){
-	var pp = d3.select(ID);
-	pp.style("display","block")
-		.style("opacity",1.);
-	pp.transition()
-		.ease(d3.easeLinear)
-		.duration(500)
-		.style("opacity", 0.)
-		.on("end", function() { pp.style("display","none") });
-}
-
 //hide the splash screen
 function hideSplash(id){
 
