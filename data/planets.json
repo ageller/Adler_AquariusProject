@@ -8,5 +8,5 @@
 {"name":"Uranus",    "semi_major_axis":19.19126393,  "eccentricity":0.04716771,  "inclination":0.76986,  "longitude_of_ascending_node":74.22968,   "argument_of_periapsis":105.63456, "period":83.74740682, "tperi":2439265.5, "day":-0.00197131,"radius":4.007, "tilt":-82.2},
 {"name":"Neptune",   "semi_major_axis":30.06896348,  "eccentricity":0.00858587,  "inclination":1.76917,  "longitude_of_ascending_node":131.72169,  "argument_of_periapsis":-86.75034, "period":163.7232045, "tperi":2406499.5, "day":0.00197131, "radius":3.883, "tilt":28.32},
 {"name":"Pluto",     "semi_major_axis":39.48168677,  "eccentricity":0.24880766,  "inclination":17.14175, "longitude_of_ascending_node":110.30347,  "argument_of_periapsis":113.76329, "period":248.0208,    "tperi":2447774.5, "day":-0.0174680, "radius":0.186, "tilt":-57.47},
-{"name":"Moon",      "semi_major_axis":0.00257,      "eccentricity":0.0549,      "inclination":5.145,    "longitude_of_ascending_node":125.08,     "argument_of_periapsis":318.15,    "period":0.0748,      "tperi":2457784.5, "day":1.0,        "radius":0.2725,"tilt":1.5}
+{"name":"Moon",      "semi_major_axis":0.00257,      "eccentricity":0.0549,      "inclination":5.145,    "longitude_of_ascending_node":125.08,     "argument_of_periapsis":318.15,    "period":0.0748,      "tperi":2457784.5, "day":0.0748,        "radius":0.2725,"tilt":1.5}
 ]
