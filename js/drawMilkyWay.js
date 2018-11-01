@@ -7,6 +7,7 @@ function drawInnerMilkyWay()
 	var material = new THREE.MeshBasicMaterial( {
 		map: params.ESOMWTex,
 		transparent: true,
+		opacity:params.MWalpha,
 	} );
 	params.MWInnerMesh = new THREE.Mesh( geometry, material );
 	params.MWInnerMesh.rotation.x = Math.PI / 2;

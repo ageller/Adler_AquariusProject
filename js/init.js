@@ -112,7 +112,6 @@ function defineParams(data){
 		this.MercuryPos = new THREE.Vector3();
 		this.VenusPos = new THREE.Vector3();
 		this.EarthPos = new THREE.Vector3();
-		this.EarthSunDir = new THREE.Vector3(1,0,0);
 		this.MoonPos = new THREE.Vector3();
 		this.AquariusPos = new THREE.Vector3();
 		this.MarsPos = new THREE.Vector3();
@@ -161,7 +160,7 @@ function defineParams(data){
 							"101":this.sRad}
 
 //Galaxy appearance
-		this.MWalpha = 0.7;
+		this.MWalpha = 0.5;
 
 //Camera target (number)
 		this.cameraTarget = 2 //Earth
