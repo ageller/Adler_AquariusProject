@@ -15,24 +15,27 @@ function update(time){
 	if (params.keyboard.down("space") ) {
 		params.pause = !params.pause;
 		if (params.pause){
-			params.saveTimeStepFac = params.timeStepFac;
 			flashplaystop("#stop");
-			params.timeStepFac = 0.;
 		} else {
 			flashplaystop("#play")
-			params.timeStepFac = params.saveTimeStepFac;
 		}
 
 	}
 	if ( params.keyboard.down("left") ) {
 		params.timeStepFac = -1. * Math.abs(params.timeStepFac);
-		params.resetSlider('timeStepFac', params.gui, params.timeStepFac);
-
+		flashplaystop("#reverse");
 	}
 	if ( params.keyboard.down("right") ) {
 		params.timeStepFac = Math.abs(params.timeStepFac);
-		params.resetSlider('timeStepFac', params.gui, params.timeStepFac);
-
+		flashplaystop("#forward");
+	}
+	if ( params.keyboard.down("up") ) {
+		params.timeStepFac *= 2.;
+		flashplaystop("#faster");
+	}
+	if ( params.keyboard.down("down") ) {
+		params.timeStepFac /= 2.;
+		flashplaystop("#slower");
 	}
 	params.controls.update();
 
@@ -54,11 +57,6 @@ function myRender(){
 }
 
 function render() {
-
-
-	if (!params.pause){
-		params.saveTimeStepFac = params.timeStepFac;
-	}
 
 	params.timeStep = parseFloat(params.timeStepUnit)*parseFloat(params.timeStepFac);
 	if (params.timeStep != 0 && !params.pause){

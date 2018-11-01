@@ -94,11 +94,11 @@ function defineParams(data){
 		//time controls
 		this.timeStepUnit = 1./8760.; //one hour for the initial time step
 		this.timeStepFac = 1.; 
-		this.saveTimeStepFac = 1.; 
 		this.timeStep = parseFloat(this.timeStepUnit)*parseFloat(this.timeStepFac);
 		//this.Year = 2017.101; //roughly Feb 6, 2017
 		//this.Year = 2017.10137;
 		//gets us closer to intersection, but might not be exactly correct time
+		this.minYear = 1990;
 		this.collisionYear = 2017.094;
 		this.startYear = this.collisionYear -1.;
 		this.Year = this.startYear;
@@ -177,7 +177,8 @@ function defineParams(data){
 
 //some functions
 		this.updateSolarSystem = function() {
-			if (params.Year < params.collisionYear){
+
+			if ((params.Year < params.collisionYear && params.timeStepFac > 0) || (params.Year > params.minYear && params.timeStepFac < 0)){
 
 				params.JDtoday = params.JD0 + (params.Year - 1990.);
 
@@ -200,6 +201,8 @@ function defineParams(data){
 				params.camera.lookAt(params.planetPos[params.cameraTarget]);
 			} else {
 				params.Year = params.collisionYear;
+				params.pause = true;
+				flashplaystop("#stop");
 			}
 			
 
@@ -323,7 +326,7 @@ function defineParams(data){
 function defineGUI(){
 
 	params.gui = new dat.GUI({ width: 450 } )
-	params.gui.add( params, 'Year', 1990, params.collisionYear).listen().onChange(params.updateSolarSystem).name("Year");
+	params.gui.add( params, 'Year', params.minYear, params.collisionYear).listen().onChange(params.updateSolarSystem).name("Year");
 
 	//params.gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
 	//params.gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
