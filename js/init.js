@@ -160,7 +160,7 @@ function defineParams(data){
 
 //some functions
 		this.updateSolarSystem = function() {
-			params.JDtoday = JD0 + (params.Year - 1990.);
+			params.JDtoday = params.JD0 + (params.Year - 1990.);
 
 			movePlanets();	
 
