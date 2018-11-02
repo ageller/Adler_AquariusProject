@@ -56,12 +56,43 @@
 		<div id="slowerControl" class="material-icons playControls" style="font-size:50px; top:0px; left:400px">remove</div>
 
 
-
-
-
 		<div id="ContentContainer" style="position: absolute; left:0px; top:0px; visibility:hidden"></div>
 
 
+		<!-- Instructions Text -->
+        	<div class="InstructionsIntro" style="position:absolute; top:60px; left:0px; font-size: 20px; color: #FFF008;">What Do I See?</div>
+		<div class="InstructionsContentIntro" style="position:absolute; top:80px; left:0px; font-size: 10px; color: #FFF008;">
+			<p>
+				You begin with a view of the solar system one year before the Aquarius Project asteroid enters the Earth's atmosphere.<br />
+				The orbit of the Aquarius Project asteroid is shown in white, and the Earth's orbit is shown in blue.<br />
+				The orbits of the other inner rocky planets Mercury, Venus, and Mars are shown in yellow.<br /> 
+				Outer gasesous planets Jupiter, Saturn, Uranus, and Neptune have red orbits, with Pluto shown in purple.<br />
+				More than 1,000 asteroids in the Asteriod Belt between Mars and Jupiter are represented with green orbits.<br />
+			</p>
+		</div>
+
+		<div class="InstructionsTime" style="position:absolute; top:170px; left:0px; font-size: 20px; color: #FFF008;">Advancing in Time</div>
+                <div class="InstructionsContentTime" style="position:absolute; top:190px; left:0px; font-size: 10px; color: #FFF008;">
+                        <p>
+                                Use the controls above to start or pause the animation, move it forward or backward in time, and to control the animation speed.<br />
+                        </p>
+                </div>		
+
+		<div class="InstructionsTarget" style="position:absolute; top:220px; left:0px; font-size: 20px; color: #FFF008;">Take a Closer Look</div>
+                <div class="InstructionsContentTarget" style="position:absolute; top:240px; left:0px; font-size: 10px; color: #FFF008;">
+                        <p>
+                                To zoom in on an individual object, choose your Target from the dropdown menu. This will also lock the camera on the chosen object.<br />
+				You can also manually zoom in and out of the Target object with your mouse, as well as control the camera viewing angle.<br />
+                        </p>    
+                </div> 
+		
+
+		<!-- Credits -->
+		<div class="Credits" style="position:absolute; top:95%; left:0px; font-size: 10px; color: #C0C0C0;">
+			<p>
+				Credits: This WebGL application was written by <a href="http://faculty.wcas.northwestern.edu/aaron-geller/index.php" target="_blank">Aaron M. Geller</a> and <a href="https://astro.uchicago.edu/people/maria-weber.php" target="_blank">Maria A. Weber</a>, using the three.js library. Patrick McPike contributed the asteroid design element. Credits for planet surface and ring images and the background Milky Way panorama can be found on our Github page. Source code is also available on our <a href="https://github.com/ageller/Adler_AquariusProject" target="_blank">GitHub page</a>.
+			<p>
+		</div>	
 
 		<!-- shaders -->
 		<script src="shaders/vertex.glsl.js"></script>
