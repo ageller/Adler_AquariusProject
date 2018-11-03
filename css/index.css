@@ -109,6 +109,7 @@ a:visited{
 	font-size:18px;
 	color: black;
 	padding:0px;
+	padding-bottom:2px;
 	margin:0px;
 	color: #FFF008;
 	background-color:none;
@@ -132,8 +133,12 @@ a:visited{
 	height:50px; 
 	border: 2px solid #FFF008;
 	z-index: 4;
-}
 
+}
+.timeText{
+	color:#FFF008;
+	font-size:40px;
+}
 #splash{
 	position:absolute;
 	top:0;

@@ -20,6 +20,7 @@ function defineParams(data, aquariusMesh){
 		//for the time slider
 		this.timeContainer = null;
 		this.timeRect = null;
+		this.timeText = null;
 
 		//radii we need to save in units of AU (?), later all planets are scaled by params.earthRad (is this right?)
 		this.earthRad = 1./23481.066;
@@ -411,7 +412,16 @@ function defineGUI(){
 		.attr("width", 0)
 		.attr("height", "100%")
 		.attr("fill","#FFF008")
-		.attr("opacity",0.7);
+		.attr("opacity",0.5);
+
+	params.timeText = params.timeContainer.append("text")
+		.attr("x", 0)
+		.attr("y", 0)
+		.attr("dy","40px")
+		.attr("dx","5px")
+		.attr("fill","#FFF008")
+		.classed('timeText', true)
+		.text("");
 
 	updateTimeSlider();
 }
