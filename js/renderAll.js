@@ -13,6 +13,9 @@ function update(time){
 
 	params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
 
+	if ( params.keyboard.down("C") ) {
+		console.log(params.rcamera.position);
+	}
 }
 
 function updateBillboards(){

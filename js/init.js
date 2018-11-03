@@ -143,7 +143,8 @@ function defineParams(data, aquariusMesh){
 							9:this.MoonPos,
 							10:this.AquariusPos,
 							100:this.SunPos, 
-							101:this.SunPos}
+							101:this.SunPos
+						}
 
 //orbit line colors
 		var c3 = "red"
@@ -168,7 +169,7 @@ function defineParams(data, aquariusMesh){
 							"9":this.planets[9].radius*this.earthRad,
 							"10":this.planets[10].radius*this.earthRad,
 							"100":this.planets[100].radius*this.earthRad, 
-							"101":this.planets[101].radius*this.earthRad}
+							"101":this.planets[100].radius*this.earthRad}
 
 //Galaxy appearance
 		this.MWalpha = 0.5;
@@ -290,15 +291,21 @@ function defineParams(data, aquariusMesh){
 			var target = {	"x":params.planetPos[params.cameraTarget].x + params.planets[params.cameraTarget].radius*params.earthRad*2., 
 				"y":params.planetPos[params.cameraTarget].y + params.planets[params.cameraTarget].radius*params.earthRad*2.,
 				"z":params.planetPos[params.cameraTarget].z + params.planets[params.cameraTarget].radius*params.earthRad*2.};
+			if (params.cameraTarget == 101){
+				//solar system view
+				target = new THREE.Vector3(-0.8090990636775851, 6.42551823357708, 2.8386747145675177);
+			}
 			var posTween = new TWEEN.Tween(params.camera.position).to(target, dur).easing(ease)
 				.onStart(function(){
 					controlsTween.start();
 				})
 				.onUpdate(function(){
-					//in case the planet is moving
-					target.x = params.planetPos[params.cameraTarget].x + params.planets[params.cameraTarget].radius*params.earthRad*2.; 
-					target.y = params.planetPos[params.cameraTarget].y + params.planets[params.cameraTarget].radius*params.earthRad*2.;
-					target.z = params.planetPos[params.cameraTarget].z + params.planets[params.cameraTarget].radius*params.earthRad*2.;
+					if (params.cameraTarget != 101){
+						//in case the planet is moving
+						target.x = params.planetPos[params.cameraTarget].x + params.planets[params.cameraTarget].radius*params.earthRad*2.; 
+						target.y = params.planetPos[params.cameraTarget].y + params.planets[params.cameraTarget].radius*params.earthRad*2.;
+						target.z = params.planetPos[params.cameraTarget].z + params.planets[params.cameraTarget].radius*params.earthRad*2.;
+					}
 				})
 
 			posTween.start();
