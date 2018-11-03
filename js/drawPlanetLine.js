@@ -34,13 +34,19 @@ function createOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
 	Q.push(s[2]*s[1] - c[2]*c[0]*c[1]);
 	Q.push(-1.*s[0]*c[2]);
 	
-	var dTheta = 2.*Math.PI / Ntheta;
+	var dTheta = 2.*Math.PI / Ntheta; 
 
 	var geometry = new THREE.Geometry();
 	var pos;
 
 	var E = 0.0;
-	for (i=0; i<=Ntheta; i++) {
+	var imin = 0;
+	var imax = Ntheta;
+	if (Ntheta > 2){//to avoid drawing the line right next to the object
+		//imin = 1;
+		imax = Ntheta - 1;
+	}
+	for (i=imin; i<=imax; i++) {
 		E = (i*dTheta + 2.*phase*Math.PI) % (2.*Math.PI);
 		pos = []
 		for (j=0; j<3; j++){

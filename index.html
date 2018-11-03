@@ -23,19 +23,20 @@
 		<script src="resources/ShaderPass.js"></script>
 		<script src="resources/OBJLoader.js"></script>
 <!-- d3 -->
-	<script src="resources/d3.v4.10.2.min.js"></script>
+		<script src="resources/d3.v4.10.2.min.js"></script>
 
 <!-- tween -->
-	<script src="resources/Tween.js"></script>
+		<script src="resources/Tween.js"></script>
 
 <!-- ccapture, for video capture -->
-	<script src="resources/CCapture/CCapture.all.min.js"></script>
+		<script src="resources/CCapture/CCapture.all.min.js"></script>
 
 	</head>
 
 	<body>
-		<div id="loader" >
-			<div id="loaderText">
+
+		<div id="loader">
+			<div id="loaderText" style="position:absolute; height:60px; left:550px">
 				<span>Loading</span>
 				<span class="loader__dot">.</span>
 				<span class="loader__dot">.</span>
@@ -48,51 +49,58 @@
 		</div>
 
 
-		<div id="playControl" class="material-icons playControls" style="font-size:50px; top:0px; left:150px">play_arrow</div>
-		<div id="stopControl" class="material-icons playControls" style="font-size:50px; top:0px; left:200px">stop</div>
-		<div id="reverseControl" class="material-icons playControls" style="font-size:50px; top:0px; left:250px">fast_rewind</div>
-		<div id="forwardControl" class="material-icons playControls" style="font-size:50px; top:0px; left:300px">fast_forward</div>
-		<div id="fasterControl" class="material-icons playControls" style="font-size:50px; top:0px; left:350px">add</div>
-		<div id="slowerControl" class="material-icons playControls" style="font-size:50px; top:0px; left:400px">remove</div>
+		<div id="playControl" class="material-icons playControls" style="left:150px; font-size:50px">play_arrow</div>
+		<div id="stopControl" class="material-icons playControls" style="left:200px; font-size:50px">stop</div>
+		<div id="reverseControl" class="material-icons playControls" style="left:250px; font-size:50px">fast_rewind</div>
+		<div id="forwardControl" class="material-icons playControls" style="left:300px; font-size:50px">fast_forward</div>
+		<div id="fasterControl" class="material-icons playControls" style="left:350px; font-size:50px">add</div>
+		<div id="slowerControl" class="material-icons playControls" style="left:400px; font-size:50px">remove</div>
+		<div id="help" class="material-icons playControls" style="left:450px; font-size:50px" onclick="showSplash('#splash')">help_outline</div>
 
-
-		<div id="ContentContainer" style="position: absolute; left:0px; top:0px; visibility:hidden"></div>
 
 
 		<!-- Instructions Text -->
-        	<div class="InstructionsIntro" style="position:absolute; top:60px; left:0px; font-size: 20px; color: #FFF008;">What Do I See?</div>
-		<div class="InstructionsContentIntro" style="position:absolute; top:80px; left:0px; font-size: 10px; color: #FFF008;">
-			<p>
-				You begin with a view of the solar system one year before the Aquarius Project asteroid enters the Earth's atmosphere.<br />
-				The orbit of the Aquarius Project asteroid is shown in white, and the Earth's orbit is shown in blue.<br />
-				The orbits of the other inner rocky planets Mercury, Venus, and Mars are shown in yellow.<br /> 
-				Outer gasesous planets Jupiter, Saturn, Uranus, and Neptune have red orbits, with Pluto shown in purple.<br />
-				More than 1,000 asteroids in the Asteriod Belt between Mars and Jupiter are represented with green orbits.<br />
-			</p>
+		<div id="splash">
+			<!-- for the play,pause, etc. buttons -->
+			<div>
+				<div class="playInstructions" style="left:0px; width:150px">camera center</div>
+				<div class="playInstructions" style="left:150px">play</div>
+				<div class="playInstructions" style="left:200px">stop</div>
+				<div class="playInstructions" style="left:250px">reverse</div>
+				<div class="playInstructions" style="left:300px">forward</div>
+				<div class="playInstructions" style="left:350px">faster</div>
+				<div class="playInstructions" style="left:400px">slower</div>
+				<div class="playInstructions" style="left:450px">help</div>
+			</div>
+
+			<div style="position:absolute; height:60px; left:550px">
+				<button class="splashButton blinkMe" onclick="hideSplash('#splash')" style="display:none">Go!</button>
+			</div>
+
+ 			<div id="myInstructions" style="top:100px; ">
+ 				<div >
+					<div class="instructionsTitle" style="font-size:60px">Explore the Aquarius Meteoroid's Orbit and Impact!</div>
+					<div class="instructionsContent">
+						The <a href="https://www.adlerplanetarium.org/education/far-horizons/the-aquarius-project/" target="_blank">Aquarius Project</a> is an <a href="https://www.adlerplanetarium.org" target="_blank">Adler Planetarium</a> program to search for a meteor that impacted in Lake Michigan on Feb. 6, 2017.  In this online interactive, you start by viewing the Solar System one year before the Aquarius Project meteroid enters the Earth's atmosphere.  Orbits are color coded : white for the Aquarius project meteor; blue for Earth; yellow for the inner rocky planets (Mercury, Venus and Mars), red for the outer gaseous planets (Jupiter, Saturn, Uranus, and Neptune), purple for Pluto, and green for the asteroid belt. To zoom in on an individual object, choose your Target from the dropdown menu. This will also lock the camera on the chosen object.	You can also manually zoom in and out of the Target object with your mouse wheel (or pinch), as well as control the camera viewing angle by click (or touch) + drag .
+					</div>
+				</div>
+
+
+				<div style="margin-top:50px">
+					<span class="instructionsTitle" >Credits: &nbsp</span>
+					<span class="instructionsContent">
+						This WebGL application was written by <a href="http://faculty.wcas.northwestern.edu/aaron-geller/index.php" target="_blank">Aaron M. Geller</a> and <a href="https://astro.uchicago.edu/people/maria-weber.php" target="_blank">Maria A. Weber</a>, using the three.js library. Patrick McPike contributed the meteoroid design element. Credits for planet surface and ring images and the background Milky Way panorama, as well as our source code, can be found on our <a href="https://github.com/ageller/Adler_AquariusProject" target="_blank">GitHub page</a>.
+					</span>
+				</div>
+
+	 
+			</div>
+
+
 		</div>
 
-		<div class="InstructionsTime" style="position:absolute; top:170px; left:0px; font-size: 20px; color: #FFF008;">Advancing in Time</div>
-                <div class="InstructionsContentTime" style="position:absolute; top:190px; left:0px; font-size: 10px; color: #FFF008;">
-                        <p>
-                                Use the controls above to start or pause the animation, move it forward or backward in time, and to control the animation speed.<br />
-                        </p>
-                </div>		
-
-		<div class="InstructionsTarget" style="position:absolute; top:220px; left:0px; font-size: 20px; color: #FFF008;">Take a Closer Look</div>
-                <div class="InstructionsContentTarget" style="position:absolute; top:240px; left:0px; font-size: 10px; color: #FFF008;">
-                        <p>
-                                To zoom in on an individual object, choose your Target from the dropdown menu. This will also lock the camera on the chosen object.<br />
-				You can also manually zoom in and out of the Target object with your mouse, as well as control the camera viewing angle.<br />
-                        </p>    
-                </div> 
-		
-
-		<!-- Credits -->
-		<div class="Credits" style="position:absolute; top:95%; left:0px; font-size: 10px; color: #C0C0C0;">
-			<p>
-				Credits: This WebGL application was written by <a href="http://faculty.wcas.northwestern.edu/aaron-geller/index.php" target="_blank">Aaron M. Geller</a> and <a href="https://astro.uchicago.edu/people/maria-weber.php" target="_blank">Maria A. Weber</a>, using the three.js library. Patrick McPike contributed the asteroid design element. Credits for planet surface and ring images and the background Milky Way panorama can be found on our Github page. Source code is also available on our <a href="https://github.com/ageller/Adler_AquariusProject" target="_blank">GitHub page</a>.
-			<p>
-		</div>	
+		<!-- will hold the WebGL canvas -->
+		<div id="ContentContainer" style="position: absolute; left:0px; top:0px; visibility:hidden"></div>
 
 		<!-- shaders -->
 		<script src="shaders/vertex.glsl.js"></script>
@@ -103,8 +111,8 @@
 		<script src="shaders/EarthFragment.glsl.js"></script>
 
 		<!-- the main attraction -->
-		<script src="js/init.js"></script>
 		<script src="js/utils.js"></script>
+		<script src="js/init.js"></script>
 		<script src="js/drawSun.js"></script>
 		<script src="js/drawPlanetLine.js"></script>
 		<script src="js/drawPlanetSphere.js"></script>

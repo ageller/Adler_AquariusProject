@@ -3,8 +3,8 @@
 
 //defined in WebGLStart, after data is loaded
 var params;
-function defineParams(data){
-	ParamsInit = function(data) {
+function defineParams(data, aquariusMesh){
+	ParamsInit = function(data, aquariusMesh) {
 
 		this.scene = null;
 		this.MWInnerScene = null;
@@ -24,7 +24,7 @@ function defineParams(data){
 
 		//this will hold the data from the input files
 		this.planets = data[0];
-		this.planets[10] = {"name":"Asteroid", "radius":this.aquariusRad};
+		this.planets[10] = {"name":"Meteoroid", "radius":this.aquariusRad};
 		this.planets[100] = {"name":"Sun", "radius":this.sRad};
 		this.planets[101] = {"name":"SolarSystem", "radius":this.sRad};
 		this.asteroids = data[1];
@@ -41,6 +41,8 @@ function defineParams(data){
 		//will hold all the spheres of the planets
 		this.movingGroup ={ 0:null,	1:null,	2:null,	3:null,	4:null,	5:null,	6:null,	7:null,	8:null,	9:null};
 		this.movingMesh = { 0:[],	1:[],	2:[],	3:[],	4:[],	5:[],	6:[],	7:[],	8:[],	9:[]  };
+		this.aquariusMesh = aquariusMesh;
+		this.aquariusGroup = null;
 
 		//solar system rotation
 		this.SSrotation = new THREE.Vector3(THREE.Math.degToRad(-63.), 0., 0.); //solar system is inclined at 63 degrees to galactic plane
@@ -153,7 +155,7 @@ function defineParams(data){
 		this.pcolors = {"Mercury":c1, "Venus":c1, "EarthMoon":c2, "Mars":c1, "Jupiter":c3, "Saturn":c3, "Uranus":c3, "Neptune":c3, "Pluto":c4, "Moon":c5}
 
 //camera "near" limit values for each focus point
-//"Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8
+//"Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Meteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8
 		this.cameraNear = {	"0":this.planets[0].radius*this.earthRad, 
 							"1":this.planets[1].radius*this.earthRad, 
 							"2":this.planets[2].radius*this.earthRad,
@@ -319,7 +321,7 @@ function defineParams(data){
 		};
 	};
 
-	params = new ParamsInit(data);
+	params = new ParamsInit(data, aquariusMesh);
 }
 
 
@@ -343,7 +345,7 @@ function defineGUI(){
 	// params.captureGUI.add( params, 'recordVideo');
 
 
-	//play pause, etc.
+	//buttons for play pause, etc.
 	d3.select('#playControl').on('click', function(){params.pause = false;})
 	d3.select('#stopControl').on('click', function(){params.pause = true;})
 	d3.select('#reverseControl').on('click', function(){params.timeStepFac = -1. * Math.abs(params.timeStepFac);})
@@ -360,7 +362,7 @@ function defineGUI(){
 			d.style('display','none');
 		}
 	});
-	var targs = { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Asteroid":10, "Solar System":101};
+	var targs = { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Meteoroid":10, "Solar System":101};
 	var dropdown = d3.select('#targetDropdown');
 	for (var key in targs) {
 	// skip loop if the property is from prototype
@@ -508,7 +510,7 @@ function init() {
 
 
 
-function loadData(callback){
+function loadData(){
 	
 	var data = [];
 	d3.json("data/planets.json",  function(x0) {
@@ -521,18 +523,50 @@ function loadData(callback){
 			d3.json("data/aquarius.json",  function(x2) {
 				data.push(x2);
 
-				callback(data);
+				loadAquarius(data); //callback and passing along data
 			});
 		});
 	});
 }
+function loadAquarius(data)
+{
+		//from https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj.html
+	var aquariusMesh
+	var manager = new THREE.LoadingManager();
+	manager.onProgress = function ( item, loaded, total ) {
+		console.log( item, loaded, total );
+	};
+	var onProgress = function ( xhr ) {
+		if ( xhr.lengthComputable ) {
+			var percentComplete = xhr.loaded / xhr.total * 100;
+			console.log( Math.round(percentComplete, 2) + '% downloaded' );
+		}
+
+	};
+	var onError = function ( xhr ) {
+	};	
+	var textureLoader = new THREE.TextureLoader( manager );
+	var texture = textureLoader.load( 'models/AsteroidCentered/maps/Comet_F_Diffuse03.png' );	
+	var loader = new THREE.OBJLoader( manager );
+	loader.load( 'models/AsteroidCentered/AsteroidQuads.obj', function ( object ) {
+		object.traverse( function ( child ) {
+			if ( child instanceof THREE.Mesh ) {
+				child.material.map = texture;
+			}
+		} );
+		
+		aquariusMesh = object;
+		WebGLStart(data, aquariusMesh);
 
 
-function WebGLStart(data){	
+	}, onProgress, onError );
+}
+
+function WebGLStart(data, aquariusMesh){	
 	clearloading();
 
 //initialize
-	defineParams(data); 
+	defineParams(data, aquariusMesh); 
 	init();
 
 //initial GUI
@@ -544,9 +578,8 @@ function WebGLStart(data){
 	}
 
 //draw everything
-	loadAquarius();
-
 	drawPlanets();
+	drawAquarius();
 
 	drawInnerMilkyWay();
 	drawPlanetOrbitLines();
@@ -573,6 +606,6 @@ if (isMobile){
 	resizeMobile()
 }
 
-
+window.addEventListener("resize", resizeInstructions());
 //////this will load the data, and then start the WebGL rendering
-loadData(WebGLStart);
+loadData();
