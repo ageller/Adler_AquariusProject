@@ -69,7 +69,8 @@ function showSplash(id, op = 0.6){
 function setTimeFromSlider(d, i){
 	var x = d3.mouse(this)[0];
 	var xtot = parseFloat(d3.select("#timeSlider").style("width"));
-	var JDtoday = THREE.Math.clamp((params.JDmax - params.JDmin)*x/xtot + params.JDmin, params.JDmin, params.JDmax);
+	var frac = THREE.Math.clamp(x/xtot, 0, 1);
+	var JDtoday = (params.JDmax - params.JDmin)*frac+ params.JDmin;
 	params.Year = JDtoday - params.JD0 + 1990;
 	params.updateSolarSystem();
 }
@@ -105,7 +106,7 @@ function pad(n, width, z) {
 //2016 was a leap year
 function convertYear(year){
 	var Yi = Math.floor(year);
-	var days = (params.Year - Yi)*365.25;
+	var days = (year - Yi)*365.25;
 
 	var monthDay =     {"Jan":31,"Feb":28, "Mar":31, "Apr":30, "May":31, "Jun":30, "Jul":31, "Aug":31, "Sep":30, "Oct":31, "Nov":30, "Dec":31};
 	if (Yi == 2016){
@@ -143,7 +144,7 @@ function convertYear(year){
 //update the width the time slider
 function updateTimeSlider(){
 	printDate = convertYear(params.Year);
-	params.timeRect.attr("width",(params.JDtoday - params.JDmin)/(params.JDmax - params.JDmin)*100. + "%")
+	params.timeRect.attr("width",(params.Year - params.startYear)/(params.collisionYear - params.startYear)*100. + "%")
 
 	params.timeText.text(printDate)
 

@@ -106,7 +106,7 @@ function defineParams(data, aquariusMesh){
 		//this.Year = 2017.10137;
 		//gets us closer to intersection, but might not be exactly correct time
 		this.minYear = 1990;
-		this.collisionYear = 2017.094;
+		this.collisionYear = 2017.1014715949;
 		this.startYear = this.collisionYear -1.;
 		this.Year = this.startYear;
 		//this.Year = 2017.0939;
@@ -191,9 +191,8 @@ function defineParams(data, aquariusMesh){
 			if ((params.Year < params.collisionYear && params.timeStepFac > 0) || (params.Year > params.minYear && params.timeStepFac < 0)){
 
 				params.JDtoday = THREE.Math.clamp(params.JD0 + (params.Year - 1990.), params.JDmin, params.JDmax);
-				params.Year = params.JDtoday - params.JD0 + 1990;
 
-				updateTimeSlider();
+				updateTimeSlider(params.Year);
 
 				var cameraPos1 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
 
@@ -214,6 +213,16 @@ function defineParams(data, aquariusMesh){
 				params.camera.lookAt(params.planetPos[params.cameraTarget]);
 			} else {
 				params.pause = true;
+				if (params.timeStepFac > 0){
+					params.Year = params.collisionYear;
+				}else{
+					params.Year = params.startYear;
+				}
+				updateTimeSlider(params.Year);
+				if (d3.select('#playControl').classed('clickedControl')){
+					d3.select('#stopControl').classed('clickedControl', true);
+					d3.select('#playControl').classed('clickedControl', false);
+				}
 			}
 			
 
@@ -637,6 +646,7 @@ function WebGLStart(data, aquariusMesh){
 	drawSun();
 	PointLightSun();
 	
+	console.log(params.collisionYear, Math.floor(params.collisionYear), convertYear(params.collisionYear))
 
 //begin the animation
 	animate();
