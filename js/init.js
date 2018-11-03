@@ -17,6 +17,10 @@ function defineParams(data, aquariusMesh){
 		this.composer = null;
 		this.capturer = null;
 
+		//for the time slider
+		this.timeContainer = null;
+		this.timeRect = null;
+
 		//radii we need to save in units of AU (?), later all planets are scaled by params.earthRad (is this right?)
 		this.earthRad = 1./23481.066;
 		this.sRad = 1./215./this.earthRad;
@@ -108,6 +112,8 @@ function defineParams(data, aquariusMesh){
 		//var JD0 = 2458060.5; //Nov. 3, 2017
 		this.JD0 = 2447892.5; //Jan. 1, 1990
 		this.JDtoday = this.JD0 + (this.Year - 1990.);
+		this.JDmin = this.JD0 + (this.startYear - 1990.);
+		this.JDmax = this.JD0 + (this.collisionYear - 1990.);
 
 		//image and video capture
 		this.filename = "test.png";
@@ -156,7 +162,7 @@ function defineParams(data, aquariusMesh){
 		this.pcolors = {"Mercury":c1, "Venus":c1, "EarthMoon":c2, "Mars":c1, "Jupiter":c3, "Saturn":c3, "Uranus":c3, "Neptune":c3, "Pluto":c4, "Moon":c5}
 
 //camera "near" limit values for each focus point
-//"Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Meteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8
+//"Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Meteoroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8
 		this.cameraNear = {	"0":this.planets[0].radius*this.earthRad, 
 							"1":this.planets[1].radius*this.earthRad, 
 							"2":this.planets[2].radius*this.earthRad,
@@ -183,7 +189,10 @@ function defineParams(data, aquariusMesh){
 
 			if ((params.Year < params.collisionYear && params.timeStepFac > 0) || (params.Year > params.minYear && params.timeStepFac < 0)){
 
-				params.JDtoday = params.JD0 + (params.Year - 1990.);
+				params.JDtoday = THREE.Math.clamp(params.JD0 + (params.Year - 1990.), params.JDmin, params.JDmax);
+				params.Year = params.JDtoday - params.JD0 + 1990;
+
+				updateTimeSlider();
 
 				var cameraPos1 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
 
@@ -203,9 +212,7 @@ function defineParams(data, aquariusMesh){
 				params.controls.target = params.planetPos[params.cameraTarget];
 				params.camera.lookAt(params.planetPos[params.cameraTarget]);
 			} else {
-				params.Year = params.collisionYear;
 				params.pause = true;
-				flashplaystop("#stop");
 			}
 			
 
@@ -312,20 +319,7 @@ function defineParams(data, aquariusMesh){
 
 		}
 		
-		this.resetSlider = function(name, gui, value){
-			if (gui != null){
-				for(var i = 0; i<gui.__controllers.length;i++){
-					if( gui.__controllers[i].property == name ) {
-						if (Math.sign(value) == -1){
-							gui.__controllers[i].__min = value;
-						} else {
-							gui.__controllers[i].__min = 0.; //NOTE: THIS IS NOT GENERAL, BUT CAN WORK FOR ME HERE
-						}
-						gui.__controllers[i].setValue(value);
-					}
-				}
-			}
-		};
+
 	};
 
 	params = new ParamsInit(data, aquariusMesh);
@@ -334,8 +328,8 @@ function defineParams(data, aquariusMesh){
 
 function defineGUI(){
 
-	params.gui = new dat.GUI({ width: 450 } )
-	params.gui.add( params, 'Year', params.minYear, params.collisionYear).listen().onChange(params.updateSolarSystem).name("Year");
+	// params.gui = new dat.GUI({ width: 450 } )
+	// params.gui.add( params, 'Year', params.minYear, params.collisionYear).listen().onChange(params.updateSolarSystem).name("Year");
 
 	//params.gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
 	//params.gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
@@ -353,23 +347,42 @@ function defineGUI(){
 
 
 	//buttons for play pause, etc.
-	d3.select('#playControl').on('click', function(){params.pause = false;})
-	d3.select('#stopControl').on('click', function(){params.pause = true;})
-	d3.select('#reverseControl').on('click', function(){params.timeStepFac = -1. * Math.abs(params.timeStepFac);})
-	d3.select('#forwardControl').on('click', function(){params.timeStepFac = Math.abs(params.timeStepFac);})
-	d3.select('#fasterControl').on('click', function(){params.timeStepFac *= 2.;})
-	d3.select('#slowerControl').on('click', function(){params.timeStepFac /= 2.;})
+	d3.select('#playControl').on('click', function(){
+		params.pause = false;
+		d3.select('#stopControl').classed('clickedControl', false);
+		d3.select('#playControl').classed('clickedControl', true);
+	});
+	d3.select('#stopControl').on('click', function(){
+		params.pause = true;
+		d3.select('#stopControl').classed('clickedControl', true);
+		d3.select('#playControl').classed('clickedControl', false);
+	});
+	d3.select('#reverseControl').on('click', function(){
+		params.timeStepFac = -1. * Math.abs(params.timeStepFac);
+		d3.select('#reverseControl').classed('clickedControl', true);
+		d3.select('#forwardControl').classed('clickedControl', false);
+	});
+	d3.select('#forwardControl').on('click', function(){
+		params.timeStepFac = Math.abs(params.timeStepFac);		
+		d3.select('#reverseControl').classed('clickedControl', false);
+		d3.select('#forwardControl').classed('clickedControl', true);
+	});
+	d3.select('#fasterControl').on('click', function(){params.timeStepFac *= 2.;});
+	d3.select('#slowerControl').on('click', function(){params.timeStepFac /= 2.;});
+	d3.select('#help').on('click', function(){showSplash('#splash');});
 
 	//dropdown for camera target
 	d3.select('#targetControl').on('click', function(){
 		d = d3.select('#targetDropdown');    
 		if (d.style('display') === 'none') {
 			d.style('display','block');
+			d3.select('#targetControl').classed('clickedControl', true);
 		} else {
 			d.style('display','none');
+			d3.select('#targetControl').classed('clickedControl', false);
 		}
 	});
-	var targs = { "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Meteoroid":10, "Solar System":101};
+	var targs = { "Meteoroid":10, "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Solar System":101};
 	var dropdown = d3.select('#targetDropdown');
 	for (var key in targs) {
 	// skip loop if the property is from prototype
@@ -383,6 +396,24 @@ function defineGUI(){
 			});
 	}
 
+	//rects for time slider
+	//Make an SVG Container
+	params.timeContainer = d3.select("#timeSlider").append("svg")
+		.attr("width", "100%")
+		.attr("height", "100%")
+		.on("mousedown", setTimeFromSlider)
+		.call(d3.drag().on("drag", setTimeFromSlider));
+	 
+	 //Draw the Rectangle
+	params.timeRect = params.timeContainer.append("rect")
+		.attr("x", 0)
+		.attr("y", 0)
+		.attr("width", 0)
+		.attr("height", "100%")
+		.attr("fill","#FFF008")
+		.attr("opacity",0.7);
+
+	updateTimeSlider();
 }
 
 function init() {	
@@ -613,6 +644,7 @@ if (isMobile){
 	resizeMobile()
 }
 
-window.addEventListener("resize", resizeInstructions());
+resizeInstructions();
+window.addEventListener("resize", resizeInstructions);
 //////this will load the data, and then start the WebGL rendering
 loadData();

@@ -31,6 +31,7 @@ function resizeMobile(){
 
 //hide the splash screen
 function hideSplash(id){
+	d3.select('#help').classed('clickedControl', false);		
 
 	var fdur = 700.;
 
@@ -45,9 +46,11 @@ function hideSplash(id){
 			splash.style("display","none");
 		})
 
+
 }
 //show the splash screen
 function showSplash(id, op = 0.6){
+	d3.select('#help').classed('clickedControl', true);		
 
 	var fdur = 700.;
 
@@ -62,13 +65,31 @@ function showSplash(id, op = 0.6){
 		.style("opacity", 1);
 
 }
+//update the width the time slider
+function updateTimeSlider(){
+	params.timeRect.attr("width",(params.JDtoday - params.JDmin)/(params.JDmax - params.JDmin)*100. + "%")
 
+}
+function setTimeFromSlider(d, i){
+	var x = d3.mouse(this)[0];
+	var xtot = parseFloat(d3.select("#timeSlider").style("width"));
+	var JDtoday = THREE.Math.clamp((params.JDmax - params.JDmin)*x/xtot + params.JDmin, params.JDmin, params.JDmax);
+	params.Year = JDtoday - params.JD0 + 1990;
+	params.updateSolarSystem();
+}
 //resize the instructions if window size changes
 function resizeInstructions(){
 
-	console.log("here")
 	var screenWidth = window.innerWidth;
 	var screenHeight = window.innerHeight;
-	d3.select("#myInstructions")
-		.style("height",screenHeight - 150)
+
+	d3.select("#myInstructions").style("height",screenHeight - 160);
+	istr = d3.select("#myInstructions").node().getBoundingClientRect();
+
+	d3.select("#titleLeft").style("width",parseFloat(istr.width) - 120);
+	tl = d3.select('#titleLeft').node().getBoundingClientRect();
+	d3.select(".splashButton").style("height",parseFloat(tl.height));
+
+	d3.select("#timeSlider").style("width",screenWidth - 504);
+
 }

@@ -14,7 +14,8 @@ function update(time){
 	params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
 
 	if ( params.keyboard.down("C") ) {
-		console.log(params.rcamera.position);
+		console.log(params.camera.position);
+		console.log(params.camera)
 	}
 }
 

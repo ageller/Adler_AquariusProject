@@ -55,9 +55,11 @@
 		<div id="forwardControl" class="material-icons playControls" style="left:300px; font-size:50px">fast_forward</div>
 		<div id="fasterControl" class="material-icons playControls" style="left:350px; font-size:50px">add</div>
 		<div id="slowerControl" class="material-icons playControls" style="left:400px; font-size:50px">remove</div>
-		<div id="help" class="material-icons playControls" style="left:450px; font-size:50px" onclick="showSplash('#splash')">help_outline</div>
+		<div id="help" class="material-icons playControls" style="left:450px; font-size:50px">help_outline</div>
 
 
+		<!-- will contain the time slider -->
+		<div id="timeSlider"></div>
 
 		<!-- Instructions Text -->
 		<div id="splash">
@@ -71,15 +73,23 @@
 				<div class="playInstructions" style="left:350px">faster</div>
 				<div class="playInstructions" style="left:400px">slower</div>
 				<div class="playInstructions" style="left:450px">help</div>
+				<div class="playInstructions" style="left:500px; width:150px; text-align:left; padding-left:10px">date and time slider</div>
 			</div>
 
-			<div style="position:absolute; height:60px; left:550px">
-				<button class="splashButton blinkMe" onclick="hideSplash('#splash')" style="display:none">Go!</button>
-			</div>
+
 
  			<div id="myInstructions" style="top:100px; ">
  				<div >
-					<div class="instructionsTitle" style="font-size:60px">Explore the Aquarius Meteoroid's Orbit and Impact!</div>
+ 					<div style="display:inline-block">
+						<div id="titleLeft" class="instructionsTitle" style="font-size:58px; width:100px; text-align:left; float:left;">Explore the Aquarius Meteoroid's Orbit and Impact!</div>
+						<div id="titleRight" style="float:right;">
+							<div id="goButton" style="height:50px">
+								<button class="splashButton blinkMe" onclick="hideSplash('#splash')" style="display:none">Go!</button>
+							</div>			
+						</div>	
+					</div>	
+
+
 					<div class="instructionsContent">
 						The <a href="https://www.adlerplanetarium.org/education/far-horizons/the-aquarius-project/" target="_blank">Aquarius Project</a> is an <a href="https://www.adlerplanetarium.org" target="_blank">Adler Planetarium</a> program to search for a meteor that impacted in Lake Michigan on Feb. 6, 2017.  In this online interactive, you start by viewing the Solar System one year before the Aquarius Project meteroid enters the Earth's atmosphere.  Orbits are color coded : white for the Aquarius project meteor; blue for Earth; yellow for the inner rocky planets (Mercury, Venus and Mars), red for the outer gaseous planets (Jupiter, Saturn, Uranus, and Neptune), purple for Pluto, and green for the asteroid belt. To zoom in on an individual object, choose your Target from the dropdown menu. This will also lock the camera on the chosen object.	You can also manually zoom in and out of the Target object with your mouse wheel (or pinch), as well as control the camera viewing angle by click (or touch) + drag .
 					</div>
