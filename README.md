@@ -6,7 +6,9 @@ A WebGL visualization for the [Adler Planetarium's Aquarius Project](https://www
 
 ## The Aquarius Project Interactive
 
-The Aquarius Project is an Adler Planetarium program to search for a meteor that impacted in Lake Michigan on Feb. 6, 2017. In this online interactive, you start by viewing the Solar System one year before the Aquarius Project meteoroid enters the Earth's atmosphere. Orbits are color coded : white for the Aquarius project meteor; blue for Earth; yellow for the inner rocky planets (Mercury, Venus and Mars), red for the outer gaseous planets (Jupiter, Saturn, Uranus, and Neptune), purple for Pluto, and green for the asteroid belt. The meteoroid is also circled in yellow. To zoom in on an individual object, choose your Target from the dropdown menu. This will also lock the camera on the chosen object. You can also manually zoom in and out of the Target object with your mouse wheel (or pinch), as well as control the camera viewing angle by click (or touch) + drag .
+The [Aquarius Project](https://www.adlerplanetarium.org/education/far-horizons/the-aquarius-project/) is an [Adler Planetarium](https://www.adlerplanetarium.org) program to search for a meteor that impacted in Lake Michigan on Feb. 6, 2017. In this online interactive, you start by viewing the Solar System one year before the Aquarius Project meteoroid enters the Earth's atmosphere. Orbits are color coded : white for the Aquarius project meteor; blue for Earth; yellow for the inner rocky planets (Mercury, Venus and Mars), red for the outer gaseous planets (Jupiter, Saturn, Uranus, and Neptune), purple for Pluto, and green for the asteroid belt. The meteoroid is also circled in yellow. 
+
+To zoom in on an individual object, choose your Target from the dropdown menu. This will also lock the camera on the chosen object. You can also manually zoom in and out of the Target object with your mouse wheel (or pinch), as well as control the camera viewing angle by click (or touch) + drag .
 
 
 ## Acknowledgments
