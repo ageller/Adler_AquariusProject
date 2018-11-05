@@ -1,6 +1,5 @@
 var coronaFragmentShader = `
 
-//precision mediump float;
 
 varying vec3 vPosition;
 
