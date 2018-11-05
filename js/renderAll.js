@@ -13,7 +13,7 @@ function update(time){
 	
 	moveImpactCircle();
 
-	//params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
+	params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
 
 }
 

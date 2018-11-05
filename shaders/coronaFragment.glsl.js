@@ -89,7 +89,7 @@ void main()
 	float cameraDistance = clamp(length(cameraPosition)/10., 1., 100.);
 
 	vec3 cNorm = normalize(cameraPosition);
-	vec3 pNorm = normalize(vPosition);
+	vec3 pNorm = normalize(vPosition) + vec3(1);
 
     float t = 5.*uTime - dist/Rout;
 
@@ -105,7 +105,7 @@ void main()
 
     gl_FragColor.a *= SSalpha;
 
-    gl_FragColor = vec4(0, 0, cn, 1);
+    //gl_FragColor = vec4(0, 0, cn, 1);
     
 }
 `;
