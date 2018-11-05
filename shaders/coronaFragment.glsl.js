@@ -104,6 +104,8 @@ void main()
     gl_FragColor.a *= alpha;
 
     gl_FragColor.a *= SSalpha;
+
+    gl_FragColor = vec4(1);
     
 }
 `;
