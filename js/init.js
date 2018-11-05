@@ -434,6 +434,9 @@ function defineGUI(){
 		.text("");
 
 	updateTimeSlider();
+
+
+
 }
 
 function init() {	

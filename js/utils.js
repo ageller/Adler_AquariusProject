@@ -186,24 +186,34 @@ function visibleSizeAtZDepth(depth){
 function moveImpactCircle(pos = null){
 
 	screenXYcheck = false;
-	display = "block";
+	displayC = "block";
+	displayT = "none";
+	if (params.Year == params.collisionYear){
+		displayT = "block";
+	}
 	size = 50;
 	if (pos == null){
 		xx = screenXY(params.AquariusPos);
 		pos = xx.pos;
 		screenXYcheck = xx.screenXYcheck;
-		display = xx.display;
+		displayC = xx.display;
+		if (xx.display == "none"){
+			displayT = xx.display;
+		}
 	}
 	//don't show circle if nearby
 	if (pos.z < 0.97){
-		display = "none"
+		displayC = "none"
+		displayT = "none"
 	}
 
-	var c = d3.select("#impactCircle").style('display',display);
+	var c = d3.select("#impactCircle").style('display',displayC);
+	var ct = d3.select("#impactText").style('display',displayT);
 	if (screenXYcheck){
 		c.style("top",pos.y - parseFloat(c.style("height"))/2.);
 		c.style("left", pos.x - parseFloat(c.style("width"))/2.);
-
+		ct.style("top",pos.y - parseFloat(c.style("height"))/2. - 50);
+		ct.style("left", pos.x - parseFloat(ct.style("width"))/2. +10);//this doesn't look centered without the additional 10px offset??
 	}
 }
 function showImpactCircle(e, pageX = null, pageY = null){
