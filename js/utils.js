@@ -11,21 +11,11 @@ function clearloading(){
 
 
 function resizeMobile(){
-	// d3.selectAll(".instructionsTitle").style("font-size", "72px"); 
-	// d3.selectAll(".instructionsSubTitle").style("font-size", "60px"); 
-	// d3.selectAll(".instructionsContent").style("font-size", "46px"); 
-	// d3.selectAll(".splashButton").style("font-size", "30px"); 
-
-	// d3.selectAll(".dg li.title").style("height", "36px");
-	// d3.selectAll(".dg li.title").style("font-size", "30px");
-	// var d = document.getElementsByClassName("function");
-	// for (var i =0; i < d.length; i++){
-	// 	var x = d[i].innerHTML.indexOf("Home</span>");
-	// 	if (x != -1){
-	// 		d[i].style.fontSize = "30px"
-	// 		d[i].style.height = "36px" //not sure if this is working
-	// 	}
-	// }
+	d3.selectAll(".dropdown-content").style("width", "250px")
+	d3.selectAll(".dropdown-content").selectAll("div")
+		.style("font-size", "36px")
+		.style("height", "40px")
+		.style("width", "250px")
 
 }
 

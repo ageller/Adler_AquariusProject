@@ -398,6 +398,7 @@ function defineGUI(){
 	// skip loop if the property is from prototype
 		if (!targs.hasOwnProperty(key)) continue;
 		dropdown.append('div')
+			.style('display','block')
 			.attr('value',targs[key])
 			.html("&nbsp;" + key)
 			.on('click', function(){
@@ -646,8 +647,6 @@ function WebGLStart(data, aquariusMesh){
 	drawSun();
 	PointLightSun();
 	
-	console.log(params.collisionYear, Math.floor(params.collisionYear), convertYear(params.collisionYear))
-
 //begin the animation
 	animate();
 
