@@ -77,11 +77,8 @@ float noise(vec3 position, int octaves, float frequency, float persistence, int 
 void main()
 {
 
-	float useTemp = (sunTemp - sTeff) * Teffac + sTeff;
-    float texPos = (useTemp - 1000.)/19000.;
-    //float texPos = (sunTemp - 1000.)/19000.;
-	vec3 compensatedStarColor = texture2D(bb, vec2(texPos, 0.5 )).rgb;
-    //vec3 compensatedStarColor = texture2D(bb, vec2(0.5, 0.5)).rgb;
+    float useTemp = clamp( (sunTemp - sTeff) * Teffac + sTeff, 1000., 19000.);
+    vec3 compensatedStarColor = texture2D(bb, vec2(clamp( ((useTemp - 1000.)/19000.), 0., 1.)), 0.5 ).rgb;
 
     gl_FragColor = vec4(compensatedStarColor, calpha);
 
