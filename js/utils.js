@@ -138,3 +138,80 @@ function updateTimeSlider(){
 	params.timeText.text(printDate)
 
 }
+
+//for moving the impact circle
+function screenXY(obj){
+
+	var vector = obj.clone();
+	var widthHalf = (window.innerWidth/2.);
+	var heightHalf = (window.innerHeight/2.);
+
+	vector.project(params.camera);
+
+	vector.x = ( vector.x * widthHalf ) + widthHalf;
+	vector.y = - ( vector.y * heightHalf ) + heightHalf;
+
+
+	display = "block";
+	if (vector.x > 2.*widthHalf || vector.y > 2.*heightHalf){
+		display = "none";
+	}
+
+	screenXYcheck = true;
+	if (vector.z > 1){
+		screenXYcheck = false;
+	}
+
+
+	return {"pos":vector, "screenXYcheck":screenXYcheck, "display":display};
+}
+function visibleSizeAtZDepth(depth){
+	// compensate for cameras not positioned at z=0
+	var cameraOffset = params.camera.position.z;
+	if ( depth < cameraOffset ){
+		depth -= cameraOffset;
+	} else {
+		depth += cameraOffset;
+	}
+	// vertical fov in radians
+	var vFOV = params.camera.fov * Math.PI / 180; 
+
+	// Math.abs to ensure the result is always positive
+	var width =  2 * Math.tan( vFOV / 2 ) * Math.abs( depth );
+	var height = width * params.camera.aspect;
+
+	return {"width":width, "height":height}
+};
+
+function moveImpactCircle(pos = null){
+
+	screenXYcheck = false;
+	display = "block";
+	size = 50;
+	if (pos == null){
+		xx = screenXY(params.AquariusPos);
+		pos = xx.pos;
+		screenXYcheck = xx.screenXYcheck;
+		display = xx.display;
+	}
+	//don't show circle if nearby
+	if (pos.z < 0.97){
+		display = "none"
+	}
+
+	var c = d3.select("#impactCircle").style('display',display);
+	if (screenXYcheck){
+		c.style("top",pos.y - parseFloat(c.style("height"))/2.);
+		c.style("left", pos.x - parseFloat(c.style("width"))/2.);
+
+	}
+}
+function showImpactCircle(e, pageX = null, pageY = null){
+
+	if (pageX == null) pageX = e.pageX;
+	if (pageY == null) pageY = e.pageY;
+
+	d3.select("#impactCircle")
+		.style("display","block")
+		.style("opacity", 1.);
+}

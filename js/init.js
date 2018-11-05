@@ -650,6 +650,7 @@ function WebGLStart(data, aquariusMesh){
 	drawSun();
 	PointLightSun();
 	
+
 //begin the animation
 	animate();
 

@@ -10,6 +10,8 @@ function update(time){
 	TWEEN.update(time);
 	params.keyboard.update();
 	params.controls.update();
+	
+	moveImpactCircle();
 
 	params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
 
