@@ -23,34 +23,35 @@ function drawSun()
 
 	var ifac = params.Year % 2;
 	// sphere	
-	var geometry = new THREE.SphereGeometry( SunRad, 32, 32 );
-	var SunMaterial =  new THREE.ShaderMaterial( {
-		uniforms: {
-			radius: { value: SunRad },
-			uTime: { value: ifac },
-			bb: { type: "t", value: params.bbTex},
-			sunTemp: {value: SunTeff},
-			sTeff: {value: params.smTeff},
-			Teffac: {value: params.Teffac},
-			SSalpha: {value: params.useSSalpha },
-			cameraCenter: {value: params.camera.position},
-		},
+	// var geometry = new THREE.SphereGeometry( SunRad, 32, 32 );
+	// var SunMaterial =  new THREE.ShaderMaterial( {
+	// 	uniforms: {
+	// 		radius: { value: SunRad },
+	// 		uTime: { value: ifac },
+	// 		bb: { type: "t", value: params.bbTex},
+	// 		sunTemp: {value: SunTeff},
+	// 		sTeff: {value: params.smTeff},
+	// 		Teffac: {value: params.Teffac},
+	// 		SSalpha: {value: params.useSSalpha },
+	// 		cameraCenter: {value: params.camera.position},
+	// 	},
 
-		vertexShader: SunVertexShader,
-		fragmentShader: SunFragmentShader,
-		depthWrite: true,
-		depthTest: true,
-		transparent: true,
-		alphaTest: true,
-	} );
+	// 	vertexShader: SunVertexShader,
+	// 	fragmentShader: SunFragmentShader,
+	// 	depthWrite: true,
+	// 	depthTest: true,
+	// 	transparent: true,
+	// 	alphaTest: true,
+	// } );
 
-	var mesh = new THREE.Mesh( geometry, SunMaterial );
-	mesh.position.set(0,0,0);
-	params.scene.add(mesh);
+	// var mesh = new THREE.Mesh( geometry, SunMaterial );
+	// mesh.position.set(0,0,0);
+	// params.scene.add(mesh);
 
-	params.SunMesh = mesh;
+	// params.SunMesh = mesh;
+
+	//corona on plane
 	var geometry = new THREE.PlaneGeometry(params.width0, params.height0);
-
 	var coronaMaterial =  new THREE.ShaderMaterial( {
 		uniforms: {
 			Rout: { value: params.coronaSize * SunRad },
@@ -82,7 +83,7 @@ function drawSun()
 
 	params.coronaMesh = mesh;
 
-    params.scene.updateMatrixWorld(true);
-    params.SunPos.setFromMatrixPosition( params.SunMesh.matrixWorld );
+	params.scene.updateMatrixWorld(true);
+	// params.SunPos.setFromMatrixPosition( params.SunMesh.matrixWorld );
 
 }

@@ -13,12 +13,8 @@ function update(time){
 	
 	moveImpactCircle();
 
-	params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
+	//params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
 
-	if ( params.keyboard.down("C") ) {
-		console.log(params.camera.position);
-		console.log(params.camera)
-	}
 }
 
 function updateBillboards(){

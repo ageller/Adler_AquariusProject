@@ -121,10 +121,5 @@ void main()
 
 	gl_FragColor.a *= SSalpha;
 
-	gl_FragColor = vec4(1, 0, 0, 1);
-	if (r2 > Rstar2){
-		gl_FragColor = vec4(1);
-		//discard;
-	}
 }
 `;
