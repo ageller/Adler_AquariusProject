@@ -107,7 +107,7 @@ function makeAsteroidLine( geo , color = 'white', rotation = null) {
 		//alphaMap: aTex,
 		lineWidth: params.ASTlineWidth,
 		sizeAttenuation: 0,
-		depthWrite: true,
+		depthWrite: false,
 		depthTest: true,
 		transparent: true,
 

@@ -188,7 +188,7 @@ function defineParams(data, aquariusMesh){
 //some functions
 		this.updateSolarSystem = function() {
 
-			if ((params.Year < params.collisionYear && params.timeStepFac > 0) || (params.Year > params.minYear && params.timeStepFac < 0)){
+			if ((params.Year < params.collisionYear && params.timeStepFac > 0) || (params.Year > params.startYear && params.timeStepFac < 0)){
 
 				params.JDtoday = THREE.Math.clamp(params.JD0 + (params.Year - 1990.), params.JDmin, params.JDmax);
 
@@ -339,12 +339,6 @@ function defineParams(data, aquariusMesh){
 function defineGUI(){
 
 	// params.gui = new dat.GUI({ width: 450 } )
-	// params.gui.add( params, 'Year', params.minYear, params.collisionYear).listen().onChange(params.updateSolarSystem).name("Year");
-
-	//params.gui.add( params, 'timeStepUnit', { "None": 0, "Hour": (1./8760.), "Day": (1./365.2422), "Year": 1} ).name("Time Step Unit");
-	//params.gui.add( params, 'timeStepFac', 0., 100. ).name("Time Step Multiplier");//.listen();
- 
-
 	// var params.captureGUI = gui.addFolder('Capture');
 	// params.captureGUI.add( params, 'filename');
 	// params.captureGUI.add( params, 'captureWidth');
@@ -646,9 +640,10 @@ function WebGLStart(data, aquariusMesh){
 	drawAquarius();
 
 	drawInnerMilkyWay();
+	drawAsteroidOrbitLines();
+
 	drawPlanetOrbitLines();
 	drawAquariusOrbitLine();
-	drawAsteroidOrbitLines();
 
 	drawSun();
 	PointLightSun();

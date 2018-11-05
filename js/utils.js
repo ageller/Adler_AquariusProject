@@ -133,7 +133,8 @@ function convertYear(year){
 //update the width the time slider
 function updateTimeSlider(){
 	printDate = convertYear(params.Year);
-	params.timeRect.attr("width",(params.Year - params.startYear)/(params.collisionYear - params.startYear)*100. + "%")
+	var frac = THREE.Math.clamp((params.Year - params.startYear)/(params.collisionYear - params.startYear), 0, 1);
+	params.timeRect.attr("width",frac*100. + "%")
 
 	params.timeText.text(printDate)
 
