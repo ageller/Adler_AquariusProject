@@ -79,7 +79,7 @@ void main()
 {
 
 	float useTemp = clamp( (sunTemp - sTeff) * Teffac + sTeff, 1000., 19000.);
-    float texPos = clamp( (useTemp - 1000.)/19000., 0., 1.);
+    float texPos = 0.5;//clamp( (useTemp - 1000.)/19000., 0., 1.);
 	vec3 compensatedStarColor = texture2D(bb, vec2(texPos, 0.5 )).rgb;
     //vec3 compensatedStarColor = texture2D(bb, vec2(0.5, 0.5)).rgb;
 
