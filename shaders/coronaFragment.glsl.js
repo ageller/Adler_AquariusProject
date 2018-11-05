@@ -79,7 +79,8 @@ void main()
 {
 
 	float useTemp = clamp( (sunTemp - sTeff) * Teffac + sTeff, 1000., 19000.);
-	vec3 compensatedStarColor = texture2D(bb, vec2(clamp( ((sunTemp - 1000.)/19000.), 0., 1.)), 0.5 ).rgb;
+    float texPos = clamp( (useTemp - 1000.)/19000., 0., 1.);
+	vec3 compensatedStarColor = texture2D(bb, vec2(texPos, 0.5 )).rgb;
     //vec3 compensatedStarColor = texture2D(bb, vec2(0.5, 0.5)).rgb;
 
     gl_FragColor = vec4(compensatedStarColor, calpha);
