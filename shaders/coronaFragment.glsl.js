@@ -105,7 +105,7 @@ void main()
 
     gl_FragColor.a *= SSalpha;
 
-    gl_FragColor = vec4(1);
+    gl_FragColor = vec4(1. - dist);
     
 }
 `;
