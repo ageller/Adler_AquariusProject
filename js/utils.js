@@ -16,8 +16,6 @@ function resizeMobile(){
 		.style("font-size", "36px")
 		.style("height", "40px")
 		.style("width", "250px")
-
-	params.isMobile = true;
 }
 
 //hide the splash screen
