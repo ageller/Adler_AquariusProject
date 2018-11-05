@@ -408,14 +408,15 @@ function defineGUI(){
 		.attr("height", "100%")
 		.on("mousedown", setTimeFromSlider)
 		.call(d3.drag().on("drag", setTimeFromSlider));
-	 
-	 //Draw the Rectangle
+	
+	var color = d3.select('#timeSlider').style('color');
+	//Draw the Rectangle
 	params.timeRect = params.timeContainer.append("rect")
 		.attr("x", 0)
 		.attr("y", 0)
 		.attr("width", 0)
 		.attr("height", "100%")
-		.attr("fill","#FFF008")
+		.attr("fill",color)
 		.attr("opacity",0.5);
 
 	params.timeText = params.timeContainer.append("text")
@@ -423,7 +424,7 @@ function defineGUI(){
 		.attr("y", 0)
 		.attr("dy","40px")
 		.attr("dx","5px")
-		.attr("fill","#FFF008")
+		.attr("fill",color)
 		.classed('timeText', true)
 		.text("");
 
