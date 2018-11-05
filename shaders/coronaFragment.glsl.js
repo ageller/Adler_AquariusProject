@@ -97,7 +97,7 @@ void main()
     float tn = Rout*noise(vec3(pNorm.xy*2., t), 1, 7., 0.7, 0);
     float cn = Rout*noise(cNorm + pNorm, 1, 7., 0.7, 0);
 
-    //dist = 0.7*dist + 0.2/cameraDistance * tn + 0.1/cameraDistance * cn;
+    dist = 0.7*dist + 0.2/cameraDistance * tn + 0.1/cameraDistance * cn;
 
     float alpha = clamp( 1. - (pow(dist/Rout, cfac)), 0.0, 1.0);
 
@@ -105,7 +105,7 @@ void main()
 
     gl_FragColor.a *= SSalpha;
 
-    gl_FragColor = vec4(1. - dist);
+    gl_FragColor = vec4(t);
     
 }
 `;
