@@ -56,8 +56,25 @@ function moveAquarius()
 	//set position
 	params.aquariusMesh.position.set(geo.vertices[0].x,geo.vertices[0].y,geo.vertices[0].z);
 
+	//should we move aquarius toward Earth
+	if (params.Year > params.collisionYear0){
+		//for Earth's position (not the same as params.planetPos because of rotation applied to mesh?)
+		geoE = createOrbit(params.planets[2].semi_major_axis, params.planets[2].eccentricity, THREE.Math.degToRad(params.planets[2].inclination), THREE.Math.degToRad(params.planets[2].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[2].argument_of_periapsis), params.planets[2].tperi, params.planets[2].period, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
+
+		var offset = new THREE.Vector3(params.earthRad/Math.sqrt(3), params.earthRad/Math.sqrt(3), params.earthRad/Math.sqrt(3))
+
+		//like mix in glsl, but I need to have the correct offset from Earth relative to the Aquarius orbit
+		var a = (params.Year - params.collisionYear0)/(params.collisionYear - params.collisionYear0)
+		var x = geo.vertices[0].x*(1. - a) + (geoE.vertices[0].x + offset.x)*a; 
+		var y = geo.vertices[0].y*(1. - a) + (geoE.vertices[0].y + offset.y)*a; 
+		var z = geo.vertices[0].z*(1. - a) + (geoE.vertices[0].z + offset.z)*a; 
+		//console.log(a, offset, x,y,z)
+		params.aquariusMesh.position.set(x,y,z);
+
+	}
+
 	//set rotation of meteoriod
-	params.aquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoriod around axis
+	params.aquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoroid around axis
 
 	params.scene.updateMatrixWorld(true);
 	params.AquariusPos.setFromMatrixPosition( params.aquariusMesh.matrixWorld );

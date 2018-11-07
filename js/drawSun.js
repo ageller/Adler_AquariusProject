@@ -42,8 +42,8 @@ function drawSun()
 
 		vertexShader: myVertexShader,
 		fragmentShader: coronaFragmentShader,
-		depthWrite:true,
-		depthTest: false,
+		depthWrite:false,
+		depthTest: true,
 		side: THREE.DoubleSide, 
 		transparent:true,
 	} );
@@ -82,9 +82,8 @@ function drawSun()
 
 	params.SunMesh = mesh;
 
-
-
 	params.scene.updateMatrixWorld(true);
-	params.SunPos.setFromMatrixPosition( params.SunMesh.matrixWorld );
+	params.planetPos[100].setFromMatrixPosition( params.SunMesh.matrixWorld );
+	params.planetPos[101].setFromMatrixPosition( params.SunMesh.matrixWorld );
 
 }

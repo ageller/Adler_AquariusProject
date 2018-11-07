@@ -266,7 +266,7 @@ a:visited{
 	text-align: center;
 	font-size:40px;
 	color:var(--main-foreground-color);
-	opacity: 0.5;
+	opacity: 1.;
 	animation: blinkerO 3s linear infinite;
 }
 @keyframes blinkerO {

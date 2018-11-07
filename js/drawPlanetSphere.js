@@ -6,7 +6,7 @@ function clearPlanet(group){
 }
 
 
-function makePlanet(geo, tperi, day, radius, tilt, tex, sc, radScale=1., rotation=null, offset=null, ringTex=null, nightTex=null, specTex=null, bumpTex=null, cloudTex=null, cloudRotScale=0.75, cloudRadScale=1.01) {
+function makePlanet(geo, tperi, day, radius, tilt, tex, sc, phaseStart, radScale=1., rotation=null, offset=null, ringTex=null, nightTex=null, specTex=null, bumpTex=null, cloudTex=null, cloudRotScale=0.75, cloudRadScale=1.01) {
 
 	var group = new THREE.Group(); // group planet mesh, then orient orbit 
 	if (rotation != null){
@@ -17,7 +17,7 @@ function makePlanet(geo, tperi, day, radius, tilt, tex, sc, radScale=1., rotatio
 
 
 	var tdiff = params.JDtoday - tperi;
-	var phase = (tdiff % day)/day;
+	var phase = (tdiff % day)/day + phaseStart;
 
 	//rescale the mesh after creating the sphere.  Otherwise, the sphere will not be drawn correctly at this small size
 	var rad = radius * radScale;
@@ -139,6 +139,7 @@ function drawPlanets()
 {
 	for (var i=0; i<10; i++){
 
+
 		geo = createOrbit(params.planets[i].semi_major_axis, params.planets[i].eccentricity, THREE.Math.degToRad(params.planets[i].inclination), THREE.Math.degToRad(params.planets[i].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[i].argument_of_periapsis), params.planets[i].tperi, params.planets[i].period, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
 
 		var offset = null;
@@ -148,7 +149,7 @@ function drawPlanets()
 		}	
 
 
-		var vals = makePlanet(geo.vertices[0], params.planets[i].tperi, params.planets[i].day, params.planets[i].radius, params.planets[i].tilt, params.planets[i].tex, params.earthRad, radScale=1., rotation=params.SSrotation, offset=offset, ringTex=params.planets[i].ringTex, nightTex=params.planets[i].nightTex, specTex=params.planets[i].specTex, bumpTex=params.planets[i].bumpTex, cloudTex=params.planets[i].cloudTex);	
+		var vals = makePlanet(geo.vertices[0], params.planets[i].tperi, params.planets[i].day, params.planets[i].radius, params.planets[i].tilt, params.planets[i].tex, params.earthRad, params.planets[i].phaseStart, radScale=1., rotation=params.SSrotation, offset=offset, ringTex=params.planets[i].ringTex, nightTex=params.planets[i].nightTex, specTex=params.planets[i].specTex, bumpTex=params.planets[i].bumpTex, cloudTex=params.planets[i].cloudTex);	
 
 
 
@@ -171,7 +172,7 @@ function movePlanets()
 	for (var i=0; i<10; i++){
 
 		var tdiff = params.JDtoday - params.planets[i].tperi;
-		var phase = (tdiff % params.planets[i].day)/params.planets[i].day;
+		var phase = (tdiff % params.planets[i].day)/params.planets[i].day + params.planets[i].phaseStart;
 
 		geo = createOrbit(params.planets[i].semi_major_axis, params.planets[i].eccentricity, THREE.Math.degToRad(params.planets[i].inclination), THREE.Math.degToRad(params.planets[i].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[i].argument_of_periapsis), params.planets[i].tperi, params.planets[i].period, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
 

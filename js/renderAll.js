@@ -13,6 +13,39 @@ function update(time){
 	
 	moveImpactCircle();
 
+	// if (params.keyboard.down("up")){
+	// 	params.aquarius.tperi += 0.001;
+	// 	console.log(params.aquarius.tperi)
+	// 	clearPlanetOrbitLines();
+	// 	drawPlanetOrbitLines();
+	// 	drawAquariusOrbitLine();
+	// 	moveAquarius();
+	// }
+	// if (params.keyboard.down("down")){
+	// 	params.aquarius.tperi -= 0.001;
+	// 	console.log(params.aquarius.tperi)
+	// 	clearPlanetOrbitLines();
+	// 	drawPlanetOrbitLines();
+	// 	drawAquariusOrbitLine();
+	// 	moveAquarius();
+	// }
+	// if (params.keyboard.down("right")){
+	// 	params.planets[2].tperi += 0.0001;
+	// 	console.log(params.planets[2].tperi)
+	// 	clearPlanetOrbitLines();
+	// 	drawPlanetOrbitLines();
+	// 	drawAquariusOrbitLine();
+	// 	movePlanets();
+	// }
+	// if (params.keyboard.down("left")){
+	// 	params.planets[2].tperi -= 0.0001;
+	// 	console.log(params.planets[2].tperi)
+	// 	clearPlanetOrbitLines();
+	// 	drawPlanetOrbitLines();
+	// 	drawAquariusOrbitLine();
+	// 	movePlanets();
+	// }
+
 	params.SunMesh.material.uniforms.cameraCenter.value = params.camera.position;
 
 }

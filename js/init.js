@@ -35,6 +35,11 @@ function defineParams(data, aquariusMesh){
 		this.asteroids = data[1];
 		this.aquarius = data[2];
 
+		//this is a tweak to get the impact to line up correctly
+		// this.aquarius.argument_of_periapsis = 45.518569;
+		this.aquarius.tperi = 2456854.814389201;
+		this.planets[2].tperi = 2450817.507099988;
+
 		//this holds all the orbit lines
 		this.orbitLines = [];
 
@@ -107,6 +112,7 @@ function defineParams(data, aquariusMesh){
 		//gets us closer to intersection, but might not be exactly correct time
 		this.minYear = 1990;
 		this.collisionYear = 2017.1014715949;
+		this.collisionYear0 = 2017.; //time when we start moving Aquarius toward collision position
 		this.startYear = this.collisionYear -1.;
 		this.Year = this.startYear;
 		//this.Year = 2017.0939;
@@ -126,31 +132,20 @@ function defineParams(data, aquariusMesh){
 		this.videoFormat = 'png';
 
 //Planet locations
-		this.SunPos = new THREE.Vector3();
-		this.MercuryPos = new THREE.Vector3();
-		this.VenusPos = new THREE.Vector3();
-		this.EarthPos = new THREE.Vector3();
-		this.MoonPos = new THREE.Vector3();
 		this.AquariusPos = new THREE.Vector3();
-		this.MarsPos = new THREE.Vector3();
-		this.JupiterPos = new THREE.Vector3();
-		this.SaturnPos = new THREE.Vector3();
-		this.UranusPos = new THREE.Vector3();
-		this.NeptunePos = new THREE.Vector3();
-		this.PlutoPos = new THREE.Vector3();
-		this.planetPos = { 0:this.MercuryPos,
-							1:this.VenusPos,
-							2:this.EarthPos,
-							3:this.MarsPos,
-							4:this.JupiterPos,
-							5:this.SaturnPos,
-							6:this.UranusPos,
-							7:this.NeptunePos,
-							8:this.PlutoPos,
-							9:this.MoonPos,
-							10:this.AquariusPos,
-							100:this.SunPos, 
-							101:this.SunPos
+		this.planetPos = {  "0":new THREE.Vector3(),//this.MercuryPos,
+							"1":new THREE.Vector3(),//this.VenusPos,
+							"2":new THREE.Vector3(),//this.EarthPos,
+							"3":new THREE.Vector3(),//this.MarsPos,
+							"4":new THREE.Vector3(),//this.JupiterPos,
+							"5":new THREE.Vector3(),//this.SaturnPos,
+							"6":new THREE.Vector3(),//this.UranusPos,
+							"7":new THREE.Vector3(),//this.NeptunePos,
+							"8":new THREE.Vector3(),//this.PlutoPos,
+							"9":new THREE.Vector3(),//this.MoonPos,
+							"10":this.AquariusPos,
+							"100":new THREE.Vector3(),//this.SunPos, 
+							"101":new THREE.Vector3(),//this.SunPos
 						}
 
 //orbit line colors
@@ -187,43 +182,41 @@ function defineParams(data, aquariusMesh){
 
 //some functions
 		this.updateSolarSystem = function() {
-
-			if ((params.Year < params.collisionYear && params.timeStepFac > 0) || (params.Year > params.startYear && params.timeStepFac < 0)){
-
-				params.JDtoday = THREE.Math.clamp(params.JD0 + (params.Year - 1990.), params.JDmin, params.JDmax);
-
-				updateTimeSlider(params.Year);
-
-				var cameraPos1 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
-
-				movePlanets();	
-				clearPlanetOrbitLines();
-				drawPlanetOrbitLines();
-				drawAquariusOrbitLine();
-				clearSun();
-				drawSun();
-				moveAquarius();
-
-				var cameraPos2 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
-
-				params.camera.position.x += (cameraPos2.x - cameraPos1.x);
-				params.camera.position.y += (cameraPos2.y - cameraPos1.y);
-				params.camera.position.z += (cameraPos2.z - cameraPos1.z);
-				params.controls.target = params.planetPos[params.cameraTarget];
-				params.camera.lookAt(params.planetPos[params.cameraTarget]);
-			} else {
+			if ((params.Year >= params.collisionYear && params.timeStepFac > 0) || (params.Year <= params.startYear && params.timeStepFac < 0)){
 				params.pause = true;
 				if (params.timeStepFac > 0){
 					params.Year = params.collisionYear;
 				}else{
 					params.Year = params.startYear;
 				}
-				updateTimeSlider(params.Year);
 				if (d3.select('#playControl').classed('clickedControl')){
 					d3.select('#stopControl').classed('clickedControl', true);
 					d3.select('#playControl').classed('clickedControl', false);
 				}
 			}
+
+			params.JDtoday = THREE.Math.clamp(params.JD0 + (params.Year - 1990.), params.JDmin, params.JDmax);
+
+			updateTimeSlider(params.Year);
+
+			var cameraPos1 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
+
+			movePlanets();	
+			clearPlanetOrbitLines();
+			drawPlanetOrbitLines();
+			drawAquariusOrbitLine();
+			clearSun();
+			drawSun();
+			moveAquarius();
+
+			var cameraPos2 = {"x":params.planetPos[params.cameraTarget].x, "y":params.planetPos[params.cameraTarget].y, "z":params.planetPos[params.cameraTarget].z};
+
+			params.camera.position.x += (cameraPos2.x - cameraPos1.x);
+			params.camera.position.y += (cameraPos2.y - cameraPos1.y);
+			params.camera.position.z += (cameraPos2.z - cameraPos1.z);
+			params.controls.target = params.planetPos[params.cameraTarget];
+			params.camera.lookAt(params.planetPos[params.cameraTarget]);
+
 			
 
 		};
@@ -294,6 +287,12 @@ function defineParams(data, aquariusMesh){
 		}
 
 		this.updateCameraTarget = function(target){
+
+			//for some reason this is breaking on the Sun's position.  I have no idea why, but here's a hacky fix!
+			if (target > 50){
+				params.planetPos[target] = new THREE.Vector3(0,0,0);
+			}
+
 			params.cameraTarget = target;
 			var dur = 3000;
 			var ease = TWEEN.Easing.Quintic.InOut;
@@ -386,7 +385,7 @@ function defineGUI(){
 			d3.select('#targetControl').classed('clickedControl', false);
 		}
 	});
-	var targs = { "Meteoroid":10, "Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8,"Moon":9, "Solar System":101};
+	var targs = { "Meteoroid":"10", "Sun":"100", "Mercury":"0", "Venus":"1", "Earth":"2", "Mars":"3", "Jupiter":"4","Saturn":"5","Uranus":"6","Neptune":"7","Pluto":"8","Moon":"9", "Solar System":"101"};
 	var dropdown = d3.select('#targetDropdown');
 	for (var key in targs) {
 	// skip loop if the property is from prototype
@@ -531,6 +530,7 @@ function init() {
 		params.planets[i].specTex = null;
 		params.planets[i].bumpTex = null;
 		params.planets[i].cloudTex = null;
+		params.planets[i].phaseStart = 0;
 	}
 	params.planets[5].ringTex = new THREE.TextureLoader().load("textures/saturn_rings_concentric.png" );
 	params.planets[6].ringTex = new THREE.TextureLoader().load("textures/uranus_rings_concentric.png" );
@@ -540,7 +540,7 @@ function init() {
 	params.planets[2].bumpTex = new THREE.TextureLoader().load("textures/8k_earth_normal_map.png" );
 	params.planets[2].specTex = new THREE.TextureLoader().load("textures/8k_earth_specular_map.png" );
 	params.planets[2].cloudTex = new THREE.TextureLoader().load("textures/fair_clouds_4k.png" );
-
+	params.planets[2].phaseStart = 0.5;
 
 	AquariusTex = new THREE.TextureLoader().load("textures/deimosbump.jpg" );
 
