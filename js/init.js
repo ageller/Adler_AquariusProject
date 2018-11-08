@@ -25,7 +25,7 @@ function defineParams(data, aquariusMesh){
 		//radii we need to save in units of AU (?), later all planets are scaled by params.earthRad (is this right?)
 		this.earthRad = 1./23481.066;
 		this.sRad = 1./215./this.earthRad;
-		this.aquariusRad = 0.0000003/this.earthRad;
+		this.aquariusRad = 3e-8/this.earthRad;
 
 		//this will hold the data from the input files
 		this.planets = data[0];
@@ -445,9 +445,7 @@ function init() {
 	var screenHeight = window.innerHeight;
 	var fov = 45;
 	var aspect = screenWidth / screenHeight;
-	//var zmin = 0.005; //minimum distance from object
-	//var zmin = 0.00001;
-	var zmin = 1e-7;
+	var zmin = 1e-8;
 	var zmax = 5000;
 	params.camera = new THREE.PerspectiveCamera( fov, aspect, zmin, zmax);
 	params.scene.add(params.camera);
