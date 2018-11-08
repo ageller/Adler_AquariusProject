@@ -61,7 +61,9 @@ function moveAquarius()
 		//for Earth's position (not the same as params.planetPos because of rotation applied to mesh?)
 		geoE = createOrbit(params.planets[2].semi_major_axis, params.planets[2].eccentricity, THREE.Math.degToRad(params.planets[2].inclination), THREE.Math.degToRad(params.planets[2].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[2].argument_of_periapsis), params.planets[2].tperi, params.planets[2].period, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
 
-		var offset = new THREE.Vector3(params.earthRad/Math.sqrt(3), params.earthRad/Math.sqrt(3), params.earthRad/Math.sqrt(3))
+		//var offset = new THREE.Vector3(params.earthRad/Math.sqrt(3), params.earthRad/Math.sqrt(3), params.earthRad/Math.sqrt(3))
+		//var offset  = new THREE.Vector3(0.000014,-0.00004,params.earthRad/Math.sqrt(3)) //closer
+		var offset  = new THREE.Vector3(0.000018,-0.0000345,0.0000175)
 
 		//like mix in glsl, but I need to have the correct offset from Earth relative to the Aquarius orbit
 		var a = (params.Year - params.collisionYear0)/(params.collisionYear - params.collisionYear0)
