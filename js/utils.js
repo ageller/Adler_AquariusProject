@@ -194,7 +194,7 @@ function moveImpactCircle(pos = null){
 	}
 	size = 50;
 	if (pos == null){
-		xx = screenXY(params.AquariusPos);
+		xx = screenXY(params.planetPos[10]);
 		pos = xx.pos;
 		screenXYcheck = xx.screenXYcheck;
 		displayC = xx.display;

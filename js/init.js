@@ -133,20 +133,19 @@ function defineParams(data, aquariusMesh){
 		this.videoFormat = 'png';
 
 //Planet locations
-		this.AquariusPos = new THREE.Vector3();
-		this.planetPos = {  "0":new THREE.Vector3(),//this.MercuryPos,
-							"1":new THREE.Vector3(),//this.VenusPos,
-							"2":new THREE.Vector3(),//this.EarthPos,
-							"3":new THREE.Vector3(),//this.MarsPos,
-							"4":new THREE.Vector3(),//this.JupiterPos,
-							"5":new THREE.Vector3(),//this.SaturnPos,
-							"6":new THREE.Vector3(),//this.UranusPos,
-							"7":new THREE.Vector3(),//this.NeptunePos,
-							"8":new THREE.Vector3(),//this.PlutoPos,
-							"9":new THREE.Vector3(),//this.MoonPos,
-							"10":this.AquariusPos,
-							"100":new THREE.Vector3(),//this.SunPos, 
-							"101":new THREE.Vector3(),//this.SunPos
+		this.planetPos = {  0:new THREE.Vector3(),//this.MercuryPos,
+							1:new THREE.Vector3(),//this.VenusPos,
+							2:new THREE.Vector3(),//this.EarthPos,
+							3:new THREE.Vector3(),//this.MarsPos,
+							4:new THREE.Vector3(),//this.JupiterPos,
+							5:new THREE.Vector3(),//this.SaturnPos,
+							6:new THREE.Vector3(),//this.UranusPos,
+							7:new THREE.Vector3(),//this.NeptunePos,
+							8:new THREE.Vector3(),//this.PlutoPos,
+							9:new THREE.Vector3(),//this.MoonPos,
+							10:new THREE.Vector3(),//this.AquariusPos,
+							100:new THREE.Vector3(),//this.SunPos, 
+							101:new THREE.Vector3(),//this.SunPos
 						}
 
 //orbit line colors
@@ -160,19 +159,19 @@ function defineParams(data, aquariusMesh){
 
 //camera "near" limit values for each focus point
 //"Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Meteoroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8
-		this.cameraNear = {	"0":this.planets[0].radius*this.earthRad, 
-							"1":this.planets[1].radius*this.earthRad, 
-							"2":this.planets[2].radius*this.earthRad,
-							"3":this.planets[3].radius*this.earthRad, 
-							"4":this.planets[4].radius*this.earthRad, 
-							"5":this.planets[5].radius*this.earthRad, 
-							"6":this.planets[6].radius*this.earthRad,
-							"7":this.planets[7].radius*this.earthRad,
-							"8":this.planets[8].radius*this.earthRad,
-							"9":this.planets[9].radius*this.earthRad,
-							"10":this.planets[10].radius*this.earthRad,
-							"100":this.planets[100].radius*this.earthRad, 
-							"101":this.planets[100].radius*this.earthRad}
+		this.cameraNear = {	0:this.planets[0].radius*this.earthRad, 
+							1:this.planets[1].radius*this.earthRad, 
+							2:this.planets[2].radius*this.earthRad,
+							3:this.planets[3].radius*this.earthRad, 
+							4:this.planets[4].radius*this.earthRad, 
+							5:this.planets[5].radius*this.earthRad, 
+							6:this.planets[6].radius*this.earthRad,
+							7:this.planets[7].radius*this.earthRad,
+							8:this.planets[8].radius*this.earthRad,
+							9:this.planets[9].radius*this.earthRad,
+							10:this.planets[10].radius*this.earthRad,
+							100:this.planets[100].radius*this.earthRad, 
+							101:this.planets[100].radius*this.earthRad}
 
 //Galaxy appearance
 		this.MWalpha = 0.5;
@@ -215,7 +214,7 @@ function defineParams(data, aquariusMesh){
 			params.camera.position.x += (cameraPos2.x - cameraPos1.x);
 			params.camera.position.y += (cameraPos2.y - cameraPos1.y);
 			params.camera.position.z += (cameraPos2.z - cameraPos1.z);
-			params.controls.target = params.planetPos[params.cameraTarget];
+			params.controls.target = params.planetPos[params.cameraTarget].clone();
 			params.camera.lookAt(params.planetPos[params.cameraTarget]);
 
 			
@@ -289,10 +288,11 @@ function defineParams(data, aquariusMesh){
 
 		this.updateCameraTarget = function(target){
 
-			//for some reason this is breaking on the Sun's position.  I have no idea why, but here's a hacky fix!
-			if (target > 50){
-				params.planetPos[target] = new THREE.Vector3(0,0,0);
-			}
+			// //for some reason this is breaking on the Sun's position, and also Aquarius.  I have no idea why, but here's a hacky fix!
+			// if (target > 50){
+			// 	params.planetPos[target] = new THREE.Vector3(0,0,0);
+			// }
+
 
 			params.cameraTarget = target;
 			var dur = 3000;

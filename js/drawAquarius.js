@@ -29,7 +29,8 @@ function makeAquarius( geo, tperi, day, radius, rotation = null) {
 	params.scene.add(params.aquariusGroup);
 
 	params.scene.updateMatrixWorld(true);
-	params.AquariusPos.setFromMatrixPosition( params.aquariusMesh.matrixWorld );
+	params.planetPos[10].setFromMatrixPosition( params.aquariusMesh.matrixWorld );
+
 }
 
 
@@ -79,5 +80,5 @@ function moveAquarius()
 	params.aquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoroid around axis
 
 	params.scene.updateMatrixWorld(true);
-	params.AquariusPos.setFromMatrixPosition( params.aquariusMesh.matrixWorld );
+	params.planetPos[10].setFromMatrixPosition( params.aquariusMesh.matrixWorld );
 }
