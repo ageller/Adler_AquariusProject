@@ -36,9 +36,10 @@ function defineParams(data, aquariusMesh){
 		this.aquarius = data[2];
 
 		//this is a tweak to get the impact to line up correctly
-		// this.aquarius.argument_of_periapsis = 45.518569;
-		this.aquarius.tperi = 2456854.814389201;
-		this.planets[2].tperi = 2450817.507099988;
+		this.aquarius.tperi += 0.006;
+		for (var i=0; i<9; i++){
+			this.planets[i].tperi += 0.007099988;
+		}
 
 		//this holds all the orbit lines
 		this.orbitLines = [];
@@ -112,7 +113,7 @@ function defineParams(data, aquariusMesh){
 		//gets us closer to intersection, but might not be exactly correct time
 		this.minYear = 1990;
 		this.collisionYear = 2017.1014715949;
-		this.collisionYear0 = 2017.; //time when we start moving Aquarius toward collision position
+		this.collisionYear0 = 2017.1; //time when we start moving Aquarius toward collision position
 		this.startYear = this.collisionYear -1.;
 		this.Year = this.startYear;
 		//this.Year = 2017.0939;
