@@ -62,16 +62,19 @@ function moveAquarius()
 		//for Earth's position (not the same as params.planetPos because of rotation applied to mesh?)
 		geoE = createOrbit(params.planets[2].semi_major_axis, params.planets[2].eccentricity, THREE.Math.degToRad(params.planets[2].inclination), THREE.Math.degToRad(params.planets[2].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[2].argument_of_periapsis), params.planets[2].tperi, params.planets[2].period, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
 
-		//var offset = new THREE.Vector3(params.earthRad/Math.sqrt(3), params.earthRad/Math.sqrt(3), params.earthRad/Math.sqrt(3))
-		//var offset  = new THREE.Vector3(0.000014,-0.00004,params.earthRad/Math.sqrt(3)) //closer
-		var offset  = new THREE.Vector3(0.000018,-0.0000345,0.0000175)
 
-		//like mix in glsl, but I need to have the correct offset from Earth relative to the Aquarius orbit
+		//impacts in lake near Sheboygan, WI
+		var r = 0.998*params.earthRad;
+		var theta = THREE.Math.degToRad(66.);
+		var phi = THREE.Math.degToRad(297.5);
+		var offset = new THREE.Vector3(	r*Math.sin(theta)*Math.cos(phi),
+										r*Math.sin(theta)*Math.sin(phi),
+										r*Math.cos(theta) );
+		//like mix in glsl
 		var a = (params.Year - params.collisionYear0)/(params.collisionYear - params.collisionYear0)
 		var x = geo.vertices[0].x*(1. - a) + (geoE.vertices[0].x + offset.x)*a; 
 		var y = geo.vertices[0].y*(1. - a) + (geoE.vertices[0].y + offset.y)*a; 
 		var z = geo.vertices[0].z*(1. - a) + (geoE.vertices[0].z + offset.z)*a; 
-		//console.log(a, offset, x,y,z)
 		params.aquariusMesh.position.set(x,y,z);
 
 	}
