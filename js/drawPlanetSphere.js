@@ -179,8 +179,16 @@ function movePlanets()
 		//set position and rotation
 		for (var j=0; j<params.movingMesh[i].length; j++){
 			params.movingMesh[i][j].position.set(geo.vertices[0].x, geo.vertices[0].y, geo.vertices[0].z);
-			params.movingMesh[i][j].rotation.y = (2.*phase*Math.PI) % (2.*Math.PI);  //the only angle that changes
+			var rot = (2.*phase*Math.PI) % (2.*Math.PI);
+			if (j != 1){//exclude rings
+				params.movingMesh[i][j].rotation.y = rot;  //the only angle that changes
+			}
+			if (j == 1){ //rings
+				params.movingMesh[i][j].rotation.z = rot; //this rotates rings at same rate as planet
+			}
 		}
+
+
 
 		if (i == 9){ //for the Moon
 			g = createOrbit(params.planets[2].semi_major_axis, params.planets[2].eccentricity, THREE.Math.degToRad(params.planets[2].inclination), THREE.Math.degToRad(params.planets[2].longitude_of_ascending_node), THREE.Math.degToRad(params.planets[2].argument_of_periapsis), params.planets[2].tperi, params.planets[2].period, Ntheta = 1., thetaMin = 0, thetaMax = 0.);
