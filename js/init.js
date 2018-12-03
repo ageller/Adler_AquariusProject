@@ -523,7 +523,7 @@ function init() {
 	params.planets[8].tex = new THREE.TextureLoader().load("textures/pluto_color_mapmosaic.jpg" );
 	params.planets[9].tex = new THREE.TextureLoader().load("textures/Lunar_Clementine_UVVIS_750nm_Global_Mosaic_1024.jpg" );
 
-	for (var i=0; i<9; i++){
+	for (var i=0; i<=9; i++){
 		params.planets[i].ringTex = null;
 		params.planets[i].nightTex = null;
 		params.planets[i].specTex = null;
