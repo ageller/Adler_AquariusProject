@@ -50,7 +50,7 @@ a:visited{
 	width: 50px;
 	padding: 0px;
 	margin: 0px;
-	z-index: 4;
+	z-index: 5;
 	color: var(--main-foreground-color);
 	background-color:none;
 	text-align: center;

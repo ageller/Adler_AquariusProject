@@ -114,7 +114,7 @@ function defineParams(data, aquariusMesh){
 		this.minYear = 1990;
 		this.collisionYear = 2017.1014715949;
 		this.collisionYear0 = 2017.1; //time when we start moving Aquarius toward collision position
-		this.startYear = this.collisionYear -1.;
+		this.startYear = this.collisionYear -2.5;
 		this.Year = this.startYear;
 		//this.Year = 2017.0939;
 		//var JD0 = 2458060.5; //Nov. 3, 2017

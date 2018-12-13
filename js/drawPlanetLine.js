@@ -8,7 +8,7 @@ function clearPlanetOrbitLines() {
 }
 
 
-function createOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
+function createOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10., NthetaRemove = 1){
 //in this calculation the orbit line will start at peri
 //but I'd like to move that so that it starts at roughly the correct spot for the given planet at the given time
 	var JDtoday = params.JD0 + (params.Year - 1990.);
@@ -43,8 +43,8 @@ function createOrbit(semi, ecc, inc, lan, ap, tperi, period, Ntheta = 10.){
 	var imin = 0;
 	var imax = Ntheta;
 	if (Ntheta > 2){//to avoid drawing the line right next to the object
-		//imin = 1;
-		imax = Ntheta - 1;
+		imin = NthetaRemove;
+		imax = Ntheta - NthetaRemove;
 	}
 	for (i=imin; i<=imax; i++) {
 		E = (i*dTheta + 2.*phase*Math.PI) % (2.*Math.PI);

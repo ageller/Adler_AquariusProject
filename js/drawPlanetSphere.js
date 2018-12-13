@@ -26,7 +26,7 @@ function makePlanet(geo, tperi, day, radius, tilt, tex, sc, phaseStart, radScale
 	var material = new THREE.MeshPhongMaterial( {
 		map: tex,
 	} );
-
+	
 	//currently only used for Earth, and could be written more scalable
 	if (nightTex != null){
 		var uniforms = THREE.UniformsUtils.merge( [

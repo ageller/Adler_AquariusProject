@@ -9,7 +9,7 @@ function clearSun(){
 //function here for point source
 function PointLightSun()
 {
-	var light = new THREE.PointLight( 0xffffff, 1, 0, 2);
+	var light = new THREE.PointLight( 0xffffff, 0.5, 0, 2); //exclude Pluto
 	light.position.set(0,0,0);
 	params.scene.add( light );
 	//so that I can see the backside
