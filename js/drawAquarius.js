@@ -80,7 +80,7 @@ function moveAquarius()
 	}
 
 	//set rotation of meteoriod
-	params.aquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate meteoroid around axis
+	params.aquariusMesh.rotation.y = (2.*phaseAquarius*Math.PI) % (2.*Math.PI); //rotate asteroid around axis
 
 	params.scene.updateMatrixWorld(true);
 	params.planetPos[10].setFromMatrixPosition( params.aquariusMesh.matrixWorld );

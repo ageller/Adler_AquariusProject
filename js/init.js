@@ -29,7 +29,7 @@ function defineParams(data, aquariusMesh){
 
 		//this will hold the data from the input files
 		this.planets = data[0];
-		this.planets[10] = {"name":"Meteoroid", "radius":this.aquariusRad};
+		this.planets[10] = {"name":"Asteroid", "radius":this.aquariusRad};
 		this.planets[100] = {"name":"Sun", "radius":this.sRad};
 		this.planets[101] = {"name":"SolarSystem", "radius":this.sRad};
 		this.asteroids = data[1];
@@ -158,7 +158,7 @@ function defineParams(data, aquariusMesh){
 		this.pcolors = {"Mercury":c1, "Venus":c1, "EarthMoon":c2, "Mars":c1, "Jupiter":c3, "Saturn":c3, "Uranus":c3, "Neptune":c3, "Pluto":c4, "Moon":c5}
 
 //camera "near" limit values for each focus point
-//"Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Meteoroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8
+//"Sun":100, "Mercury":0, "Venus":1, "Earth":2, "Moon":9, "Asteroid":10, "Mars":3, "Jupiter":4,"Saturn":5,"Uranus":6,"Neptune":7,"Pluto":8
 		this.cameraNear = {	0:this.planets[0].radius*this.earthRad, 
 							1:this.planets[1].radius*this.earthRad, 
 							2:this.planets[2].radius*this.earthRad,
@@ -386,7 +386,7 @@ function defineGUI(){
 			d3.select('#targetControl').classed('clickedControl', false);
 		}
 	});
-	var targs = { "Meteoroid":"10", "Sun":"100", "Mercury":"0", "Venus":"1", "Earth":"2", "Mars":"3", "Jupiter":"4","Saturn":"5","Uranus":"6","Neptune":"7","Pluto":"8","Moon":"9", "Solar System":"101"};
+	var targs = { "Asteroid":"10", "Sun":"100", "Mercury":"0", "Venus":"1", "Earth":"2", "Mars":"3", "Jupiter":"4","Saturn":"5","Uranus":"6","Neptune":"7","Pluto":"8","Moon":"9", "Solar System":"101"};
 	var dropdown = d3.select('#targetDropdown');
 	for (var key in targs) {
 	// skip loop if the property is from prototype
